@@ -3,44 +3,67 @@ package hu.bme.aut.android.ludocompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
+import dagger.hilt.android.AndroidEntryPoint
+import hu.bme.aut.android.ludocompose.navigation.NavGraph
+import hu.bme.aut.android.ludocompose.ui.common.LudoAppBar
 import hu.bme.aut.android.ludocompose.ui.theme.LudoComposeTheme
 
+@AndroidEntryPoint
+@ExperimentalMaterial3Api
+@ExperimentalFoundationApi
+@ExperimentalComposeUiApi
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             LudoComposeTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = colorScheme.background,
                 ) {
-                    Greeting("Android")
+                    val snackbarHostState = remember { SnackbarHostState() }
+
+                    var titleId by remember { mutableStateOf(R.string.app_name) }
+
+                    Scaffold(
+                        snackbarHost = { SnackbarHost(snackbarHostState) },
+                        topBar = {
+                            LudoAppBar(
+                                title = stringResource(id = titleId),
+                            )
+                        },
+                        floatingActionButton = {}
+                    ) { paddingValues ->
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues)
+                        ) {
+                            NavGraph(
+                                snackbarHostState = snackbarHostState,
+                                onTitleChange = { titleId = it },
+                            )
+                        }
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    LudoComposeTheme {
-        Greeting("Android")
     }
 }

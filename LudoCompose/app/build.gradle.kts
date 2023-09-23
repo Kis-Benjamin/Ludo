@@ -2,6 +2,9 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.kapt)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -15,6 +18,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -31,6 +35,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -41,7 +46,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
     packaging {
         resources {
@@ -50,21 +55,39 @@ android {
     }
 }
 
-dependencies {
+kapt {
+    correctErrorTypes = true
+}
 
+hilt {
+    enableAggregatingTask = true
+    enableExperimentalClasspathAggregation = true
+}
+
+dependencies {
+    // Android-Kotlin
     implementation(libs.core.ktx)
-    implementation(libs.lifecycle.runtime.ktx)
+    // Android-Compose
+    implementation(libs.bundles.lifecycle)
     implementation(libs.activity.compose)
+    implementation(libs.navigation.compose)
+    // Compose
     implementation(platform(libs.compose.bom))
-    implementation(libs.ui)
-    implementation(libs.ui.graphics)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
+    implementation(libs.bundles.compose)
+    // Room
+    implementation(libs.bundles.room)
+    ksp(libs.room.compiler)
+    // Hilt
+    implementation(libs.bundles.hilt)
+    kapt(libs.dagger.hilt.compiler)
+    // Kotlin extensions
+    implementation(libs.datetime)
+    // Util
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+    // Test
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.ui.test.junit4)
-    debugImplementation(libs.ui.tooling)
-    debugImplementation(libs.ui.test.manifest)
+    androidTestImplementation(libs.bundles.test)
+    // Debug
+    debugImplementation(libs.bundles.debug)
 }
