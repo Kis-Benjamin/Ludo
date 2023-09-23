@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Ludo Compose</string>
+    <string name="menu_new_game">Új játék indítása</string>
+    <string name="menu_save_game">Játékállás mentése</string>
+    <string name="menu_load_game">Játékállás betöltése</string>
+    <string name="menu_score_board">Dicsőségtábla</string>
+    <string name="menu_resume_game">Játék folytatása</string>
+    <string name="new_game_enter_player_count">Játékosok számának megadása</string>
+    <string name="new_game_two_players">Két játékos</string>
+    <string name="new_game_three_players">Három játékos</string>
+    <string name="new_game_four_players">Négy játékos</string>
+    <string name="new_game_enter_player_names">Játékosok nevének megadása</string>
+    <string name="new_game_enter_player_one_name">Első játékos neve</string>
+    <string name="new_game_enter_player_two_name">Második játékos neve</string>
+    <string name="new_game_enter_player_three_name">Harmadik játékos neve</string>
+    <string name="new_game_enter_player_four_name">Negyedik játékos neve</string>
+    <string name="new_game_button">Új játék</string>
+    <string name="new_game_player_names_empty">Nem adtál meg nevet a %1$d. játékosnak</string>
+    <string name="save_game_enter_game_name">Játékállás mentés neve</string>
+    <string name="save_game_button">Mentés</string>
+    <string name="save_game_name_empty">A megadott név üres</string>
+    <string name="save_game_name_exists">%1$s játékállás mentés már létezik</string>
+    <string name="load_game_button">Betöltés</string>
+    <string name="load_game_list_item_date">A mentés ideje: %1$s</string>
+    <string name="load_game_list_empty">Még nem mentettél el egy játékot sem</string>
+    <string name="load_game_empty_selection">Még nem választottál ki játékot</string>
+    <string name="game_select">Kiválaszt</string>
+    <string name="game_step">Lép</string>
+    <string name="score_board_name">Játékos neve</string>
+    <string name="score_board_win_count">Győzelmek száma</string>
+    <string name="score_board_empty">A dicsőség lista üres.</string>
+    <string name="unknown_error_message">Valami hiba történt</string>
+</resources>
