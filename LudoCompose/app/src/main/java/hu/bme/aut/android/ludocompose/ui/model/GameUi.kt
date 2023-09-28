@@ -9,5 +9,5 @@ data class GameUi(
 
 fun Game.toUiModel() = GameUi(
     board = board.toUiModel(),
-    dice = DiceUi(dice, ColorSequence.values()[actPlayerIndex]),
+    dice = DiceUi(dice, ColorSequence.entries[actPlayerIndex]),
 )
