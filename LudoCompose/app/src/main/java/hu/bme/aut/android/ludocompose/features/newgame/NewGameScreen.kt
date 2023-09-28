@@ -65,12 +65,7 @@ fun NewGameScreen(
         }
     }
 
-    val playerNamesLabel = arrayOf(
-        R.string.new_game_enter_player_one_name,
-        R.string.new_game_enter_player_two_name,
-        R.string.new_game_enter_player_three_name,
-        R.string.new_game_enter_player_four_name,
-    )
+    val playerNames = stringArrayResource(R.array.new_game_player_names)
 
     Column(
         modifier = Modifier
@@ -95,7 +90,7 @@ fun NewGameScreen(
                         .fillMaxWidth(),
                     value = state.playerNames[i],
                     onValueChange = { newGameViewModel.changePlayerName(i, it) },
-                    label = stringResource(id = playerNamesLabel[i]),
+                    label = playerNames[i],
                     enabled = i < state.playerCount,
                     onDone = { keyboardController?.hide() }
                 )

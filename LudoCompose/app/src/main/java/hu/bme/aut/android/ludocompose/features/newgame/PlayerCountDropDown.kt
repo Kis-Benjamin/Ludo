@@ -1,6 +1,5 @@
 package hu.bme.aut.android.ludocompose.features.newgame
 
-import androidx.annotation.StringRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,9 +35,9 @@ fun PlayerCountDropDown(
         targetValue = if (expanded) 180f else 0f, label = ""
     )
 
-    val playerCounts = PlayerCount.entries
+    val playerCounts = stringArrayResource(R.array.new_game_player_count)
 
-    var selectedPlayerCount by remember { mutableStateOf(playerCounts[0]) }
+    var selectedPlayerCount by remember { mutableIntStateOf(2) }
 
     val shape = RoundedCornerShape(5.dp)
 
@@ -62,7 +61,7 @@ fun PlayerCountDropDown(
             Text(
                 modifier = Modifier
                     .weight(weight = 8f),
-                text = stringResource(id = selectedPlayerCount.title),
+                text = playerCounts[selectedPlayerCount - 1],
                 style = style
             )
             IconButton(
@@ -83,33 +82,26 @@ fun PlayerCountDropDown(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                playerCounts.forEach { playerCount ->
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                text = stringResource(id = playerCount.title),
-                                style = style
-                            )
-                        },
-                        onClick = {
-                            expanded = false
-                            selectedPlayerCount = playerCount
-                            onPlayerCountSelected(playerCount.value)
-                        },
-                    )
+                playerCounts.forEachIndexed { index, playerCount ->
+                    if (index >= 1) {
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = playerCount,
+                                    style = style
+                                )
+                            },
+                            onClick = {
+                                expanded = false
+                                selectedPlayerCount = index + 1
+                                onPlayerCountSelected(selectedPlayerCount)
+                            },
+                        )
+                    }
                 }
             }
         }
     }
-}
-
-enum class PlayerCount(
-    @StringRes val title: Int,
-    val value: Int,
-) {
-    Two(R.string.new_game_two_players,2),
-    Three(R.string.new_game_three_players, 3),
-    Four(R.string.new_game_four_players, 4),
 }
 
 @ExperimentalMaterial3Api
