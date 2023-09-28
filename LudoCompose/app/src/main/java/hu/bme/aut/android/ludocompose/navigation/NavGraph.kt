@@ -48,41 +48,41 @@ fun NavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Menu.route
+        startDestination = MenuScreen.route,
     ) {
-        composable(Screen.Menu) {
+        composable(MenuScreen) {
             MenuScreen(
-                onNavigateToNewGame = { navigateTo(Screen.NewGame) },
-                onNavigateToLoadGame = { navigateTo(Screen.LoadGame) },
-                onNavigateToSaveGame = { navigateTo(Screen.SaveGame) },
-                onNavigateToGame = { navigateTo(Screen.Game) },
-                onNavigateToScoreboard = { navigateTo(Screen.ScoreBoard) },
+                onNavigateToNewGame = { navigateTo(NewGameScreen) },
+                onNavigateToLoadGame = { navigateTo(LoadGameScreen) },
+                onNavigateToSaveGame = { navigateTo(SaveGameScreen) },
+                onNavigateToGame = { navigateTo(GameScreen) },
+                onNavigateToScoreboard = { navigateTo(ScoreBoardScreen) },
             )
         }
-        composable(Screen.NewGame) {
+        composable(NewGameScreen) {
             NewGameScreen(
                 snackbarHostState = snackbarHostState,
-                onSuccess = { navigateTo(Screen.Game) },
+                onSuccess = { navigateTo(GameScreen) },
             )
         }
-        composable(Screen.LoadGame) {
+        composable(LoadGameScreen) {
             LoadGameScreen(
                 snackbarHostState = snackbarHostState,
-                onSuccess = { navigateTo(Screen.Game) },
+                onSuccess = { navigateTo(GameScreen) },
             )
         }
-        dialog(Screen.SaveGame.route) {
+        dialog(SaveGameScreen.route) {
             SaveGameScreen(
                 snackbarHostState = snackbarHostState,
-                onSuccess = { navigateTo(Screen.Menu) },
+                onSuccess = { navigateTo(MenuScreen) },
             )
         }
-        composable(Screen.Game) {
+        composable(GameScreen) {
             GameScreen(
-                onGameEnded = { navigateTo(Screen.Menu) },
+                onGameEnded = { navigateTo(MenuScreen) },
             )
         }
-        composable(Screen.ScoreBoard) {
+        composable(ScoreBoardScreen) {
             ScoreBoardScreen(
                 snackbarHostState = snackbarHostState,
             )
