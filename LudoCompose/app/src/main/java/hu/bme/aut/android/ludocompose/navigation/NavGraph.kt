@@ -1,11 +1,21 @@
 package hu.bme.aut.android.ludocompose.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -26,12 +36,13 @@ import hu.bme.aut.android.ludocompose.features.scoreboard.ScoreBoardScreen
 @Composable
 fun NavGraph(
     snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier,
     onTitleChange: (Int) -> Unit,
     navController: NavHostController = rememberNavController(),
 ) {
     fun navigateTo(destination: Screen) {
         navController.navigate(destination.route) {
-            popUpTo(Screen.Menu.route)
+            popUpTo(MenuScreen.route)
             launchSingleTop = true
         }
     }
@@ -40,7 +51,25 @@ fun NavGraph(
         screen: Screen,
         content: @Composable (NavBackStackEntry) -> Unit
     ) {
-        composable(screen.route) {
+        composable(
+            route = screen.route,
+            enterTransition = {
+                fadeIn(
+                    animationSpec = tween(300, easing = LinearEasing)
+                ) + slideIntoContainer(
+                    animationSpec = tween(300, easing = EaseIn),
+                    towards = AnimatedContentTransitionScope.SlideDirection.End
+                )
+            },
+            exitTransition = {
+                fadeOut(
+                    animationSpec = tween(300, easing = LinearEasing)
+                ) + slideOutOfContainer(
+                    animationSpec = tween(300, easing = EaseOut),
+                    towards = AnimatedContentTransitionScope.SlideDirection.Start
+                )
+            },
+        ) {
             onTitleChange(screen.title)
             content(it)
         }
@@ -49,6 +78,10 @@ fun NavGraph(
     NavHost(
         navController = navController,
         startDestination = MenuScreen.route,
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
     ) {
         composable(MenuScreen) {
             MenuScreen(
