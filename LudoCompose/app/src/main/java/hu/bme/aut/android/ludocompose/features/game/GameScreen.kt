@@ -19,9 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.RectangleShape
@@ -33,7 +31,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import hu.bme.aut.android.ludocompose.R
 import hu.bme.aut.android.ludocompose.ui.graphics.drawGame
 import hu.bme.aut.android.ludocompose.ui.model.toUiText
-import java.util.UUID
 
 @Composable
 fun GameScreen(

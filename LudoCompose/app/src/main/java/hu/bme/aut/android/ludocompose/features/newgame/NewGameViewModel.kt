@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.ludocompose.R
-import hu.bme.aut.android.ludocompose.domain.model.Board
 import hu.bme.aut.android.ludocompose.domain.usecases.StartGameUseCase
 import hu.bme.aut.android.ludocompose.ui.model.UiText
 import hu.bme.aut.android.ludocompose.ui.util.UiEvent
