@@ -27,7 +27,9 @@ fun NormalTextField(
     trailingIcon: @Composable (() -> Unit)? = null,
     singleLine: Boolean = false,
     enabled: Boolean = true,
-    onDone: (KeyboardActionScope.() -> Unit)?
+    isNext: Boolean = false,
+    onNext: (KeyboardActionScope.() -> Unit)? = null,
+    onDone: (KeyboardActionScope.() -> Unit)? = null
 ) {
     val shape = RoundedCornerShape(5.dp)
 
@@ -42,9 +44,10 @@ fun NormalTextField(
         enabled = enabled,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Done
+            imeAction = if (isNext) ImeAction.Next else ImeAction.Done
         ),
         keyboardActions = KeyboardActions(
+            onNext = onNext,
             onDone = onDone
         ),
         colors = colors(),

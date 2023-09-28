@@ -16,12 +16,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -65,6 +69,8 @@ fun NewGameScreen(
         }
     }
 
+    val focusRequesters = remember { Array(4) { FocusRequester() } }
+
     val playerNames = stringArrayResource(R.array.new_game_player_names)
 
     Column(
@@ -87,12 +93,18 @@ fun NewGameScreen(
             for (i in 0 until 4) {
                 NormalTextField(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .focusRequester(focusRequesters[i]),
                     value = state.playerNames[i],
                     onValueChange = { newGameViewModel.changePlayerName(i, it) },
                     label = playerNames[i],
                     enabled = i < state.playerCount,
-                    onDone = { keyboardController?.hide() }
+                    isNext = i < state.playerCount - 1,
+                    onNext = { focusRequesters[i + 1].requestFocus() },
+                    onDone = {
+                        keyboardController?.hide()
+                        newGameViewModel.startGame()
+                    }
                 )
                 Spacer(modifier = Modifier.height(15.dp))
             }
