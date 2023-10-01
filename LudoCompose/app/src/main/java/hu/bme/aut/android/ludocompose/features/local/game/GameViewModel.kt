@@ -1,7 +1,5 @@
 package hu.bme.aut.android.ludocompose.features.local.game
 
-import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.ludocompose.domain.model.isSelectEnabled
@@ -11,9 +9,8 @@ import hu.bme.aut.android.ludocompose.domain.usecases.GetGameUseCase
 import hu.bme.aut.android.ludocompose.domain.usecases.SaveScoreUseCase
 import hu.bme.aut.android.ludocompose.ui.model.GameUi
 import hu.bme.aut.android.ludocompose.ui.model.toUiModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import hu.bme.aut.android.ludocompose.ui.util.LoadingState
+import hu.bme.aut.android.ludocompose.ui.util.LoadingViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -26,38 +23,23 @@ class GameViewModel @Inject constructor(
     private val gameStepUseCase: GameStepUseCase,
     private val getGameUseCase: GetGameUseCase,
     private val saveScoreUseCase: SaveScoreUseCase,
-) : ViewModel() {
+) : LoadingViewModel<GameState>() {
 
-    private val _state = MutableStateFlow(GameState())
-    val state = _state.asStateFlow()
+    override val _state = MutableStateFlow(GameState())
+    override val state = _state.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            _state.update {
-                it.copy(isLoading = true)
-            }
-            load()
-        }
+        init()
     }
 
-    private fun load() {
-        viewModelScope.launch {
-            CoroutineScope(coroutineContext).launch(Dispatchers.IO) {
-                try {
-                    val game = getGameUseCase().getOrThrow()
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            game = game.toUiModel(),
-                            isSelectEnabled = game.isSelectEnabled,
-                        )
-                    }
-                } catch (e: Exception) {
-                    _state.update {
-                        it.copy(isLoading = false, error = e)
-                    }
-                }
-            }
+    override suspend fun loadImpl() {
+        val game = getGameUseCase().getOrThrow()
+        _state.update {
+            it.copy(
+                isLoading = false,
+                game = game.toUiModel(),
+                isSelectEnabled = game.isSelectEnabled,
+            )
         }
     }
 
@@ -83,11 +65,13 @@ class GameViewModel @Inject constructor(
 }
 
 data class GameState(
-    val isLoading: Boolean = false,
-    val error: Throwable? = null,
+    override val isLoading: Boolean = false,
+    override val error: Throwable? = null,
     val game: GameUi? = null,
     val isSelectEnabled: Boolean = false,
-)
+) : LoadingState {
+    override val isError: Boolean get() = error != null
 
-val GameState.isError: Boolean get() = error != null
-
+    override fun clone(isLoading: Boolean, error: Throwable?): LoadingState =
+        copy(isLoading = isLoading, error = error)
+}

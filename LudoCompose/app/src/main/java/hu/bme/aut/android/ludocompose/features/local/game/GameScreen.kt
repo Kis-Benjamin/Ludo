@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import hu.bme.aut.android.ludocompose.R
+import hu.bme.aut.android.ludocompose.ui.common.LoadingScreen
 import hu.bme.aut.android.ludocompose.ui.graphics.drawGame
 import hu.bme.aut.android.ludocompose.ui.model.toUiText
 
@@ -39,26 +40,11 @@ fun GameScreen(
 ) {
     val state by gameViewModel.state.collectAsStateWithLifecycle()
 
-    val context = LocalContext.current
-
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        if (state.isLoading) {
-            CircularProgressIndicator(
-                color = colorScheme.secondaryContainer
-            )
-        } else if (state.isError) {
-            Text(
-                text = state.error?.toUiText()?.asString(context)
-                    ?: stringResource(id = R.string.unknown_error_message)
-            )
-        } else {
-
-            Column {
-                key(state) {
-                    Box(modifier = Modifier
+    LoadingScreen(state = state) {
+        Column {
+            key(state) {
+                Box(
+                    modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                         .aspectRatio(1f)
@@ -69,25 +55,25 @@ fun GameScreen(
                             drawGame(state.game!!, average)
                             drawContent()
                         },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = state.game!!.dice!!.value.toString(),
-                            style = typography.displayLarge)
-                    }
-                }
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp)
+                    contentAlignment = Alignment.Center
                 ) {
-                    Button(onClick = { gameViewModel.select() }, enabled = state.isSelectEnabled) {
-                        Text(text = stringResource(id = R.string.game_select))
-                    }
-                    Button(onClick = { gameViewModel.step { onGameEnded() } }) {
-                        Text(text = stringResource(id = R.string.game_step))
-                    }
+                    Text(
+                        text = state.game!!.dice!!.value.toString(),
+                        style = typography.displayLarge
+                    )
+                }
+            }
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+            ) {
+                Button(onClick = { gameViewModel.select() }, enabled = state.isSelectEnabled) {
+                    Text(text = stringResource(id = R.string.game_select))
+                }
+                Button(onClick = { gameViewModel.step { onGameEnded() } }) {
+                    Text(text = stringResource(id = R.string.game_step))
                 }
             }
         }
