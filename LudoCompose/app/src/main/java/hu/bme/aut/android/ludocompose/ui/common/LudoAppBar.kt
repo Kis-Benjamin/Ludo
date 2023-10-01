@@ -2,13 +2,6 @@ package hu.bme.aut.android.ludocompose.ui.common
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandHorizontally
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkHorizontally
-import androidx.compose.animation.togetherWith
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import hu.bme.aut.android.ludocompose.ui.theme.LudoComposeTheme
+import hu.bme.aut.android.ludocompose.ui.util.transitionSpec
 
 @ExperimentalAnimationApi
 @ExperimentalMaterial3Api
@@ -31,17 +25,7 @@ fun LudoAppBar(
         title = {
             AnimatedContent(
                 targetState = title,
-                transitionSpec = {
-                    fadeIn(tween(700)) +
-                            expandHorizontally(
-                                animationSpec = tween(
-                                    durationMillis = 700,
-                                    easing = LinearEasing
-                                )
-                            ) togetherWith
-                            fadeOut(tween(700)) +
-                            shrinkHorizontally(tween(700))
-                },
+                transitionSpec = transitionSpec,
                 label = "TitleChangeAnimation"
             ) {
                 Text(

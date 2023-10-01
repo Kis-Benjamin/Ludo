@@ -78,7 +78,8 @@ fun PlayerCountDropDown(
             }
             DropdownMenu(
                 modifier = modifier
-                    .width(TextFieldDefaults.MinWidth),
+                    .width(TextFieldDefaults.MinWidth)
+                    .clip(shape = shape),
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
