@@ -1,4 +1,4 @@
-package hu.bme.aut.android.ludocompose.features.scoreboard
+package hu.bme.aut.android.ludocompose.features.local.scoreboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

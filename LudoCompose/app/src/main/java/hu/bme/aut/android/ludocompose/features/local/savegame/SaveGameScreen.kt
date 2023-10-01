@@ -1,4 +1,4 @@
-package hu.bme.aut.android.ludocompose.features.savegame
+package hu.bme.aut.android.ludocompose.features.local.savegame
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

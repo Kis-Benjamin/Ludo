@@ -1,4 +1,4 @@
-package hu.bme.aut.android.ludocompose.features.newgame
+package hu.bme.aut.android.ludocompose.features.local.newgame
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background

@@ -1,4 +1,4 @@
-package hu.bme.aut.android.ludocompose.navigation
+package hu.bme.aut.android.ludocompose.navigation.local
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -16,12 +16,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
-import hu.bme.aut.android.ludocompose.features.game.GameScreen
-import hu.bme.aut.android.ludocompose.features.loadgame.LoadGameScreen
-import hu.bme.aut.android.ludocompose.features.menu.MenuScreen
-import hu.bme.aut.android.ludocompose.features.newgame.NewGameScreen
-import hu.bme.aut.android.ludocompose.features.savegame.SaveGameScreen
-import hu.bme.aut.android.ludocompose.features.scoreboard.ScoreBoardScreen
+import hu.bme.aut.android.ludocompose.features.local.game.GameScreen
+import hu.bme.aut.android.ludocompose.features.local.loadgame.LoadGameScreen
+import hu.bme.aut.android.ludocompose.features.local.menu.MenuScreen
+import hu.bme.aut.android.ludocompose.features.local.newgame.NewGameScreen
+import hu.bme.aut.android.ludocompose.features.local.savegame.SaveGameScreen
+import hu.bme.aut.android.ludocompose.features.local.scoreboard.ScoreBoardScreen
 import hu.bme.aut.android.ludocompose.ui.util.enterTransition
 import hu.bme.aut.android.ludocompose.ui.util.exitTransition
 

@@ -1,4 +1,4 @@
-package hu.bme.aut.android.ludocompose.features.loadgame
+package hu.bme.aut.android.ludocompose.features.local.loadgame
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

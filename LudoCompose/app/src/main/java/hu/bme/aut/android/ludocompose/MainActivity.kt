@@ -21,7 +21,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import dagger.hilt.android.AndroidEntryPoint
-import hu.bme.aut.android.ludocompose.navigation.NavGraph
+import hu.bme.aut.android.ludocompose.navigation.local.NavGraph as LocalNavGraph
 import hu.bme.aut.android.ludocompose.ui.common.LudoAppBar
 import hu.bme.aut.android.ludocompose.ui.theme.LudoComposeTheme
 
@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
                         },
                         floatingActionButton = {}
                     ) { paddingValues ->
-                        NavGraph(
+                        LocalNavGraph(
                             snackbarHostState = snackbarHostState,
                             onTitleChange = { titleId = it },
                             modifier = Modifier

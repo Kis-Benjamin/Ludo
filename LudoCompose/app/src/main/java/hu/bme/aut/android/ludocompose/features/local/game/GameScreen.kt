@@ -1,4 +1,4 @@
-package hu.bme.aut.android.ludocompose.features.game
+package hu.bme.aut.android.ludocompose.features.local.game
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

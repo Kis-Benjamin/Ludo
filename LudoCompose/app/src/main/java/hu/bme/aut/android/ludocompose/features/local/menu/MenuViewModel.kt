@@ -1,4 +1,4 @@
-package hu.bme.aut.android.ludocompose.features.menu
+package hu.bme.aut.android.ludocompose.features.local.menu
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

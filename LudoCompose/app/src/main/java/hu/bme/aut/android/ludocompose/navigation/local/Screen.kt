@@ -1,4 +1,4 @@
-package hu.bme.aut.android.ludocompose.navigation
+package hu.bme.aut.android.ludocompose.navigation.local
 
 import androidx.annotation.StringRes
 import hu.bme.aut.android.ludocompose.R

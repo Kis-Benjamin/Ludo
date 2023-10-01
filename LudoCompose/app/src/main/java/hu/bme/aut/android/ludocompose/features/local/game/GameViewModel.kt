@@ -1,4 +1,4 @@
-package hu.bme.aut.android.ludocompose.features.game
+package hu.bme.aut.android.ludocompose.features.local.game
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
