@@ -82,7 +82,7 @@ fun GameScreen(
                         .fillMaxWidth()
                         .padding(10.dp)
                 ) {
-                    Button(onClick = { gameViewModel.select() }) {
+                    Button(onClick = { gameViewModel.select() }, enabled = state.isSelectEnabled) {
                         Text(text = stringResource(id = R.string.game_select))
                     }
                     Button(onClick = { gameViewModel.step { onGameEnded() } }) {

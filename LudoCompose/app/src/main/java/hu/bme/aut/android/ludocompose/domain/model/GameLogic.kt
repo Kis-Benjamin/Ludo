@@ -122,6 +122,8 @@ fun Game.updateGameBoard() {
     }
 }
 
+val Game.isSelectEnabled: Boolean get() = validTokenCount() > 1
+
 fun Game.select() {
     nextValidToken()
     updateGameBoard()

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.bme.aut.android.ludocompose.domain.model.isSelectEnabled
 import hu.bme.aut.android.ludocompose.domain.usecases.GameSelectUseCase
 import hu.bme.aut.android.ludocompose.domain.usecases.GameStepUseCase
 import hu.bme.aut.android.ludocompose.domain.usecases.GetGameUseCase
@@ -45,11 +46,14 @@ class GameViewModel @Inject constructor(
             CoroutineScope(coroutineContext).launch(Dispatchers.IO) {
                 try {
                     val game = getGameUseCase().getOrThrow()
-                    _state.update { state ->
-                        state.copy(game = game.toUiModel(), isLoading = false)
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            game = game.toUiModel(),
+                            isSelectEnabled = game.isSelectEnabled,
+                        )
                     }
                 } catch (e: Exception) {
-                    Log.d("GameViewModel", e.message.toString())
                     _state.update {
                         it.copy(isLoading = false, error = e)
                     }
@@ -83,6 +87,7 @@ data class GameState(
     val isLoading: Boolean = false,
     val error: Throwable? = null,
     val game: GameUi? = null,
+    val isSelectEnabled: Boolean = false,
 )
 
 val GameState.isError: Boolean get() = error != null
