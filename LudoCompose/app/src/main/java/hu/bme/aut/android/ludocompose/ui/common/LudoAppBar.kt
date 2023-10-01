@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import hu.bme.aut.android.ludocompose.ui.theme.LudoComposeTheme
-import hu.bme.aut.android.ludocompose.ui.util.transitionSpec
+import hu.bme.aut.android.ludocompose.ui.animation.transitionSpec
 
 @ExperimentalAnimationApi
 @ExperimentalMaterial3Api

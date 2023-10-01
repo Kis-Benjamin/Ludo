@@ -1,4 +1,4 @@
-package hu.bme.aut.android.ludocompose.ui.util
+package hu.bme.aut.android.ludocompose.ui.animation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ContentTransform

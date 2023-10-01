@@ -22,8 +22,8 @@ import hu.bme.aut.android.ludocompose.features.local.menu.MenuScreen
 import hu.bme.aut.android.ludocompose.features.local.newgame.NewGameScreen
 import hu.bme.aut.android.ludocompose.features.local.savegame.SaveGameScreen
 import hu.bme.aut.android.ludocompose.features.local.scoreboard.ScoreBoardScreen
-import hu.bme.aut.android.ludocompose.ui.util.enterTransition
-import hu.bme.aut.android.ludocompose.ui.util.exitTransition
+import hu.bme.aut.android.ludocompose.ui.animation.enterTransition
+import hu.bme.aut.android.ludocompose.ui.animation.exitTransition
 
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
