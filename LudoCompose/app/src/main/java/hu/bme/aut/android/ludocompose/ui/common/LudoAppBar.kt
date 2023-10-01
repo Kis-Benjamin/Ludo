@@ -11,7 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import hu.bme.aut.android.ludocompose.ui.theme.LudoComposeTheme
+import hu.bme.aut.android.ludocompose.ui.util.transitionSpec
 
+@ExperimentalAnimationApi
 @ExperimentalMaterial3Api
 @Composable
 fun LudoAppBar(
@@ -20,10 +22,18 @@ fun LudoAppBar(
 ) {
     TopAppBar(
         modifier = modifier,
-        title = { Text(
-            text = title,
-            style = MaterialTheme.typography.titleLarge
-        ) },
+        title = {
+            AnimatedContent(
+                targetState = title,
+                transitionSpec = transitionSpec,
+                label = "TitleChangeAnimation"
+            ) {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+        },
         navigationIcon = {},
         actions = {},
         colors = topAppBarColors(
@@ -37,6 +47,7 @@ fun LudoAppBar(
 
 @Preview
 @ExperimentalMaterial3Api
+@ExperimentalAnimationApi
 @Composable
 fun LudoAppBar_Preview() {
     LudoComposeTheme {
