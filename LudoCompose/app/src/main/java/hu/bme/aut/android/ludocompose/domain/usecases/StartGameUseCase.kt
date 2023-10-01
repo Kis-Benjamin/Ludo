@@ -4,7 +4,6 @@ import hu.bme.aut.android.ludocompose.domain.model.Game
 import hu.bme.aut.android.ludocompose.domain.model.Player
 import hu.bme.aut.android.ludocompose.domain.model.Token
 import hu.bme.aut.android.ludocompose.domain.model.rollDice
-import hu.bme.aut.android.ludocompose.domain.model.updateGameBoard
 import hu.bme.aut.android.ludocompose.domain.services.GameService
 import hu.bme.aut.android.ludocompose.ui.model.BoardConstants
 import javax.inject.Inject
@@ -23,7 +22,6 @@ class StartGameUseCase @Inject constructor(
             },
         )
         game.rollDice()
-        game.updateGameBoard()
         gameService.game = game
     }
 }

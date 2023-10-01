@@ -6,7 +6,6 @@ data class Game(
     val players: List<Player> = List(playerCount) { Player() },
     var actPlayerIndex: Int = 0,
     var dice: Int = 0,
-    val board: Board = Board(),
 )
 
 val Game.actPlayer: Player get() = players[actPlayerIndex]

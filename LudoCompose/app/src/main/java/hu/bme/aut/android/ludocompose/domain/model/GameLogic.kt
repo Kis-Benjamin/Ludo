@@ -95,8 +95,7 @@ fun Game.rollDice() {
     dice = (1..46656).shuffled().random() % 6 + 1
 }
 
-fun Game.updateGameBoard() {
-    board.clearState()
+val Game.board: Board get() = Board().also { board ->
     for (playerIndex in players.indices) {
         val player = players[playerIndex]
         var homeCount = 4
@@ -126,7 +125,6 @@ val Game.isSelectEnabled: Boolean get() = validTokenCount() > 1
 
 fun Game.select() {
     nextValidToken()
-    updateGameBoard()
 }
 
 fun Game.step(): Boolean {
@@ -136,14 +134,12 @@ fun Game.step(): Boolean {
     if (canRollAgain()) rollDice()
     else {
         if (nextValidPlayer()) {
-            updateGameBoard()
             return true
         } else {
             rollDice()
             nextValidToken()
         }
     }
-    updateGameBoard()
     return false
 }
 

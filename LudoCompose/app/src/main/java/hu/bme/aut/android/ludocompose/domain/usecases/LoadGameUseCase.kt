@@ -2,7 +2,6 @@ package hu.bme.aut.android.ludocompose.domain.usecases
 
 import hu.bme.aut.android.ludocompose.data.datasource.GameRepository
 import hu.bme.aut.android.ludocompose.domain.converters.toDomainModel
-import hu.bme.aut.android.ludocompose.domain.model.updateGameBoard
 import hu.bme.aut.android.ludocompose.domain.services.GameService
 import javax.inject.Inject
 
@@ -13,7 +12,6 @@ class LoadGameUseCase @Inject constructor(
     suspend operator fun invoke(id: Long) {
         val gameEntity = gameRepository.get(id)
         val game = gameEntity.toDomainModel()
-        game.updateGameBoard()
         gameService.game = game
     }
 }
