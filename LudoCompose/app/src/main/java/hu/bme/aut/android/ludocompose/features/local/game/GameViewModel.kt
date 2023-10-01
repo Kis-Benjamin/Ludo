@@ -36,7 +36,6 @@ class GameViewModel @Inject constructor(
             _state.update {
                 it.copy(isLoading = true)
             }
-            delay(1000)
             load()
         }
     }

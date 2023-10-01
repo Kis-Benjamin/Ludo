@@ -20,6 +20,7 @@ class SaveScoreUseCase @Inject constructor(
         } else {
             scoreRepository.insert(ScoreEntity(name = name, winCount = 1))
         }
+        gameService.game = null
         Result.success(Unit)
     } catch (e: Exception) {
         Result.failure(e)
