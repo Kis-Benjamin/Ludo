@@ -2,7 +2,6 @@ package hu.bme.aut.android.ludocompose.features.local.game
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.android.ludocompose.domain.model.isSelectEnabled
 import hu.bme.aut.android.ludocompose.domain.usecases.GameSelectUseCase
 import hu.bme.aut.android.ludocompose.domain.usecases.GameStepUseCase
 import hu.bme.aut.android.ludocompose.domain.usecases.GetGameUseCase
@@ -38,7 +37,7 @@ class GameViewModel @Inject constructor(
             it.copy(
                 isLoading = false,
                 game = game.toUiModel(),
-                isSelectEnabled = game.isValidStep,
+                isSelectEnabled = game.isValidStep(),
             )
         }
     }
