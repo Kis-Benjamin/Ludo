@@ -38,7 +38,7 @@ class GameViewModel @Inject constructor(
             it.copy(
                 isLoading = false,
                 game = game.toUiModel(),
-                isSelectEnabled = game.isSelectEnabled,
+                isSelectEnabled = game.isValidStep,
             )
         }
     }
