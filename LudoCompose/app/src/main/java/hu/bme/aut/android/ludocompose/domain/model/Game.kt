@@ -1,57 +1,82 @@
 package hu.bme.aut.android.ludocompose.domain.model
 
-import hu.bme.aut.android.ludocompose.domain.util.circular
-
 class Game(
     playerCount: Int,
     val players: List<Player> = List(playerCount) { Player() },
     var actPlayerIndex: Int = 0,
     var dice: Int = 0,
 ) {
-    val playerCount: Int get() = players.size
-    val playersInGame: Int get() = players.count { it.isInGame }
-    val actPlayer: Player get() = players[actPlayerIndex]
-
-    val isOnYard: Boolean get() = actPlayer.isInYard
-
-    val isOnTrack: Boolean get() = actPlayer.isInTrack
-
-    val isInHome: Boolean get() = actPlayer.isInHome
-
-    val isValidStep: Boolean get() = actPlayer.isValidStep(dice)
-
-    val canRollAgain: Boolean get() = isValidStep && dice == 6
+    private val playerCount: Int get() = players.size
+    private val playersInGame: Int get() = players.count { it.isInGame }
+    private val actPlayer: Player get() = players[actPlayerIndex]
 
     val winner: String get() = players.find { it.standing == 1 }!!.name
 
-    fun nextPlayer() {
+    private fun isInYard() =
+        actPlayer.actToken.isInYard
+
+    private fun isInTrack() =
+        actPlayer.actToken.isInTrack
+
+    private fun isInHome() =
+        actPlayer.actToken.isInHome
+
+    private fun canStepInTrack() =
+        isInYard() && dice == 6
+
+    private fun canStepOnHome() =
+        isInTrack() && actPlayer.actToken.trackPos >= 40 + 10 * actPlayerIndex
+
+    private fun canRollAgain() =
+        isInTrack() && dice == 6
+
+    fun isValidStep() =
+        canStepInTrack() || isInTrack()
+
+    private fun isInGame() =
+        actPlayer.isInGame
+
+    private fun nextPlayer() {
         actPlayerIndex = (actPlayerIndex + 1) % playerCount
     }
 
-    fun nextValidPlayer(): Boolean {
+    private fun nextValidPlayer(): Boolean {
         var stepCount = 0
         do nextPlayer()
-        while (!actPlayer.isInGame && ++stepCount < playerCount)
+        while (!isInGame() && ++stepCount < playerCount)
         return stepCount == playerCount
     }
 
-    fun nextValidToken() {
-        actPlayer.nextValidToken(dice)
+    private fun nextToken() {
+        actPlayer.actTokenIndex = (actPlayer.actTokenIndex + 1) % 4
     }
 
-    fun rollDice() {
-        dice = set.random() % 6 + 1
+    private fun nextValidToken(): Boolean {
+        var stepCount = 0
+        do nextToken()
+        while (!isValidStep() && ++stepCount < 4)
+        return stepCount != 4
     }
 
-    fun executeStep() {
-        val finished = actPlayer.executeStep(actPlayerIndex, dice)
-        if (finished) {
-            actPlayer.standing = playerCount - playersInGame
+    private fun executeStep() {
+        val token = actPlayer.actToken
+        if (isInTrack()) {
+            token.trackPos += dice
+        }
+        if (canStepInTrack()) {
+            token.state = Token.State.TRACK
+            token.trackPos = 10 * actPlayerIndex
+        }
+        if (canStepOnHome()) {
+            token.state = Token.State.HOME
+            token.trackPos = 0
+            if (!isInGame())
+                actPlayer.standing = playerCount - playersInGame
         }
     }
 
-    fun executeTokenKill() {
-        if (!isOnTrack) return
+    private fun executeTokenKill() {
+        if (!isInTrack()) return
         for (playerIndex in players.indices) {
             val player = players[playerIndex]
             for (tokenIndex in player.tokens.indices) {
@@ -73,8 +98,9 @@ class Game(
 
     fun step(): Boolean {
         executeStep()
+        if (isInHome()) nextValidToken()
         executeTokenKill()
-        if (canRollAgain) rollDice()
+        if (canRollAgain()) rollDice()
         else {
             if (nextValidPlayer()) {
                 return true
@@ -86,7 +112,41 @@ class Game(
         return false
     }
 
+    fun rollDice() {
+        dice = set.random() % 6 + 1
+    }
+
     companion object {
         private val set = (1..46656).shuffled()
+    }
+
+    val board: Board get() = Board().also { board ->
+        for (playerIndex in players.indices) {
+            val player = players[playerIndex]
+            var homeCount = 4
+            for (tokenIndex in player.tokens.indices) {
+                val token = player.tokens[tokenIndex]
+                when (token.state) {
+                    Token.State.YARD -> {
+                        board.yardFields[playerIndex][tokenIndex].playerIndex = playerIndex
+                    }
+                    Token.State.TRACK -> {
+                        board.trackFields[token.trackPos % 40].playerIndex = playerIndex
+                    }
+                    else -> {
+                        board.homeFields[playerIndex][--homeCount].playerIndex = playerIndex
+                    }
+                }
+            }
+        }
+        if (isValidStep()) {
+            val player = actPlayer
+            val token = actPlayer.actToken
+            if (token.isInYard) {
+                board.yardFields[actPlayerIndex][player.actTokenIndex].isPointer = true
+            } else if (token.isInTrack) {
+                board.trackFields[token.trackPos % 40].isPointer = true
+            }
+        }
     }
 }
