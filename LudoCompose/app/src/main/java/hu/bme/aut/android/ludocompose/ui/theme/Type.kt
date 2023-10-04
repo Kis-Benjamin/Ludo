@@ -1,6 +1,9 @@
 package hu.bme.aut.android.ludocompose.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -32,9 +35,15 @@ val Typography = Typography(
     displayLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
-        fontSize = 34.sp,
+        color = Color.White,
+        fontSize = 42.sp,
         lineHeight = 40.sp,
-        letterSpacing = 0.sp
+        letterSpacing = 0.sp,
+        shadow = Shadow(
+            color = Color.Black,
+            offset = Offset(0f, 0f),
+            blurRadius = 20f
+        )
     ),
     /* Other default text styles to override
     labelSmall = TextStyle(
