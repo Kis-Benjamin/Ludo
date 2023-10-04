@@ -12,29 +12,21 @@ class Game(
 
     val winner: String get() = players.find { it.standing == 1 }!!.name
 
-    private fun isInYard() =
-        actPlayer.actToken.isInYard
+    private val isInYard get() = actPlayer.actToken.isInYard
 
-    private fun isInTrack() =
-        actPlayer.actToken.isInTrack
+    private val isInTrack get() = actPlayer.actToken.isInTrack
 
-    private fun isInHome() =
-        actPlayer.actToken.isInHome
+    private val isInHome get() = actPlayer.actToken.isInHome
 
-    private fun canStepInTrack() =
-        isInYard() && dice == 6
+    private val canStepInTrack get() = isInYard && dice == 6
 
-    private fun canStepOnHome() =
-        isInTrack() && actPlayer.actToken.trackPos >= 40 + 10 * actPlayerIndex
+    private val canStepOnHome get() = isInTrack && actPlayer.actToken.trackPos >= 40 + 10 * actPlayerIndex
 
-    private fun canRollAgain() =
-        isInTrack() && dice == 6
+    private val canRollAgain get() = isInTrack && dice == 6
 
-    fun isValidStep() =
-        canStepInTrack() || isInTrack()
+    val isValidStep get() = canStepInTrack || isInTrack
 
-    private fun isInGame() =
-        actPlayer.isInGame
+    private val isInGame get() = actPlayer.isInGame
 
     private fun nextPlayer() {
         actPlayerIndex = (actPlayerIndex + 1) % playerCount
@@ -43,7 +35,7 @@ class Game(
     private fun nextValidPlayer(): Boolean {
         var stepCount = 0
         do nextPlayer()
-        while (!isInGame() && ++stepCount < playerCount)
+        while (!isInGame && ++stepCount < playerCount)
         return stepCount == playerCount
     }
 
@@ -54,29 +46,29 @@ class Game(
     private fun nextValidToken(): Boolean {
         var stepCount = 0
         do nextToken()
-        while (!isValidStep() && ++stepCount < 4)
+        while (!isValidStep && ++stepCount < 4)
         return stepCount != 4
     }
 
     private fun executeStep() {
         val token = actPlayer.actToken
-        if (isInTrack()) {
+        if (isInTrack) {
             token.trackPos += dice
         }
-        if (canStepInTrack()) {
+        if (canStepInTrack) {
             token.state = Token.State.TRACK
             token.trackPos = 10 * actPlayerIndex
         }
-        if (canStepOnHome()) {
+        if (canStepOnHome) {
             token.state = Token.State.HOME
             token.trackPos = 0
-            if (!isInGame())
+            if (!isInGame)
                 actPlayer.standing = playerCount - playersInGame
         }
     }
 
     private fun executeTokenKill() {
-        if (!isInTrack()) return
+        if (!isInTrack) return
         for (playerIndex in players.indices) {
             val player = players[playerIndex]
             for (tokenIndex in player.tokens.indices) {
@@ -98,9 +90,9 @@ class Game(
 
     fun step(): Boolean {
         executeStep()
-        if (isInHome()) nextValidToken()
+        if (isInHome) nextValidToken()
         executeTokenKill()
-        if (canRollAgain()) rollDice()
+        if (canRollAgain) rollDice()
         else {
             if (nextValidPlayer()) {
                 return true
@@ -139,7 +131,7 @@ class Game(
                 }
             }
         }
-        if (isValidStep()) {
+        if (isValidStep) {
             val player = actPlayer
             val token = actPlayer.actToken
             if (token.isInYard) {
