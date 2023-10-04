@@ -16,7 +16,7 @@ import hu.bme.aut.android.ludocompose.ui.model.toUiText
 
 @Composable
 fun LoadingScreen(
-    state: LoadingState,
+    loadingState: LoadingState,
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
@@ -25,13 +25,13 @@ fun LoadingScreen(
         contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()
     ) {
-        if (state.isLoading) {
+        if (loadingState.isLoading) {
             CircularProgressIndicator(
                 color = MaterialTheme.colorScheme.secondaryContainer
             )
-        } else if (state.isError) {
+        } else if (loadingState.isError) {
             Text(
-                text = state.error?.toUiText()?.asString(context)
+                text = loadingState.error?.toUiText()?.asString(context)
                     ?: stringResource(id = R.string.unknown_error_message)
             )
         } else {

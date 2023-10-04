@@ -1,54 +1,45 @@
 package hu.bme.aut.android.ludocompose.ui.util
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-abstract class LoadingViewModel<T : LoadingState> : ViewModel() {
+class LoadingViewModel(
+    val coroutineScope: CoroutineScope,
+    val loadImpl: suspend () -> Boolean,
+) {
 
-    protected abstract val _state: MutableStateFlow<T>
-    abstract val state: StateFlow<T>
+    private val _state = MutableStateFlow(LoadingState())
+    val state = _state.asStateFlow()
 
-    protected fun init() {
-        viewModelScope.launch {
-            _state.update {
-                // TODO: 2023 .10. 01. Avoid casting
-                it.clone(isLoading = true) as T
-            }
-            load()
-        }
+    init {
+        load()
     }
 
-    protected abstract suspend fun loadImpl()
-
-    protected fun load() {
-        viewModelScope.launch {
-            CoroutineScope(coroutineContext).launch(Dispatchers.IO) {
-                try {
-                    loadImpl()
-                } catch (e: Exception) {
+    fun load() {
+        coroutineScope.launch(Dispatchers.IO) {
+            try {
+                val result = loadImpl()
+                if (result) {
                     _state.update {
-                        // TODO: 2023. 10. 01. Avoid casting
-                        it.clone(isLoading = false, error = e) as T
+                        it.copy(isLoading = false)
                     }
+                }
+            } catch (e: Exception) {
+                _state.update {
+                    it.copy(isLoading = false, error = e)
                 }
             }
         }
     }
 }
 
-interface LoadingState {
-    val isLoading: Boolean
-    val isError: Boolean
-    val error: Throwable?
-    // TODO: 2023. 10. 01. LoadingState should be a data class
-    fun clone(
-        isLoading: Boolean = this.isLoading,
-        error: Throwable? = this.error,
-    ): LoadingState
+data class LoadingState(
+    val isLoading: Boolean = true,
+    val error: Throwable? = null,
+) {
+    val isError: Boolean get() = error != null
 }
