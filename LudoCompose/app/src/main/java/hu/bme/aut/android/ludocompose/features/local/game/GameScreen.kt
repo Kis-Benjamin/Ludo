@@ -53,8 +53,9 @@ fun GameScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = state.game!!.dice!!.value.toString(),
-                    style = typography.displayLarge
+                    text = state.game!!.diceUi.value.toString(),
+                    modifier = Modifier.padding(bottom = 3.dp),
+                    style = typography.displayLarge,
                 )
             }
         }
