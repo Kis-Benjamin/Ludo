@@ -8,9 +8,9 @@ data class FieldUi(
     val color: ColorSequence = ColorSequence.GRAY,
     var tokenColor: ColorSequence? = null,
     var isPointer: Boolean = false,
-)
-
-fun FieldUi.update(field: Field) {
-    tokenColor = field.playerIndex?.let { ColorSequence.values()[it] }
-    isPointer = field.isPointer
+) {
+    fun update(field: Field) {
+        tokenColor = field.playerIndex?.let { ColorSequence.entries[it] }
+        isPointer = field.isPointer
+    }
 }
