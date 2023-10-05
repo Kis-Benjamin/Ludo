@@ -34,15 +34,14 @@ class GameViewModel @Inject constructor(
     private val _state = MutableStateFlow(GameState())
     val state = _state.asStateFlow()
 
-    private suspend fun loadImpl(): Boolean {
+    private suspend fun loadImpl() {
         val game = getGameUseCase().getOrThrow()
         _state.update {
             it.copy(
                 game = game.toUiModel(),
-                isSelectEnabled = game.isValidStep,
+                isSelectEnabled = game.isSelectEnabled,
             )
         }
-        return true
     }
 
     fun select() {

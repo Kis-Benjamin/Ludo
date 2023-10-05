@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 
 class LoadingViewModel(
     val coroutineScope: CoroutineScope,
-    val loadImpl: suspend () -> Boolean,
+    val loadImpl: suspend () -> Unit,
 ) {
 
     private val _state = MutableStateFlow(LoadingState())
@@ -22,11 +22,9 @@ class LoadingViewModel(
     fun load() {
         coroutineScope.launch(Dispatchers.IO) {
             try {
-                val result = loadImpl()
-                if (result) {
-                    _state.update {
-                        it.copy(isLoading = false)
-                    }
+                loadImpl()
+                _state.update {
+                    it.copy(isLoading = false)
                 }
             } catch (e: Exception) {
                 _state.update {
