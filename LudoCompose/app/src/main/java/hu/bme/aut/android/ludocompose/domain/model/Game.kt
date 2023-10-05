@@ -1,5 +1,9 @@
 package hu.bme.aut.android.ludocompose.domain.model
 
+import hu.bme.aut.android.ludocompose.domain.model.Constants.tokenCount
+import hu.bme.aut.android.ludocompose.domain.model.Constants.trackMultiplier
+import hu.bme.aut.android.ludocompose.domain.model.Constants.trackSize
+
 class Game(
     playerCount: Int,
     val players: List<Player> = List(playerCount) { Player() },
@@ -20,11 +24,12 @@ class Game(
 
     private val canStepInTrack get() = isInYard && dice == 6
 
-    private val canStepOnHome get() = isInTrack && actPlayer.actToken.trackPos >= 40 + 10 * actPlayerIndex
+    private val canStepOnHome get() = isInTrack &&
+            actPlayer.actToken.trackPos >= trackSize + trackMultiplier * actPlayerIndex
 
     private val canRollAgain get() = isInTrack && dice == 6
 
-    val isValidStep get() = canStepInTrack || isInTrack
+    private val isValidStep get() = canStepInTrack || isInTrack
 
     private val isInGame get() = actPlayer.isInGame
 
@@ -40,14 +45,14 @@ class Game(
     }
 
     private fun nextToken() {
-        actPlayer.actTokenIndex = (actPlayer.actTokenIndex + 1) % 4
+        actPlayer.actTokenIndex = (actPlayer.actTokenIndex + 1) % tokenCount
     }
 
     private fun nextValidToken(): Boolean {
         var stepCount = 0
         do nextToken()
-        while (!isValidStep && ++stepCount < 4)
-        return stepCount != 4
+        while (!isValidStep && ++stepCount < tokenCount)
+        return stepCount != tokenCount
     }
 
     private fun executeStep() {
@@ -57,7 +62,7 @@ class Game(
         }
         if (canStepInTrack) {
             token.state = Token.State.TRACK
-            token.trackPos = 10 * actPlayerIndex
+            token.trackPos = trackMultiplier * actPlayerIndex
         }
         if (canStepOnHome) {
             token.state = Token.State.HOME
@@ -75,7 +80,7 @@ class Game(
                 if (actPlayerIndex == playerIndex && actPlayer.actTokenIndex == tokenIndex) continue
                 val token = player.tokens[tokenIndex]
                 if (token.state != Token.State.TRACK) continue
-                if (token.trackPos % 40 == actPlayer.actToken.trackPos % 40) {
+                if (token.trackPos % trackSize == actPlayer.actToken.trackPos % trackSize) {
                     token.trackPos = 0
                     token.state = Token.State.YARD
                     return
@@ -112,7 +117,10 @@ class Game(
         private val set = (1..46656).shuffled()
     }
 
-    val board: Board get() = Board().also { board ->
+    val isSelectEnabled: Boolean get() = actPlayer.tokens.count { it.isInYard && dice == 6 || it.isInTrack } > 1
+
+    val board: Board get() = Board.also { board ->
+        board.reset()
         for (playerIndex in players.indices) {
             val player = players[playerIndex]
             var homeCount = 4
@@ -123,7 +131,7 @@ class Game(
                         board.yardFields[playerIndex][tokenIndex].playerIndex = playerIndex
                     }
                     Token.State.TRACK -> {
-                        board.trackFields[token.trackPos % 40].playerIndex = playerIndex
+                        board.trackFields[token.trackPos % trackSize].playerIndex = playerIndex
                     }
                     else -> {
                         board.homeFields[playerIndex][--homeCount].playerIndex = playerIndex
@@ -137,7 +145,7 @@ class Game(
             if (token.isInYard) {
                 board.yardFields[actPlayerIndex][player.actTokenIndex].isPointer = true
             } else if (token.isInTrack) {
-                board.trackFields[token.trackPos % 40].isPointer = true
+                board.trackFields[token.trackPos % trackSize].isPointer = true
             }
         }
     }

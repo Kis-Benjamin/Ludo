@@ -1,22 +1,19 @@
 package hu.bme.aut.android.ludocompose.ui.model
 
 import androidx.compose.ui.geometry.Offset
-import hu.bme.aut.android.ludocompose.domain.model.Board
+import hu.bme.aut.android.ludocompose.domain.model.Constants.playerCount
+import hu.bme.aut.android.ludocompose.domain.model.Constants.tokenCount
+import hu.bme.aut.android.ludocompose.domain.model.Constants.trackSize
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-object BoardConstants {
+data object Constants {
     private const val SQRT2 = 1.4142135623730951
     private const val RAD = PI / 180.0
     private val Int.rad get() = (mod(360) * RAD).toFloat()
     private fun cos(deg: Int) = cos(deg.rad)
     private fun sin(deg: Int) = sin(deg.rad)
-
-    const val playerCount = 4
-    const val tokenCount = 4
-    const val trackMultiplier = 10
-    const val trackSize = trackMultiplier * playerCount
 
     // calculate points in a 1x1 clip square
     const val width = 1f

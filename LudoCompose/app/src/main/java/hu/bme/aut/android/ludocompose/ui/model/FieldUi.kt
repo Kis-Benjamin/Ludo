@@ -10,12 +10,6 @@ data class FieldUi(
     var isPointer: Boolean = false,
 )
 
-val FieldUi.radius: Float get() = BoardConstants.fieldRadius
-val FieldUi.border: Float get() = BoardConstants.fieldBorder
-
-val FieldUi.tokenRadius: Float get() = BoardConstants.tokenRadius
-val FieldUi.pointerRadius: Float get() = BoardConstants.pointerRadius
-
 fun FieldUi.update(field: Field) {
     tokenColor = field.playerIndex?.let { ColorSequence.values()[it] }
     isPointer = field.isPointer
