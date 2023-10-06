@@ -42,7 +42,6 @@ fun GameWithPlayers.toDomainModel(): Game {
     return Game(
         dice = game.dice,
         actPlayerIndex = game.actPlayer,
-        playerCount = players.size,
         players = players
             .sortedBy { it.player.index }
             .map {

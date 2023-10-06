@@ -5,11 +5,14 @@ import hu.bme.aut.android.ludocompose.domain.model.Constants.trackMultiplier
 import hu.bme.aut.android.ludocompose.domain.model.Constants.trackSize
 
 class Game(
-    playerCount: Int,
-    val players: List<Player> = List(playerCount) { Player() },
+    val players: List<Player>,
     var actPlayerIndex: Int = 0,
     var dice: Int = 0,
 ) {
+    constructor(playerNames: List<String>) : this(
+        players = playerNames.map { Player(it) }
+    )
+
     private val playerCount: Int get() = players.size
     private val playersInGame: Int get() = players.count { it.isInGame }
     private val actPlayer: Player get() = players[actPlayerIndex]
