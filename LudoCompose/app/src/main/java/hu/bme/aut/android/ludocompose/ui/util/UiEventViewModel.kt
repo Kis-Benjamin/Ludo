@@ -25,4 +25,10 @@ class UiEventViewModel(
             }
         }
     }
+
+    fun send(event: UiEvent) {
+        coroutineScope.launch {
+            _uiEvent.send(event)
+        }
+    }
 }

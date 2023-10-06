@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 fun UiEventHandler(
     uiEvent: Flow<UiEvent>,
     snackbarHostState: SnackbarHostState,
+    onSuccess: (UiEvent.Success) -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
 
@@ -21,7 +22,9 @@ fun UiEventHandler(
     LaunchedEffect(key1 = true) {
         uiEvent.collect { uiEvent ->
             when (uiEvent) {
-                is UiEvent.Success -> {}
+                is UiEvent.Success -> {
+                    onSuccess(uiEvent)
+                }
 
                 is UiEvent.Failure -> {
                     scope.launch {
