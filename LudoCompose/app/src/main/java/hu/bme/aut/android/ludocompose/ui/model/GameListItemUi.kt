@@ -16,13 +16,6 @@ data class GameListItemUi internal constructor(
     val playerNames: List<String> = emptyList(),
 )
 
-fun GameListItemUi.toDomainModel() = GameListItem(
-    id = id,
-    name = name,
-    date = date.toLocalDate(),
-    playerNames = playerNames,
-)
-
 fun GameListItem.toUiModel() = GameListItemUi(
     id = id,
     name = name,

@@ -16,7 +16,7 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindGameRepository(
-        todoRepositoryImpl: GameRepositoryDatabase
+        gameRepositoryDatabase: GameRepositoryDatabase
     ): GameRepository
 
     @Binds

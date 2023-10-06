@@ -14,6 +14,7 @@ import javax.inject.Inject
 class MenuViewModel @Inject constructor(
     private val gameService: GameService,
 ) : ViewModel() {
+
     private val _state = MutableStateFlow(MenuState())
     val state = _state.asStateFlow()
 

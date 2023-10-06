@@ -8,6 +8,7 @@ fun ScoreEntity.toDomainModel() = ScoreItem(
     name = name,
     winCount = winCount,
 )
+
 fun ScoreItem.toDataModel() = ScoreEntity(
     id = null,
     name = name,

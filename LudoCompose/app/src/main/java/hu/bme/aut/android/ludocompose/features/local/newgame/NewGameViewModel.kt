@@ -17,6 +17,7 @@ import javax.inject.Inject
 class NewGameViewModel @Inject constructor(
     private val gameService: GameService,
 ) : ViewModel() {
+
     private val _state = MutableStateFlow(NewGameState())
     val state = _state.asStateFlow()
 
