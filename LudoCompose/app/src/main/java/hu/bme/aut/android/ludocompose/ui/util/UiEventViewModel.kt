@@ -1,5 +1,7 @@
 package hu.bme.aut.android.ludocompose.ui.util
 
+import hu.bme.aut.android.ludocompose.ui.model.toUiText
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -12,9 +14,17 @@ class UiEventViewModel(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    fun fire(event: String, data: Any? = null) {
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         coroutineScope.launch {
-            val result = events[event]!!.invoke(data)
+            _uiEvent.send(UiEvent.Failure(throwable.toUiText()))
+        }
+    }
+
+    fun fire(event: String, data: Any? = null) {
+        coroutineScope.launch(exceptionHandler) {
+            val result = checkNotNull(events[event]?.invoke(data)) {
+                "Event $event not found"
+            }
             _uiEvent.send(result)
         }
     }
