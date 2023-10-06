@@ -30,6 +30,8 @@ interface GameService {
 
     suspend fun load(id: Long)
 
+    suspend fun unLoad()
+
     suspend fun save(name: String)
 
     suspend fun delete(id: Long)

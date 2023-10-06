@@ -29,7 +29,9 @@ import javax.inject.Inject
 class GameServiceLocal @Inject constructor(
     private val gameRepository: GameRepository,
 ) : GameService {
+
     private var game: Game? = null
+
     override val hasActive: Boolean
         get() = game != null
 
@@ -55,6 +57,10 @@ class GameServiceLocal @Inject constructor(
     override suspend fun load(id: Long) {
         val gameEntity = gameRepository.get(id)
         game = gameEntity.toDomainModel()
+    }
+
+    override suspend fun unLoad() {
+        game = null
     }
 
     override suspend fun save(name: String) {

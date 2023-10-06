@@ -73,6 +73,7 @@ class GameViewModel @Inject constructor(
                 val game = gameService.getActive()
                 val winner = game.winner
                 scoreService.save(winner)
+                gameService.unLoad()
                 onGameEnded()
             }
         }
