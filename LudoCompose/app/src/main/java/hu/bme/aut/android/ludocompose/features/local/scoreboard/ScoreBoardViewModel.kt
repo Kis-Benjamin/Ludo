@@ -42,15 +42,13 @@ class ScoreBoardViewModel @Inject constructor(
 
     val uiEvent get() = uiEventViewModel.uiEvent
 
-    private suspend fun loadData() = try {
-        val games = loadScoresUseCase().getOrThrow().map { it.toUiModel() }
-        _state.update {
-            it.copy(scores = games)
+    private suspend fun loadData() =
+        loadScoresUseCase().map { scores ->
+            val scores = scores.map { score -> score.toUiModel() }
+            _state.update { state ->
+                state.copy(scores = scores)
+            }
         }
-        Result.success(Unit)
-    } catch (e: Exception) {
-        Result.failure(e)
-    }
 
     private suspend fun deleteEvent(data: Any?): UiEvent {
         val id = data as Long

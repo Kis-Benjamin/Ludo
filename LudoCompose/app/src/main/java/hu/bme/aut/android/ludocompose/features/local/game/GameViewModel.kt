@@ -10,7 +10,6 @@ import hu.bme.aut.android.ludocompose.domain.usecases.SaveScoreUseCase
 import hu.bme.aut.android.ludocompose.ui.model.GameUi
 import hu.bme.aut.android.ludocompose.ui.model.toUiModel
 import hu.bme.aut.android.ludocompose.ui.util.LoadingViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -35,18 +34,15 @@ class GameViewModel @Inject constructor(
 
     val loadingState get() = loadingViewModel.state
 
-    private suspend fun loadData() = try {
-        val game = getGameUseCase().getOrThrow()
-        _state.update {
-            it.copy(
-                game = game.toUiModel(),
-                isSelectEnabled = game.isSelectEnabled,
-            )
+    private suspend fun loadData() =
+        getGameUseCase().map { game ->
+            _state.update { state ->
+                state.copy(
+                    game = game.toUiModel(),
+                    isSelectEnabled = game.isSelectEnabled,
+                )
+            }
         }
-        Result.success(Unit)
-    } catch (e: Exception) {
-        Result.failure(e)
-    }
 
     fun select() {
         viewModelScope.launch {

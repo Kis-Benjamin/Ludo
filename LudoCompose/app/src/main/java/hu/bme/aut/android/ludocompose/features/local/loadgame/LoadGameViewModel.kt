@@ -45,21 +45,20 @@ class LoadGameViewModel @Inject constructor(
 
     val uiEvent get() = uiEventViewModel.uiEvent
 
-    private suspend fun loadData() = try {
-        val games = loadGamesUseCase().getOrThrow().map { it.toUiModel() }
-        _state.update { state ->
-            state.copy(games = games)
+    private suspend fun loadData() =
+        loadGamesUseCase().map { games ->
+            val games = games.map { game -> game.toUiModel() }
+            _state.update { state ->
+                state.copy(games = games)
+            }
         }
-        Result.success(Unit)
-    } catch (e: Exception) {
-        Result.failure(e)
-    }
 
     fun select(index: Int) {
         _state.update { state ->
             state.copy(selectedIndex = index)
         }
     }
+
     private suspend fun loadSelectedEvent(data: Any?): UiEvent {
         val selectedId = _state.value.selectedId
         if (selectedId == null) {
