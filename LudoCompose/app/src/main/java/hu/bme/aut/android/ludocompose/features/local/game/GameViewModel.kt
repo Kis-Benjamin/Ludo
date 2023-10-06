@@ -46,7 +46,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun select() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             gameSelectUseCase()
             loadingViewModel.load()
         }
@@ -55,7 +55,7 @@ class GameViewModel @Inject constructor(
     fun step(
         onGameEnded: () -> Unit,
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val isFinished = gameStepUseCase()
             loadingViewModel.load()
             if (isFinished == true) {

@@ -17,9 +17,7 @@ class UiEventViewModel(
     fun fire(event: String, data: Any? = null) {
         coroutineScope.launch {
             try {
-                launch(Dispatchers.IO) {
-                    events[event]!!.invoke(data)
-                }.join()
+                events[event]!!.invoke(data)
             } catch (e: Exception) {
                 _uiEvent.send(UiEvent.Failure(e.toUiText()))
             }

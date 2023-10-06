@@ -57,7 +57,7 @@ class NewGameViewModel @Inject constructor(
                     return@launch
                 }
             }
-            CoroutineScope(coroutineContext).launch(Dispatchers.IO) {
+            launch {
                 val playerCount = _state.value.playerCount
                 val playerNames = _state.value.playerNames
                 startGameUseCase(playerCount, playerNames.take(playerCount))

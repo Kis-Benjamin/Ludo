@@ -25,13 +25,11 @@ class MenuViewModel @Inject constructor(
 
     fun load() {
         viewModelScope.launch {
-            CoroutineScope(coroutineContext).launch(Dispatchers.IO) {
-                val hasActiveGame = checkActiveGameUseCase()
-                _state.update { state ->
-                    state.copy(
-                        hasActiveGame = hasActiveGame,
-                    )
-                }
+            val hasActiveGame = checkActiveGameUseCase()
+            _state.update { state ->
+                state.copy(
+                    hasActiveGame = hasActiveGame,
+                )
             }
         }
     }

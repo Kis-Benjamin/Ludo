@@ -36,18 +36,18 @@ class SaveGameViewModel @Inject constructor(
                 _uiEvent.send(UiEvent.Failure(UiText.StringResource(R.string.save_game_name_empty)))
                 return@launch
             }
-            CoroutineScope(coroutineContext).launch(Dispatchers.IO) {
-                try {
-                    saveGameUseCase(name).getOrThrow()
-                    _uiEvent.send(UiEvent.Success)
-                } catch (e: IllegalArgumentException) {
-                    _uiEvent.send(UiEvent.Failure(
+            try {
+                saveGameUseCase(name).getOrThrow()
+                _uiEvent.send(UiEvent.Success)
+            } catch (e: IllegalArgumentException) {
+                _uiEvent.send(
+                    UiEvent.Failure(
                         UiText.StringResource(R.string.save_game_name_exists, name)
-                    ))
-                    return@launch
-                } catch (e: Exception) {
-                    _uiEvent.send(UiEvent.Failure(e.toUiText()))
-                }
+                    )
+                )
+                return@launch
+            } catch (e: Exception) {
+                _uiEvent.send(UiEvent.Failure(e.toUiText()))
             }
         }
     }

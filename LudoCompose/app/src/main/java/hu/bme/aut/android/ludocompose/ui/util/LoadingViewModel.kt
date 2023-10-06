@@ -27,9 +27,7 @@ class LoadingViewModel(
                         it.copy(isLoading = true)
                     }
                 }
-                launch(Dispatchers.IO) {
-                   loadData()
-                }.join()
+                loadData().getOrThrow()
                 _state.update {
                     it.copy(isLoading = false)
                 }
