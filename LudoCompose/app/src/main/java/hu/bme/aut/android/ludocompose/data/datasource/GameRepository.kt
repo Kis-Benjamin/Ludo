@@ -6,9 +6,11 @@ import hu.bme.aut.android.ludocompose.data.pojos.GameWithPlayers
 interface GameRepository {
     suspend fun getAll(): List<GameEntity>
 
+    suspend fun get(name: String): GameEntity?
+
     suspend fun get(id: Long): GameWithPlayers
 
     suspend fun insert(gameWithPlayers: GameWithPlayers)
 
-    suspend fun delete(gameId: Long)
+    suspend fun delete(id: Long)
 }

@@ -10,6 +10,8 @@ class GameRepositoryDatabase @Inject constructor(
 ) : GameRepository {
     override suspend fun getAll() = gameDao.getAll()
 
+    override suspend fun get(name: String) = gameDao.get(name)
+
     override suspend fun get(id: Long) = gameDao.get(id)
 
     private suspend fun insert(playerWithTokens: PlayerWithTokens) {
@@ -28,5 +30,7 @@ class GameRepositoryDatabase @Inject constructor(
         }
     }
 
-    override suspend fun delete(gameId: Long) = gameDao.delete(gameId)
+    override suspend fun delete(id: Long) {
+        gameDao.delete(id)
+    }
 }

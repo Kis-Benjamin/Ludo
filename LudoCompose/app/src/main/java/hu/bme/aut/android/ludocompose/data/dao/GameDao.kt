@@ -13,6 +13,10 @@ interface GameDao {
     suspend fun getAll(): List<GameEntity>
 
     @Transaction
+    @Query("SELECT * FROM games WHERE name = :name")
+    suspend fun get(name: String): GameEntity?
+
+    @Transaction
     @Query("SELECT * FROM games WHERE id = :id")
     suspend fun get(id: Long): GameWithPlayers
 

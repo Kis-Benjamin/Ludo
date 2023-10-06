@@ -11,9 +11,15 @@ class ScoreRepositoryDatabase @Inject constructor(
 
     override suspend fun get(name: String) = scoreDao.get(name)
 
-    override suspend fun update(item: ScoreEntity) = scoreDao.update(item)
+    override suspend fun update(item: ScoreEntity) {
+        scoreDao.update(item)
+    }
 
-    override suspend fun insert(item: ScoreEntity) = scoreDao.insert(item)
+    override suspend fun insert(item: ScoreEntity) {
+        scoreDao.insert(item)
+    }
 
-    override suspend fun delete(id: Long) = scoreDao.delete(id)
+    override suspend fun delete(id: Long) {
+        scoreDao.delete(id)
+    }
 }
