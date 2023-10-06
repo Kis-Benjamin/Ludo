@@ -80,6 +80,6 @@ fun DrawScope.drawDice(dice: DiceUi, scale: Float) {
 }
 
 fun DrawScope.drawGame(game: GameUi, scale: Float = 1f) {
-    drawBoard(game.boardUi!!, scale)
-    drawDice(game.diceUi!!, scale)
+    drawBoard(game.boardUi, scale)
+    drawDice(game.diceUi, scale)
 }

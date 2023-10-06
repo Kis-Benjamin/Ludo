@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -38,47 +37,47 @@ fun GameScreen(
     val state by gameViewModel.state.collectAsStateWithLifecycle()
 
     LoadingScreen(loadingState) {
-        key(state) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .clip(shape = RectangleShape)
-                    .background(color = Gray)
-                    .drawWithContent {
-                        val average = (size.width + size.height) / 2
-                        drawGame(state.game!!, average)
-                        drawContent()
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = state.game!!.diceUi.value.toString(),
-                    modifier = Modifier.padding(bottom = 3.dp),
-                    style = typography.displayLarge,
-                )
+        Column {
+            key(state) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(0.8f)
+                        .aspectRatio(1f)
+                        .clip(RectangleShape)
+                        .background(Gray)
+                        .drawWithContent {
+                            val average = (size.width + size.height) / 2
+                            drawGame(state.game!!, average)
+                            drawContent()
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = state.game!!.diceUi.value,
+                        modifier = Modifier.padding(bottom = 3.dp),
+                        style = typography.displayLarge,
+                    )
+                }
             }
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(30.dp),
-            verticalArrangement = Arrangement.Bottom,
-        ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().weight(0.2f),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 Button(
                     onClick = { gameViewModel.select() },
-                    modifier = Modifier.weight(1f, true).padding(end = 10.dp),
+                    modifier = Modifier
+                        .weight(1f, true)
+                        .padding(16.dp),
                     enabled = state.isSelectEnabled
                 ) {
                     Text(text = stringResource(id = R.string.game_select))
                 }
                 Button(
                     onClick = { gameViewModel.step { onGameEnded() } },
-                    modifier = Modifier.weight(1f, true).padding(start = 10.dp),
+                    modifier = Modifier
+                        .weight(1f, true)
+                        .padding(16.dp),
                 ) {
                     Text(text = stringResource(id = R.string.game_step))
                 }

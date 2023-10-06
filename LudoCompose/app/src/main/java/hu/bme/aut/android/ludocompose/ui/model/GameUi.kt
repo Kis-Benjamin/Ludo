@@ -11,5 +11,5 @@ data class GameUi(
 
 fun Game.toUiModel() = GameUi(
     boardUi = BoardUi.apply { update(board) },
-    diceUi = DiceUi(dice, ColorSequence.entries[actPlayerIndex]),
+    diceUi = DiceUi(dice.toString(), ColorSequence.entries[actPlayerIndex]),
 )
