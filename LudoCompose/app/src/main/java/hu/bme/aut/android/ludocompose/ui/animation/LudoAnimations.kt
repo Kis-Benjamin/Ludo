@@ -6,13 +6,17 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.navigation.NavBackStackEntry
 
 private const val DURATION = 500
@@ -24,6 +28,12 @@ private val animationSpecFloat = tween<Float>(
 )
 
 private val animationSpecIntOffset = tween<IntOffset>(
+    durationMillis = DURATION,
+    delayMillis = 0,
+    easing = FastOutSlowInEasing
+)
+
+private val animationSpecIntSize = tween<IntSize>(
     durationMillis = DURATION,
     delayMillis = 0,
     easing = FastOutSlowInEasing
@@ -65,3 +75,19 @@ val exitTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> Exit
         animationSpecIntOffset
     )
 }
+
+val visibleEnterTransition: EnterTransition =
+    fadeIn(
+        animationSpecFloat
+    ) + expandVertically(
+        animationSpecIntSize,
+        expandFrom = Alignment.Top
+    )
+
+val visibleExitTransition: ExitTransition =
+    fadeOut(
+        animationSpecFloat
+    ) + shrinkVertically(
+        animationSpecIntSize,
+        shrinkTowards = Alignment.Top
+    )
