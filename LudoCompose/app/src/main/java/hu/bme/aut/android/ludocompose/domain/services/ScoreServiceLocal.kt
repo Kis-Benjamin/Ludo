@@ -17,8 +17,13 @@ class ScoreServiceLocal @Inject constructor(
     override suspend fun save(name: String) {
         val scoreEntity = scoreRepository.get(name)?.let {
             it.copy(winCount = it.winCount + 1)
-        } ?: ScoreItem(name = name, winCount = 1).toDataModel()
-        scoreRepository.insert(scoreEntity)
+        }
+        if (scoreEntity != null) {
+            scoreRepository.update(scoreEntity)
+        } else {
+            val scoreEntity = ScoreItem(name = name, winCount = 1).toDataModel()
+            scoreRepository.insert(scoreEntity)
+        }
     }
 
     override suspend fun delete(id: Long) {
