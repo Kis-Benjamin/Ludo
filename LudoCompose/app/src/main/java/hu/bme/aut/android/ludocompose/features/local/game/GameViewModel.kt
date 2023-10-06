@@ -3,10 +3,8 @@ package hu.bme.aut.android.ludocompose.features.local.game
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.android.ludocompose.domain.usecases.GameSelectUseCase
-import hu.bme.aut.android.ludocompose.domain.usecases.GameStepUseCase
-import hu.bme.aut.android.ludocompose.domain.usecases.GetGameUseCase
-import hu.bme.aut.android.ludocompose.domain.usecases.SaveScoreUseCase
+import hu.bme.aut.android.ludocompose.domain.services.GameService
+import hu.bme.aut.android.ludocompose.domain.services.ScoreService
 import hu.bme.aut.android.ludocompose.ui.model.GameUi
 import hu.bme.aut.android.ludocompose.ui.model.toUiModel
 import hu.bme.aut.android.ludocompose.ui.util.LoadingViewModel
@@ -18,10 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
-    private val gameSelectUseCase: GameSelectUseCase,
-    private val gameStepUseCase: GameStepUseCase,
-    private val getGameUseCase: GetGameUseCase,
-    private val saveScoreUseCase: SaveScoreUseCase,
+    private val gameService: GameService,
+    private val scoreService: ScoreService,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(GameState())
@@ -34,19 +30,19 @@ class GameViewModel @Inject constructor(
 
     val loadingState get() = loadingViewModel.state
 
-    private suspend fun loadData() =
-        getGameUseCase().map { game ->
-            _state.update { state ->
-                state.copy(
-                    game = game.toUiModel(),
-                    isSelectEnabled = game.isSelectEnabled,
-                )
-            }
+    private suspend fun loadData() {
+        val game = gameService.getActive()
+        _state.update { state ->
+            state.copy(
+                game = game.toUiModel(),
+                isSelectEnabled = game.isSelectEnabled,
+            )
         }
+    }
 
     fun select() {
         viewModelScope.launch {
-            gameSelectUseCase()
+            gameService.select()
             loadingViewModel.load()
         }
     }
@@ -55,10 +51,12 @@ class GameViewModel @Inject constructor(
         onGameEnded: () -> Unit,
     ) {
         viewModelScope.launch {
-            val isFinished = gameStepUseCase()
+            val isFinished = gameService.step()
             loadingViewModel.load()
-            if (isFinished == true) {
-                saveScoreUseCase()
+            if (isFinished) {
+                val game = gameService.getActive()
+                val winner = game.winner
+                scoreService.save(winner)
                 onGameEnded()
             }
         }

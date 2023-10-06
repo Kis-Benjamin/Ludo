@@ -4,8 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.ludocompose.R
-import hu.bme.aut.android.ludocompose.domain.usecases.DeleteScoreUseCase
-import hu.bme.aut.android.ludocompose.domain.usecases.LoadScoresUseCase
+import hu.bme.aut.android.ludocompose.domain.services.ScoreService
 import hu.bme.aut.android.ludocompose.ui.model.ScoreItemUi
 import hu.bme.aut.android.ludocompose.ui.model.UiText
 import hu.bme.aut.android.ludocompose.ui.model.toUiModel
@@ -19,8 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ScoreBoardViewModel @Inject constructor(
-    private val loadScoresUseCase: LoadScoresUseCase,
-    private val deleteScoreUseCase: DeleteScoreUseCase,
+    private val scoreService: ScoreService,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ScoreBoardState())
@@ -42,18 +40,16 @@ class ScoreBoardViewModel @Inject constructor(
 
     val uiEvent get() = uiEventViewModel.uiEvent
 
-    private suspend fun loadData() =
-        loadScoresUseCase().map { scores ->
-            val scores = scores.map { score -> score.toUiModel() }
-            _state.update { state ->
-                state.copy(scores = scores)
-            }
+    private suspend fun loadData() {
+        val scores = scoreService.getAll().map { it.toUiModel() }
+        _state.update { state ->
+            state.copy(scores = scores)
         }
-
+    }
     private suspend fun deleteEvent(data: Any?): UiEvent {
         val id = data as Long
-        deleteScoreUseCase(id)
-        loadingViewModel.load(true)
+        scoreService.delete(id)
+        loadingViewModel.load()
         val message = UiText.StringResource(R.string.score_board_delete_success)
         return UiEvent.Settled(message)
     }

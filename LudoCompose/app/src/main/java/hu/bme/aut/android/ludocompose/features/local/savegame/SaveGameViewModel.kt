@@ -4,9 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.ludocompose.R
-import hu.bme.aut.android.ludocompose.domain.usecases.SaveGameUseCase
+import hu.bme.aut.android.ludocompose.domain.services.GameService
 import hu.bme.aut.android.ludocompose.ui.model.UiText
-import hu.bme.aut.android.ludocompose.ui.model.toUiText
 import hu.bme.aut.android.ludocompose.ui.util.UiEvent
 import hu.bme.aut.android.ludocompose.ui.util.UiEventViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SaveGameViewModel @Inject constructor(
-    private val saveGameUseCase: SaveGameUseCase,
+    private val gameService: GameService,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SaveGameState())
@@ -37,18 +36,9 @@ class SaveGameViewModel @Inject constructor(
             val message = UiText.StringResource(R.string.save_game_name_empty)
             return UiEvent.Failure(message)
         }
-        return saveGameUseCase(name).fold(
-            onSuccess = {
-                UiEvent.Success
-            },
-            onFailure = {
-                return@fold UiEvent.Failure(
-                    if (it is IllegalArgumentException)
-                        UiText.StringResource(R.string.save_game_name_exists, name)
-                    else it.toUiText()
-                )
-            }
-        )
+        val message = UiText.StringResource(R.string.save_game_name_exists, name)
+        gameService.save(name)
+        return UiEvent.Success
     }
 
     fun save() {

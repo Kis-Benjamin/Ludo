@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.ludocompose.R
-import hu.bme.aut.android.ludocompose.domain.usecases.StartGameUseCase
+import hu.bme.aut.android.ludocompose.domain.services.GameService
 import hu.bme.aut.android.ludocompose.ui.model.UiText
 import hu.bme.aut.android.ludocompose.ui.util.UiEvent
 import hu.bme.aut.android.ludocompose.ui.util.UiEventViewModel
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewGameViewModel @Inject constructor(
-    private val startGameUseCase: StartGameUseCase,
+    private val gameService: GameService,
 ) : ViewModel() {
     private val _state = MutableStateFlow(NewGameState())
     val state = _state.asStateFlow()
@@ -57,7 +57,7 @@ class NewGameViewModel @Inject constructor(
         }
         val playerCount = _state.value.playerCount
         val playerNames = _state.value.playerNames
-        startGameUseCase(playerCount, playerNames.take(playerCount))
+        gameService.start(playerNames.take(playerCount))
         return UiEvent.Success
     }
 
