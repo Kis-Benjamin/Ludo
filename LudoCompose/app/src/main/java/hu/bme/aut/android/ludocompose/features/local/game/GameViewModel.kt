@@ -25,6 +25,9 @@ class GameViewModel @Inject constructor(
     private val saveScoreUseCase: SaveScoreUseCase,
 ) : ViewModel() {
 
+    private val _state = MutableStateFlow(GameState())
+    val state = _state.asStateFlow()
+
     private val loadingViewModel = LoadingViewModel(
         coroutineScope = viewModelScope,
         loadData = ::loadData,
@@ -32,10 +35,7 @@ class GameViewModel @Inject constructor(
 
     val loadingState get() = loadingViewModel.state
 
-    private val _state = MutableStateFlow(GameState())
-    val state = _state.asStateFlow()
-
-    private suspend fun loadData() {
+    private suspend fun loadData() = try {
         val game = getGameUseCase().getOrThrow()
         _state.update {
             it.copy(
@@ -43,6 +43,9 @@ class GameViewModel @Inject constructor(
                 isSelectEnabled = game.isSelectEnabled,
             )
         }
+        Result.success(Unit)
+    } catch (e: Exception) {
+        Result.failure(e)
     }
 
     fun select() {

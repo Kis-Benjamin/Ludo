@@ -20,6 +20,9 @@ class ScoreBoardViewModel @Inject constructor(
     private val deleteScoreUseCase: DeleteScoreUseCase,
 ) : ViewModel() {
 
+    private val _state = MutableStateFlow(ScoreBoardState())
+    val state = _state.asStateFlow()
+
     private val loadingViewModel = LoadingViewModel(
         coroutineScope = viewModelScope,
         loadData = ::loadData,
@@ -36,14 +39,14 @@ class ScoreBoardViewModel @Inject constructor(
 
     val uiEvent get() = uiEventViewModel.uiEvent
 
-    private val _state = MutableStateFlow(ScoreBoardState())
-    val state = _state.asStateFlow()
-
-    private suspend fun loadData() {
+    private suspend fun loadData() = try {
         val games = loadScoresUseCase().getOrThrow().map { it.toUiModel() }
         _state.update {
             it.copy(scores = games)
         }
+        Result.success(Unit)
+    } catch (e: Exception) {
+        Result.failure(e)
     }
 
     private suspend fun deleteEvent(data: Any?) {

@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 
 class LoadingViewModel(
     private val coroutineScope: CoroutineScope,
-    private val loadData: suspend () -> Unit,
+    private val loadData: suspend () -> Result<Unit>,
 ) {
 
     private val _state = MutableStateFlow(LoadingState())
