@@ -29,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import hu.bme.aut.android.ludocompose.R
 import hu.bme.aut.android.ludocompose.ui.common.NormalTextField
+import hu.bme.aut.android.ludocompose.ui.common.UiEventHandler
 import hu.bme.aut.android.ludocompose.ui.util.UiEvent
 import kotlinx.coroutines.launch
 
@@ -42,35 +43,22 @@ fun SaveGameScreen(
 ) {
     val state by saveGameViewModel.state.collectAsStateWithLifecycle()
 
-    val scope = rememberCoroutineScope()
+    UiEventHandler(saveGameViewModel.uiEvent, snackbarHostState) {
+        onSuccess()
+    }
 
-    val context = LocalContext.current
+    val shape = RoundedCornerShape(30.dp)
+    val color = colorScheme.tertiaryContainer
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    LaunchedEffect(key1 = true) {
-        saveGameViewModel.uiEvent.collect { uiEvent ->
-            when (uiEvent) {
-                is UiEvent.Success -> {
-                    onSuccess()
-                }
-
-                is UiEvent.Failure -> {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(uiEvent.message.asString(context))
-                    }
-                }
-            }
-        }
-    }
-
     Surface(
         modifier = Modifier
-            .clip(RoundedCornerShape(30.dp)),
+            .clip(shape),
     ) {
         Column(
             modifier = Modifier
-                .background(color = colorScheme.tertiaryContainer)
+                .background(color)
                 .padding(30.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

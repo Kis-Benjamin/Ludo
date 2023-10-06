@@ -8,14 +8,10 @@ import hu.bme.aut.android.ludocompose.domain.usecases.SaveGameUseCase
 import hu.bme.aut.android.ludocompose.ui.model.UiText
 import hu.bme.aut.android.ludocompose.ui.model.toUiText
 import hu.bme.aut.android.ludocompose.ui.util.UiEvent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
+import hu.bme.aut.android.ludocompose.ui.util.UiEventViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,30 +22,37 @@ class SaveGameViewModel @Inject constructor(
     private val _state = MutableStateFlow(SaveGameState())
     val state = _state.asStateFlow()
 
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
+    private val uiEventViewModel = UiEventViewModel(
+        coroutineScope = viewModelScope,
+        events = mapOf(
+            "save" to ::saveEvent,
+        )
+    )
+
+    val uiEvent = uiEventViewModel.uiEvent
+
+    private suspend fun saveEvent(data: Any?): UiEvent {
+        val name = _state.value.name
+        if (name.isBlank()) {
+            val message = UiText.StringResource(R.string.save_game_name_empty)
+            return UiEvent.Failure(message)
+        }
+        return saveGameUseCase(name).fold(
+            onSuccess = {
+                UiEvent.Success
+            },
+            onFailure = {
+                return@fold UiEvent.Failure(
+                    if (it is IllegalArgumentException)
+                        UiText.StringResource(R.string.save_game_name_exists, name)
+                    else it.toUiText()
+                )
+            }
+        )
+    }
 
     fun save() {
-        viewModelScope.launch {
-            val name = _state.value.name
-            if (name.isBlank()) {
-                _uiEvent.send(UiEvent.Failure(UiText.StringResource(R.string.save_game_name_empty)))
-                return@launch
-            }
-            try {
-                saveGameUseCase(name).getOrThrow()
-                _uiEvent.send(UiEvent.Success)
-            } catch (e: IllegalArgumentException) {
-                _uiEvent.send(
-                    UiEvent.Failure(
-                        UiText.StringResource(R.string.save_game_name_exists, name)
-                    )
-                )
-                return@launch
-            } catch (e: Exception) {
-                _uiEvent.send(UiEvent.Failure(e.toUiText()))
-            }
-        }
+        uiEventViewModel.fire("save")
     }
 
     fun setName(name: String) {
