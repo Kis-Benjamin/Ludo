@@ -28,13 +28,8 @@ class LoadingViewModel(
         load()
     }
 
-    fun load(requestReset: Boolean = false) {
+    fun load() {
         coroutineScope.launch(exceptionHandler) {
-            if (requestReset) {
-                _state.update { state ->
-                    state.copy(isLoading = true)
-                }
-            }
             loadData() // Possible to throw exception
             _state.update { state ->
                 state.copy(isLoading = false)
