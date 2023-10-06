@@ -3,11 +3,14 @@ package hu.bme.aut.android.ludocompose.features.local.scoreboard
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.bme.aut.android.ludocompose.R
 import hu.bme.aut.android.ludocompose.domain.usecases.DeleteScoreUseCase
 import hu.bme.aut.android.ludocompose.domain.usecases.LoadScoresUseCase
 import hu.bme.aut.android.ludocompose.ui.model.ScoreItemUi
+import hu.bme.aut.android.ludocompose.ui.model.UiText
 import hu.bme.aut.android.ludocompose.ui.model.toUiModel
 import hu.bme.aut.android.ludocompose.ui.util.LoadingViewModel
+import hu.bme.aut.android.ludocompose.ui.util.UiEvent
 import hu.bme.aut.android.ludocompose.ui.util.UiEventViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -49,10 +52,12 @@ class ScoreBoardViewModel @Inject constructor(
         Result.failure(e)
     }
 
-    private suspend fun deleteEvent(data: Any?) {
+    private suspend fun deleteEvent(data: Any?): UiEvent {
         val id = data as Long
         deleteScoreUseCase(id)
         loadingViewModel.load(true)
+        val message = UiText.StringResource(R.string.score_board_delete_success)
+        return UiEvent.Settled(message)
     }
 
     fun delete(id: Long) {

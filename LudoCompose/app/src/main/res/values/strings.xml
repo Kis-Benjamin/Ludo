@@ -29,10 +29,12 @@
     <string name="load_game_list_item_date">A mentés ideje: %1$s</string>
     <string name="load_game_list_empty">Még nem mentettél el egy játékot sem</string>
     <string name="load_game_empty_selection">Még nem választottál ki játékot</string>
+    <string name="load_game_delete_success">Játékállás mentés törölve</string>
     <string name="game_select">Kiválaszt</string>
     <string name="game_step">Lép</string>
     <string name="score_board_name">Játékos neve</string>
     <string name="score_board_win_count">Győzelmek száma</string>
     <string name="score_board_empty">A dicsőség lista üres.</string>
+    <string name="score_board_delete_success">Bejegyzés törölve</string>
     <string name="unknown_error_message">Valami hiba történt</string>
 </resources>

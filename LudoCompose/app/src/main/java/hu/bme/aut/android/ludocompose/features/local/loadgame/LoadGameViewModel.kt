@@ -60,26 +60,26 @@ class LoadGameViewModel @Inject constructor(
             state.copy(selectedIndex = index)
         }
     }
-    private suspend fun loadSelectedEvent(data: Any?) {
+    private suspend fun loadSelectedEvent(data: Any?): UiEvent {
         val selectedId = _state.value.selectedId
         if (selectedId == null) {
-            val uiText = UiText.StringResource(R.string.load_game_empty_selection)
-            val uiEvent = UiEvent.Failure(uiText)
-            uiEventViewModel.send(uiEvent)
-            return
+            val message = UiText.StringResource(R.string.load_game_empty_selection)
+            return UiEvent.Failure(message)
         }
         loadGameUseCase(selectedId)
-        uiEventViewModel.send(UiEvent.Success)
+        return UiEvent.Success
     }
 
     fun loadSelected() {
         uiEventViewModel.fire("loadSelected")
     }
 
-    private suspend fun deleteEvent(data: Any?) {
+    private suspend fun deleteEvent(data: Any?): UiEvent {
         val id = data as Long
         deleteGameUseCase(id)
         loadingViewModel.load(true)
+        val message = UiText.StringResource(R.string.load_game_delete_success)
+        return UiEvent.Settled(message)
     }
 
     fun delete(id: Long) {

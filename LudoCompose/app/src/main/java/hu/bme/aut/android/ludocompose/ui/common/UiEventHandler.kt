@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import hu.bme.aut.android.ludocompose.ui.model.UiText
 import hu.bme.aut.android.ludocompose.ui.util.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -21,15 +22,20 @@ fun UiEventHandler(
 
     LaunchedEffect(key1 = true) {
         uiEvent.collect { uiEvent ->
+            fun send(message: UiText) {
+                scope.launch {
+                    snackbarHostState.showSnackbar(message.asString(context))
+                }
+            }
             when (uiEvent) {
                 is UiEvent.Success -> {
                     onSuccess(uiEvent)
                 }
-
+                is UiEvent.Settled -> {
+                    send(uiEvent.message)
+                }
                 is UiEvent.Failure -> {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(uiEvent.message.asString(context))
-                    }
+                    send(uiEvent.message)
                 }
             }
         }
