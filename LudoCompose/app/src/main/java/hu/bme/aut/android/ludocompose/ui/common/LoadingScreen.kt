@@ -1,9 +1,10 @@
 package hu.bme.aut.android.ludocompose.ui.common
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,17 +18,18 @@ import hu.bme.aut.android.ludocompose.ui.model.toUiText
 @Composable
 fun LoadingScreen(
     loadingState: LoadingState,
-    content: @Composable () -> Unit
+    modifier: Modifier = Modifier,
+    content: @Composable BoxScope.() -> Unit
 ) {
     val context = LocalContext.current
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         if (loadingState.isLoading) {
             CircularProgressIndicator(
-                color = MaterialTheme.colorScheme.secondaryContainer
+                color = colorScheme.secondary
             )
         } else if (loadingState.isError) {
             Text(

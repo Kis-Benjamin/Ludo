@@ -10,6 +10,7 @@ import hu.bme.aut.android.ludocompose.domain.usecases.SaveScoreUseCase
 import hu.bme.aut.android.ludocompose.ui.model.GameUi
 import hu.bme.aut.android.ludocompose.ui.model.toUiModel
 import hu.bme.aut.android.ludocompose.ui.util.LoadingViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -26,7 +27,7 @@ class GameViewModel @Inject constructor(
 
     private val loadingViewModel = LoadingViewModel(
         coroutineScope = viewModelScope,
-        loadImpl = ::loadImpl,
+        loadData = ::loadData,
     )
 
     val loadingState get() = loadingViewModel.state
@@ -34,7 +35,7 @@ class GameViewModel @Inject constructor(
     private val _state = MutableStateFlow(GameState())
     val state = _state.asStateFlow()
 
-    private suspend fun loadImpl() {
+    private suspend fun loadData() {
         val game = getGameUseCase().getOrThrow()
         _state.update {
             it.copy(
@@ -45,7 +46,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun select() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             gameSelectUseCase()
             loadingViewModel.load()
         }
@@ -54,7 +55,7 @@ class GameViewModel @Inject constructor(
     fun step(
         onGameEnded: () -> Unit,
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val isFinished = gameStepUseCase()
             loadingViewModel.load()
             if (isFinished == true) {

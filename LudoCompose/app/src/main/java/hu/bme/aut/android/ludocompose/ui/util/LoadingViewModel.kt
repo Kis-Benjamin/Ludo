@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoadingViewModel(
-    val coroutineScope: CoroutineScope,
-    val loadImpl: suspend () -> Unit,
+    private val coroutineScope: CoroutineScope,
+    private val loadData: suspend () -> Unit,
 ) {
 
     private val _state = MutableStateFlow(LoadingState())
@@ -19,10 +19,17 @@ class LoadingViewModel(
         load()
     }
 
-    fun load() {
-        coroutineScope.launch(Dispatchers.IO) {
+    fun load(requestReset: Boolean = false) {
+        coroutineScope.launch {
             try {
-                loadImpl()
+                if (requestReset) {
+                    _state.update {
+                        it.copy(isLoading = true)
+                    }
+                }
+                launch(Dispatchers.IO) {
+                   loadData()
+                }.join()
                 _state.update {
                     it.copy(isLoading = false)
                 }
