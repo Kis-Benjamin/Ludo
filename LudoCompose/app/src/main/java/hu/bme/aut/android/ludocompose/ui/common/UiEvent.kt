@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.ui.util
+package hu.bme.aut.android.ludocompose.ui.common
 
 import hu.bme.aut.android.ludocompose.ui.model.UiText
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.ui.util
+package hu.bme.aut.android.ludocompose.ui.common
 
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -22,7 +22,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
 
 class LoadingViewModel(
     private val coroutineScope: CoroutineScope,

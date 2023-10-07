@@ -24,9 +24,9 @@ import hu.bme.aut.android.ludocompose.domain.services.GameService
 import hu.bme.aut.android.ludocompose.ui.model.GameListItemUi
 import hu.bme.aut.android.ludocompose.ui.model.UiText
 import hu.bme.aut.android.ludocompose.ui.model.toUiModel
-import hu.bme.aut.android.ludocompose.ui.util.LoadingViewModel
-import hu.bme.aut.android.ludocompose.ui.util.UiEvent
-import hu.bme.aut.android.ludocompose.ui.util.UiEventViewModel
+import hu.bme.aut.android.ludocompose.ui.common.LoadingViewModel
+import hu.bme.aut.android.ludocompose.ui.common.UiEvent
+import hu.bme.aut.android.ludocompose.ui.common.UiEventViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

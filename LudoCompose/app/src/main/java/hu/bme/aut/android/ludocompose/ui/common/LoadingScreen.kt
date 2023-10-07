@@ -28,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import hu.bme.aut.android.ludocompose.R
-import hu.bme.aut.android.ludocompose.ui.util.LoadingState
 import hu.bme.aut.android.ludocompose.ui.model.toUiText
 
 @Composable

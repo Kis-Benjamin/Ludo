@@ -23,7 +23,7 @@ import hu.bme.aut.android.ludocompose.domain.services.GameService
 import hu.bme.aut.android.ludocompose.domain.services.ScoreService
 import hu.bme.aut.android.ludocompose.ui.model.GameUi
 import hu.bme.aut.android.ludocompose.ui.model.toUiModel
-import hu.bme.aut.android.ludocompose.ui.util.LoadingViewModel
+import hu.bme.aut.android.ludocompose.ui.common.LoadingViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

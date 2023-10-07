@@ -22,7 +22,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import hu.bme.aut.android.ludocompose.ui.model.UiText
-import hu.bme.aut.android.ludocompose.ui.util.UiEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
