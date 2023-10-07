@@ -30,7 +30,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,9 +39,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import hu.bme.aut.android.ludocompose.navigation.common.Screen
-import hu.bme.aut.android.ludocompose.navigation.menu.MenuScreen
-import hu.bme.aut.android.ludocompose.navigation.menu.NavGraph
-import hu.bme.aut.android.ludocompose.navigation.local.NavGraph as LocalNavGraph
+import hu.bme.aut.android.ludocompose.navigation.main.MenuScreen
+import hu.bme.aut.android.ludocompose.navigation.main.NavGraph
 import hu.bme.aut.android.ludocompose.ui.common.LudoAppBar
 import hu.bme.aut.android.ludocompose.ui.theme.LudoComposeTheme
 

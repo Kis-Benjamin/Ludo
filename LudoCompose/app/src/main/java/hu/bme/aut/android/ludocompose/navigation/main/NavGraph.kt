@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.navigation.menu
+package hu.bme.aut.android.ludocompose.navigation.main
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,10 +23,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import hu.bme.aut.android.ludocompose.features.menu.MenuScreen
-import hu.bme.aut.android.ludocompose.features.menu.AboutScreen
+import hu.bme.aut.android.ludocompose.features.main.MenuScreen
+import hu.bme.aut.android.ludocompose.features.main.AboutScreen
 import hu.bme.aut.android.ludocompose.navigation.local.NavGraph as LocalNavGraph
 import hu.bme.aut.android.ludocompose.navigation.local.MenuScreen as Local_MenuScreen
+import hu.bme.aut.android.ludocompose.navigation.online.NavGraph as OnlineNavGraph
+import hu.bme.aut.android.ludocompose.navigation.online.OnlineMenuScreen as Online_MenuScreen
 import hu.bme.aut.android.ludocompose.navigation.common.LudoNavHost
 import hu.bme.aut.android.ludocompose.navigation.common.Screen
 
@@ -65,6 +67,15 @@ fun NavGraph(
             route = LocalMenuScreen,
         ) {
             LocalNavGraph(
+                snackbarHostState = snackbarHostState,
+                navController = navController,
+            )
+        }
+        navigation(
+            startDestination = Online_MenuScreen,
+            route = OnlineMenuScreen,
+        ) {
+            OnlineNavGraph(
                 snackbarHostState = snackbarHostState,
                 navController = navController,
             )
