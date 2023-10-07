@@ -28,6 +28,8 @@ import hu.bme.aut.android.ludocompose.features.local.newgame.NewGameScreen
 import hu.bme.aut.android.ludocompose.features.local.savegame.SaveGameScreen
 import hu.bme.aut.android.ludocompose.features.local.scoreboard.ScoreBoardScreen
 import hu.bme.aut.android.ludocompose.navigation.common.LudoNavGraphBuilder
+import hu.bme.aut.android.ludocompose.navigation.common.Screen
+
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @ExperimentalMaterial3Api
@@ -36,9 +38,7 @@ fun LudoNavGraphBuilder.NavGraph(
     navController: NavController,
 ) {
     fun navigate(destination: Screen) {
-        navController.navigate(destination.route) {
-            popUpTo(MenuScreen.route)
-        }
+        navController.navigate(destination, MenuScreen)
     }
 
     composable(MenuScreen) {

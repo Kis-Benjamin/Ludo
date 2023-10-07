@@ -18,6 +18,7 @@ package hu.bme.aut.android.ludocompose.navigation.common
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
@@ -27,10 +28,10 @@ import hu.bme.aut.android.ludocompose.ui.animation.exitTransition
 
 class LudoNavGraphBuilder(
     private val navGraphBuilder: NavGraphBuilder,
-    private val onTitleChange: (Int) -> Unit,
+    private val onNavigate: (Screen) -> Unit,
 ) {
     fun composable(
-        screen: IScreen,
+        screen: Screen,
         content: @Composable (NavBackStackEntry) -> Unit
     ) {
         navGraphBuilder.composable(
@@ -38,13 +39,13 @@ class LudoNavGraphBuilder(
             enterTransition = enterTransition,
             exitTransition = exitTransition,
         ) {
-            onTitleChange(screen.title)
+            onNavigate(screen)
             content(it)
         }
     }
 
     fun dialog(
-        screen: IScreen,
+        screen: Screen,
         content: @Composable (NavBackStackEntry) -> Unit
     ) {
         navGraphBuilder.dialog(screen.route) {
@@ -52,15 +53,21 @@ class LudoNavGraphBuilder(
         }
     }
     fun navigation(
-        startDestination: IScreen,
-        route: IScreen,
+        startDestination: Screen,
+        route: Screen,
         content: LudoNavGraphBuilder.() -> Unit
     ) {
         navGraphBuilder.navigation(
             startDestination = startDestination.route,
             route = route.route,
         ) {
-            LudoNavGraphBuilder(this, onTitleChange).apply(content)
+            LudoNavGraphBuilder(this, onNavigate).apply(content)
+        }
+    }
+
+    fun NavController.navigate(destination: Screen, popUpTo: Screen) {
+        navigate(destination.route) {
+            popUpTo(popUpTo.route)
         }
     }
 }

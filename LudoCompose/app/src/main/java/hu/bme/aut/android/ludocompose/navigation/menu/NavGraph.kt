@@ -23,12 +23,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import hu.bme.aut.android.ludocompose.features.menu.MenuScreen
 import hu.bme.aut.android.ludocompose.features.menu.AboutScreen
 import hu.bme.aut.android.ludocompose.navigation.local.NavGraph as LocalNavGraph
 import hu.bme.aut.android.ludocompose.navigation.local.MenuScreen as Local_MenuScreen
 import hu.bme.aut.android.ludocompose.navigation.common.LudoNavHost
+import hu.bme.aut.android.ludocompose.navigation.common.Screen
 
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
@@ -37,19 +37,17 @@ import hu.bme.aut.android.ludocompose.navigation.common.LudoNavHost
 fun NavGraph(
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
-    onTitleChange: (Int) -> Unit,
-    navController: NavHostController = rememberNavController(),
+    onNavigate: (Screen) -> Unit,
+    navController: NavHostController,
 ) {
     LudoNavHost(
         navController = navController,
-        screen = MenuScreen,
-        onTitleChange = onTitleChange,
+        startScreen = MenuScreen,
+        onNavigate = onNavigate,
         modifier = modifier,
     ) {
         fun navigate(destination: Screen) {
-            navController.navigate(destination.route) {
-                popUpTo(MenuScreen.route)
-            }
+            navController.navigate(destination, MenuScreen)
         }
 
         composable(MenuScreen) {

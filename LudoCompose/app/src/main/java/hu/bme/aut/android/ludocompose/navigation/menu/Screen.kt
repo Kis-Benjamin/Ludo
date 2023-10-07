@@ -18,14 +18,18 @@ package hu.bme.aut.android.ludocompose.navigation.menu
 
 import androidx.annotation.StringRes
 import hu.bme.aut.android.ludocompose.R
-import hu.bme.aut.android.ludocompose.navigation.common.IScreen
+import hu.bme.aut.android.ludocompose.navigation.common.Screen
 
-sealed class Screen(override val route: String, @StringRes override val title: Int): IScreen
+sealed class MainScreen(
+    override val route: String,
+    @StringRes override val title: Int
+) : Screen
+data object MenuScreen : MainScreen("menu", R.string.menu_main) {
+    override val enableNavigationBack: Boolean get() = false
+}
 
-data object MenuScreen : Screen("menu", R.string.menu_main)
+data object LocalMenuScreen : MainScreen("local_menu", R.string.menu_local)
 
-data object LocalMenuScreen : Screen("local_menu", R.string.menu_local)
+data object OnlineMenuScreen : MainScreen("online_menu", R.string.menu_online)
 
-data object OnlineMenuScreen : Screen("online_menu", R.string.menu_online)
-
-data object AboutScreen : Screen("about", R.string.menu_about)
+data object AboutScreen : MainScreen("about", R.string.menu_about)

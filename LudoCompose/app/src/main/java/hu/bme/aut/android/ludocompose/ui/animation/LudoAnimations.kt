@@ -20,13 +20,16 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.EaseInOutSine
+import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.ui.Alignment
@@ -37,22 +40,24 @@ import androidx.navigation.NavBackStackEntry
 
 private const val DURATION = 500
 
+private val easing: Easing = EaseInOutSine
+
 private val animationSpecFloat = tween<Float>(
     durationMillis = DURATION,
     delayMillis = 0,
-    easing = FastOutSlowInEasing
+    easing = easing
 )
 
 private val animationSpecIntOffset = tween<IntOffset>(
     durationMillis = DURATION,
     delayMillis = 0,
-    easing = FastOutSlowInEasing
+    easing = easing
 )
 
 private val animationSpecIntSize = tween<IntSize>(
     durationMillis = DURATION,
     delayMillis = 0,
-    easing = FastOutSlowInEasing
+    easing = easing
 )
 
 private val transformOrigin = TransformOrigin(0.0f, 0.5f)
@@ -64,12 +69,18 @@ val transitionSpec: AnimatedContentTransitionScope<String>.() -> ContentTransfor
         animationSpecFloat,
         initialScale = 0.0f,
         transformOrigin
+    ) + slideIntoContainer(
+        AnimatedContentTransitionScope.SlideDirection.End,
+        animationSpecIntOffset
     ) togetherWith fadeOut(
         animationSpecFloat
     ) + scaleOut(
         animationSpecFloat,
         targetScale = 0.0f,
         transformOrigin
+    ) + slideOutOfContainer(
+        AnimatedContentTransitionScope.SlideDirection.Start,
+        animationSpecIntOffset
     )
 }
 
@@ -106,4 +117,20 @@ val visibleExitTransition: ExitTransition =
     ) + shrinkVertically(
         animationSpecIntSize,
         shrinkTowards = Alignment.Top
+    )
+
+val visibleHorizontalEnterTransition: EnterTransition =
+    fadeIn(
+        animationSpecFloat
+    ) + expandHorizontally(
+        animationSpecIntSize,
+        expandFrom = Alignment.Start
+    )
+
+val visibleHorizontalExitTransition: ExitTransition =
+    fadeOut(
+        animationSpecFloat
+    ) + shrinkHorizontally(
+        animationSpecIntSize,
+        shrinkTowards = Alignment.Start
     )

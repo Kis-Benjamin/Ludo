@@ -30,8 +30,8 @@ import androidx.navigation.compose.NavHost
 @Composable
 fun LudoNavHost(
     navController: NavHostController,
-    screen: IScreen,
-    onTitleChange: (Int) -> Unit,
+    startScreen: Screen,
+    onNavigate: (Screen) -> Unit,
     modifier: Modifier = Modifier,
     contentAlignment: Alignment = Alignment.Center,
     enterTransition: (AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition) =
@@ -42,12 +42,12 @@ fun LudoNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = screen.route,
+        startDestination = startScreen.route,
         modifier = modifier,
         contentAlignment = contentAlignment,
         enterTransition = enterTransition,
         exitTransition = exitTransition,
     ) {
-        LudoNavGraphBuilder(this, onTitleChange).apply(builder)
+        LudoNavGraphBuilder(this, onNavigate).apply(builder)
     }
 }

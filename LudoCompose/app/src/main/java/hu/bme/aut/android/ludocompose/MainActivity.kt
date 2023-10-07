@@ -31,12 +31,16 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import hu.bme.aut.android.ludocompose.navigation.common.Screen
+import hu.bme.aut.android.ludocompose.navigation.menu.MenuScreen
 import hu.bme.aut.android.ludocompose.navigation.menu.NavGraph
 import hu.bme.aut.android.ludocompose.navigation.local.NavGraph as LocalNavGraph
 import hu.bme.aut.android.ludocompose.ui.common.LudoAppBar
@@ -58,23 +62,30 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val snackbarHostState = remember { SnackbarHostState() }
 
-                    var titleId by remember { mutableIntStateOf(R.string.app_name) }
+                    var screen: Screen by remember { mutableStateOf(MenuScreen) }
+
+                    val navController = rememberNavController()
 
                     Scaffold(
                         snackbarHost = { SnackbarHost(snackbarHostState) },
                         topBar = {
                             LudoAppBar(
-                                title = stringResource(titleId),
+                                title = stringResource(screen.title),
+                                enableNavigationBack = screen.enableNavigationBack,
+                                onNavigationClick = {
+                                    navController.popBackStack()
+                                },
                             )
                         },
                         floatingActionButton = {}
                     ) { paddingValues ->
                         NavGraph(
                             snackbarHostState = snackbarHostState,
-                            onTitleChange = { titleId = it },
+                            onNavigate = { screen = it },
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(paddingValues)
+                                .padding(paddingValues),
+                            navController = navController,
                         )
                     }
                 }
