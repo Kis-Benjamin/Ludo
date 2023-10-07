@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Ludo Compose</string>
+    <string name="menu_main">Ki nevet a végén!</string>
+    <string name="menu_local">Lokális játék</string>
+    <string name="menu_online">Online játék</string>
+    <string name="menu_about">Rólunk</string>
     <string name="menu_new_game">Új játék indítása</string>
     <string name="menu_save_game">Játékállás mentése</string>
     <string name="menu_load_game">Játékállás betöltése</string>
