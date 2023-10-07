@@ -23,6 +23,8 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextMotion
 import androidx.compose.ui.unit.sp
 
 // Set of Material typography styles to start with
@@ -37,16 +39,18 @@ val Typography = Typography(
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Bold,
-        fontSize = 28.sp,
-        lineHeight = 24.sp,
+        fontSize = 27.sp,
+        lineHeight = 22.sp,
         letterSpacing = 0.5.sp
     ),
     labelLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
-        fontSize = 20.sp,
+        fontSize = 22.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.5.sp,
+        textAlign = TextAlign.Center,
+        textMotion = TextMotion.Animated
     ),
     displayLarge = TextStyle(
         fontFamily = FontFamily.Default,

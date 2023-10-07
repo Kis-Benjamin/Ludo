@@ -48,18 +48,19 @@ fun MenuScreen(
     val state by menuViewModel.state.collectAsStateWithLifecycle()
 
     val style = typography.labelLarge
+    val modifier = Modifier.fillMaxWidth().padding(20.dp)
 
     menuViewModel.load()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(50.dp),
+            .padding(20.dp),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier,
             onClick = onNavigateToNewGame,
         ) {
             Text(
@@ -68,7 +69,7 @@ fun MenuScreen(
             )
         }
         Button(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier,
             onClick = onNavigateToLoadGame,
         ) {
             Text(
@@ -77,7 +78,7 @@ fun MenuScreen(
             )
         }
         Button(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier,
             onClick = onNavigateToSaveGame,
             enabled = state.hasActiveGame,
         ) {
@@ -87,7 +88,7 @@ fun MenuScreen(
             )
         }
         Button(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier,
             onClick = onNavigateToGame,
             enabled = state.hasActiveGame,
         ) {
@@ -97,7 +98,7 @@ fun MenuScreen(
             )
         }
         Button(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier,
             onClick = onNavigateToScoreboard
         ) {
             Text(

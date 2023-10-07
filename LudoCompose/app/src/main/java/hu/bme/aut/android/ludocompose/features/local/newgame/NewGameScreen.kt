@@ -39,6 +39,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -73,11 +74,20 @@ fun NewGameScreen(
             .fillMaxSize()
             .padding(50.dp),
     ) {
-        Text(text = stringResource(id = R.string.new_game_enter_player_count))
+        Text(
+            text = stringResource(id = R.string.new_game_enter_player_count),
+            textAlign = TextAlign.Justify
+        )
+        Spacer(modifier = Modifier.height(10.dp))
         PlayerCountDropDown(
             onPlayerCountSelected = { newGameViewModel.changePlayerCount(it) }
         )
-        Text(text = stringResource(id = R.string.new_game_enter_player_names))
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = stringResource(id = R.string.new_game_enter_player_names),
+            textAlign = TextAlign.Justify
+        )
+        Spacer(modifier = Modifier.height(10.dp))
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -106,7 +116,7 @@ fun NewGameScreen(
                         }
                     )
                 }
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(10.dp))
             }
         }
         Button(

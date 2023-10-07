@@ -45,7 +45,7 @@ fun MenuScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(30.dp),
+            .padding(20.dp),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
