@@ -16,23 +16,17 @@
 
 package hu.bme.aut.android.ludocompose.navigation.local
 
-import androidx.annotation.StringRes
 import hu.bme.aut.android.ludocompose.R
 import hu.bme.aut.android.ludocompose.navigation.common.Screen
 
-sealed class LocalScreen(
-    override val route: String,
-    @StringRes override val title: Int
-) : Screen
+data object MenuScreen : Screen("local_menu", R.string.menu_local)
 
-data object MenuScreen : LocalScreen("menu", R.string.menu_local)
+data object NewGameScreen : Screen("new_game", R.string.menu_new_game)
 
-data object NewGameScreen : LocalScreen("new_game", R.string.menu_new_game)
+data object LoadGameScreen : Screen("load_game", R.string.menu_load_game)
 
-data object LoadGameScreen : LocalScreen("load_game", R.string.menu_load_game)
+data object SaveGameScreen : Screen("save_game", R.string.menu_save_game)
 
-data object SaveGameScreen : LocalScreen("save_game", R.string.menu_save_game)
+data object LocalGameScreen : Screen("local_game", R.string.menu_game)
 
-data object GameScreen : LocalScreen("game", R.string.menu_game)
-
-data object ScoreBoardScreen : LocalScreen("score_board", R.string.menu_score_board)
+data object ScoreBoardScreen : Screen("local_score_board", R.string.menu_score_board)

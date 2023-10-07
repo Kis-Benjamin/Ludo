@@ -19,9 +19,9 @@ package hu.bme.aut.android.ludocompose.navigation.common
 import androidx.annotation.StringRes
 
 
-interface Screen {
-    val route: String
-    @get:StringRes
-    val title: Int
-    val enableNavigationBack: Boolean get() = true
+open class Screen(
+    val route: String,
+    @StringRes val title: Int,
+) {
+    open val enableNavigationBack: Boolean get() = true
 }

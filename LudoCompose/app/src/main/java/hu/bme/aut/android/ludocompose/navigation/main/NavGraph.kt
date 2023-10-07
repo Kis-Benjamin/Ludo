@@ -28,7 +28,7 @@ import hu.bme.aut.android.ludocompose.features.main.AboutScreen
 import hu.bme.aut.android.ludocompose.navigation.local.NavGraph as LocalNavGraph
 import hu.bme.aut.android.ludocompose.navigation.local.MenuScreen as Local_MenuScreen
 import hu.bme.aut.android.ludocompose.navigation.online.NavGraph as OnlineNavGraph
-import hu.bme.aut.android.ludocompose.navigation.online.OnlineMenuScreen as Online_MenuScreen
+import hu.bme.aut.android.ludocompose.navigation.online.MenuScreen as Online_MenuScreen
 import hu.bme.aut.android.ludocompose.navigation.common.LudoNavHost
 import hu.bme.aut.android.ludocompose.navigation.common.Screen
 
