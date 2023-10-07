@@ -8,6 +8,8 @@
     <string name="menu_about">Rólunk</string>
     <string name="menu_game">Ki nevet a végén!</string>
     <string name="menu_new_game">Új játék indítása</string>
+    <string name="menu_new_room">Új szoba létrehozása</string>
+    <string name="menu_join_room">Csatlakozás szobához</string>
     <string name="menu_save_game">Játékállás mentése</string>
     <string name="menu_load_game">Játékállás betöltése</string>
     <string name="menu_score_board">Dicsőségtábla</string>
