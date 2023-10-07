@@ -61,6 +61,19 @@ val Typography = Typography(
             blurRadius = 20f
         )
     ),
+    displayMedium = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Medium,
+        color = Color.White,
+        fontSize = 42.sp,
+        lineHeight = 40.sp,
+        letterSpacing = 0.sp,
+        shadow = Shadow(
+            color = Color.Black,
+            offset = Offset(0f, 0f),
+            blurRadius = 20f
+        )
+    ),
     /* Other default text styles to override
     labelSmall = TextStyle(
         fontFamily = FontFamily.Default,

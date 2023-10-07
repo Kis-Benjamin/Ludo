@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Ludo Compose</string>
+    <string name="app_version_string">Verzió v1.0</string>
+    <string name="app_author_string">Készítettte:\nKis Benjámin</string>
     <string name="menu_main">Ki nevet a végén!</string>
     <string name="menu_local">Lokális játék</string>
     <string name="menu_online">Online játék</string>
