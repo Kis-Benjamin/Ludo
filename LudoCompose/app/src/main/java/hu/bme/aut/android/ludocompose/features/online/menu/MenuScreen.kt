@@ -45,12 +45,8 @@ fun MenuScreen(
     onNavigateToScoreboard: () -> Unit,
     menuViewModel: MenuViewModel = hiltViewModel()
 ) {
-    val state by menuViewModel.state.collectAsStateWithLifecycle()
-
     val style = typography.labelLarge
     val modifier = Modifier.fillMaxWidth().padding(20.dp)
-
-    menuViewModel.load()
 
     Column(
         modifier = Modifier
@@ -81,7 +77,7 @@ fun MenuScreen(
         Button(
             modifier = modifier,
             onClick = onNavigateToGame,
-            enabled = state.hasActiveGame,
+            enabled = false,
         ) {
             Text(
                 text = stringResource(id = R.string.menu_resume_game),

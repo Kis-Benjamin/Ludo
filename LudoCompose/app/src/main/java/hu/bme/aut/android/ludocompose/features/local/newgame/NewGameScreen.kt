@@ -43,8 +43,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import hu.bme.aut.android.ludocompose.R
-import hu.bme.aut.android.ludocompose.ui.animation.visibleEnterTransition
-import hu.bme.aut.android.ludocompose.ui.animation.visibleExitTransition
+import hu.bme.aut.android.ludocompose.ui.animation.topEnterTransition
+import hu.bme.aut.android.ludocompose.ui.animation.topExitTransition
 import hu.bme.aut.android.ludocompose.ui.common.NormalTextField
 import hu.bme.aut.android.ludocompose.ui.common.UiEventHandler
 
@@ -86,8 +86,8 @@ fun NewGameScreen(
             for (i in 0 until 4) {
                 AnimatedVisibility(
                     visible = i < state.playerCount,
-                    enter = visibleEnterTransition,
-                    exit = visibleExitTransition,
+                    enter = topEnterTransition,
+                    exit = topExitTransition,
                     label = "Player name $i"
                 ) {
                     NormalTextField(

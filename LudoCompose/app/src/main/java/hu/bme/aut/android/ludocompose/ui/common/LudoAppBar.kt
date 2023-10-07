@@ -33,8 +33,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import hu.bme.aut.android.ludocompose.ui.theme.LudoComposeTheme
 import hu.bme.aut.android.ludocompose.ui.animation.transitionSpec
-import hu.bme.aut.android.ludocompose.ui.animation.visibleHorizontalEnterTransition
-import hu.bme.aut.android.ludocompose.ui.animation.visibleHorizontalExitTransition
+import hu.bme.aut.android.ludocompose.ui.animation.startEnterTransition
+import hu.bme.aut.android.ludocompose.ui.animation.startExitTransition
 
 @ExperimentalAnimationApi
 @ExperimentalMaterial3Api
@@ -62,8 +62,8 @@ fun LudoAppBar(
         navigationIcon = {
             AnimatedVisibility(
                 visible = enableNavigationBack,
-                enter = visibleHorizontalEnterTransition,
-                exit = visibleHorizontalExitTransition,
+                enter = startEnterTransition,
+                exit = startExitTransition,
                 label = "NavigationIconVisibilityAnimation"
             ) {
                 IconButton(onClick = onNavigationClick) {
