@@ -38,9 +38,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import hu.bme.aut.android.ludocompose.navigation.common.Screen
-import hu.bme.aut.android.ludocompose.navigation.main.MenuScreen
-import hu.bme.aut.android.ludocompose.navigation.main.NavGraph
+import hu.bme.aut.android.ludocompose.ui.navigation.common.Screen
+import hu.bme.aut.android.ludocompose.ui.navigation.main.MenuScreen
+import hu.bme.aut.android.ludocompose.ui.navigation.main.NavGraph
 import hu.bme.aut.android.ludocompose.ui.common.LudoAppBar
 import hu.bme.aut.android.ludocompose.ui.theme.LudoComposeTheme
 
