@@ -49,7 +49,7 @@ fun Player.toDataModel(playerIndex: Int) = PlayerWithTokens(
 
 fun Token.toDataModel(tokenIndex: Int) = TokenEntity(
     index = tokenIndex,
-    state = state,
+    state = state.ordinal,
     trackPos = trackPos,
 )
 
@@ -83,7 +83,7 @@ fun PlayerWithTokens.toDomainModel(): Player {
 fun TokenEntity.toDomainModel(): Token {
     require(id != null) { "Token id must not be null" }
     return Token(
-        state = state,
+        state = Token.State.entries[state],
         trackPos = trackPos,
     )
 }

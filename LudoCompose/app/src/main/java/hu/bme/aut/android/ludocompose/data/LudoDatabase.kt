@@ -20,7 +20,6 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import hu.bme.aut.android.ludocompose.data.converters.LocalDateConverter
-import hu.bme.aut.android.ludocompose.data.converters.TokenStateConverter
 import hu.bme.aut.android.ludocompose.data.dao.GameDao
 import hu.bme.aut.android.ludocompose.data.dao.ScoreDao
 import hu.bme.aut.android.ludocompose.data.model.GameEntity
@@ -38,7 +37,7 @@ import hu.bme.aut.android.ludocompose.data.model.TokenEntity
     version = 1,
     exportSchema = false
 )
-@TypeConverters(LocalDateConverter::class, TokenStateConverter::class)
+@TypeConverters(LocalDateConverter::class)
 abstract class LudoDatabase : RoomDatabase() {
     abstract val gameDao: GameDao
     abstract val scoreDao: ScoreDao
