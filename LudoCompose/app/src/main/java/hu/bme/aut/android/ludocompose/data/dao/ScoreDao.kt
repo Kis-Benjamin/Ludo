@@ -17,7 +17,7 @@
 package hu.bme.aut.android.ludocompose.data.dao
 
 import androidx.room.*
-import hu.bme.aut.android.ludocompose.data.entities.ScoreEntity
+import hu.bme.aut.android.ludocompose.data.model.ScoreEntity
 
 @Dao
 interface ScoreDao {

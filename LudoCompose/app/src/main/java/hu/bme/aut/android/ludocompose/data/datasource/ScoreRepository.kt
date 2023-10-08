@@ -16,7 +16,7 @@
 
 package hu.bme.aut.android.ludocompose.data.datasource
 
-import hu.bme.aut.android.ludocompose.data.entities.ScoreEntity
+import hu.bme.aut.android.ludocompose.data.model.ScoreEntity
 
 interface ScoreRepository {
     suspend fun getAll(): List<ScoreEntity>

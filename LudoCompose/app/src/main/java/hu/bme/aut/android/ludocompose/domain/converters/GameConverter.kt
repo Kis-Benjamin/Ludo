@@ -16,11 +16,11 @@
 
 package hu.bme.aut.android.ludocompose.domain.converters
 
-import hu.bme.aut.android.ludocompose.data.entities.GameEntity
-import hu.bme.aut.android.ludocompose.data.entities.PlayerEntity
-import hu.bme.aut.android.ludocompose.data.entities.TokenEntity
-import hu.bme.aut.android.ludocompose.data.pojos.GameWithPlayers
-import hu.bme.aut.android.ludocompose.data.pojos.PlayerWithTokens
+import hu.bme.aut.android.ludocompose.data.model.GameEntity
+import hu.bme.aut.android.ludocompose.data.model.PlayerEntity
+import hu.bme.aut.android.ludocompose.data.model.TokenEntity
+import hu.bme.aut.android.ludocompose.data.model.GameWithPlayers
+import hu.bme.aut.android.ludocompose.data.model.PlayerWithTokens
 import hu.bme.aut.android.ludocompose.domain.model.Game
 import hu.bme.aut.android.ludocompose.domain.model.GameListItem
 import hu.bme.aut.android.ludocompose.domain.model.Player

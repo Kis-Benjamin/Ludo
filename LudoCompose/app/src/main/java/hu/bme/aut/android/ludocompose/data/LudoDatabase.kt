@@ -23,10 +23,10 @@ import hu.bme.aut.android.ludocompose.data.converters.LocalDateConverter
 import hu.bme.aut.android.ludocompose.data.converters.TokenStateConverter
 import hu.bme.aut.android.ludocompose.data.dao.GameDao
 import hu.bme.aut.android.ludocompose.data.dao.ScoreDao
-import hu.bme.aut.android.ludocompose.data.entities.GameEntity
-import hu.bme.aut.android.ludocompose.data.entities.PlayerEntity
-import hu.bme.aut.android.ludocompose.data.entities.ScoreEntity
-import hu.bme.aut.android.ludocompose.data.entities.TokenEntity
+import hu.bme.aut.android.ludocompose.data.model.GameEntity
+import hu.bme.aut.android.ludocompose.data.model.PlayerEntity
+import hu.bme.aut.android.ludocompose.data.model.ScoreEntity
+import hu.bme.aut.android.ludocompose.data.model.TokenEntity
 
 @Database(
     entities = [

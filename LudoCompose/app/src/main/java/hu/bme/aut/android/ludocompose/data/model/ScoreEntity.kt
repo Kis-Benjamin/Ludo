@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.domain.converters
+package hu.bme.aut.android.ludocompose.data.model
 
-import hu.bme.aut.android.ludocompose.data.model.ScoreEntity
-import hu.bme.aut.android.ludocompose.domain.model.ScoreItem
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 
-fun ScoreEntity.toDomainModel() = ScoreItem(
-    id = id!!,
-    name = name,
-    winCount = winCount,
+@Entity(tableName = "scores", indices = [Index(value = ["name"], unique = true)])
+data class ScoreEntity(
+    @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) val id: Long? = null,
+    @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "win_count") val winCount: Int = 0
 )
-
-fun ScoreItem.toDataModel() = ScoreEntity(
-    id = null,
-    name = name,
-    winCount = winCount,
-)
-

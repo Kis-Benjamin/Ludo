@@ -16,8 +16,8 @@
 
 package hu.bme.aut.android.ludocompose.data.datasource
 
-import hu.bme.aut.android.ludocompose.data.entities.GameEntity
-import hu.bme.aut.android.ludocompose.data.pojos.GameWithPlayers
+import hu.bme.aut.android.ludocompose.data.model.GameEntity
+import hu.bme.aut.android.ludocompose.data.model.GameWithPlayers
 
 interface GameRepository {
     suspend fun getAll(): List<GameEntity>

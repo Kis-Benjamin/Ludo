@@ -17,10 +17,10 @@
 package hu.bme.aut.android.ludocompose.data.dao
 
 import androidx.room.*
-import hu.bme.aut.android.ludocompose.data.entities.GameEntity
-import hu.bme.aut.android.ludocompose.data.entities.PlayerEntity
-import hu.bme.aut.android.ludocompose.data.entities.TokenEntity
-import hu.bme.aut.android.ludocompose.data.pojos.GameWithPlayers
+import hu.bme.aut.android.ludocompose.data.model.GameEntity
+import hu.bme.aut.android.ludocompose.data.model.PlayerEntity
+import hu.bme.aut.android.ludocompose.data.model.TokenEntity
+import hu.bme.aut.android.ludocompose.data.model.GameWithPlayers
 
 @Dao
 interface GameDao {

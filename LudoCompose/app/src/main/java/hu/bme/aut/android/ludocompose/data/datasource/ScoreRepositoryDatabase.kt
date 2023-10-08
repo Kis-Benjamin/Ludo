@@ -17,7 +17,7 @@
 package hu.bme.aut.android.ludocompose.data.datasource
 
 import hu.bme.aut.android.ludocompose.data.dao.ScoreDao
-import hu.bme.aut.android.ludocompose.data.entities.ScoreEntity
+import hu.bme.aut.android.ludocompose.data.model.ScoreEntity
 import javax.inject.Inject
 
 class ScoreRepositoryDatabase @Inject constructor(

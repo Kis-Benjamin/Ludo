@@ -17,8 +17,8 @@
 package hu.bme.aut.android.ludocompose.data.datasource
 
 import hu.bme.aut.android.ludocompose.data.dao.GameDao
-import hu.bme.aut.android.ludocompose.data.pojos.GameWithPlayers
-import hu.bme.aut.android.ludocompose.data.pojos.PlayerWithTokens
+import hu.bme.aut.android.ludocompose.data.model.GameWithPlayers
+import hu.bme.aut.android.ludocompose.data.model.PlayerWithTokens
 import javax.inject.Inject
 
 class GameRepositoryDatabase @Inject constructor(

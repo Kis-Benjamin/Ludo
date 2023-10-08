@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.data.entities
+package hu.bme.aut.android.ludocompose.data.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.Embedded
+import androidx.room.Relation
 
-@Entity(tableName = "scores", indices = [Index(value = ["name"], unique = true)])
-data class ScoreEntity(
-    @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "win_count") val winCount: Int = 0
+data class PlayerWithTokens(
+    @Embedded val player: PlayerEntity,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "player_id",
+        entity = TokenEntity::class,
+    ) val tokens: List<TokenEntity>
 )

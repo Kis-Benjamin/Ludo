@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.data.entities
+package hu.bme.aut.android.ludocompose.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
