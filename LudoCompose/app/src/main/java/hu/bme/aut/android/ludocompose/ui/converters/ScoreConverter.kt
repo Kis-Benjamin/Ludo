@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.ui.model
+package hu.bme.aut.android.ludocompose.ui.converters
 
-import kotlin.random.Random
+import hu.bme.aut.android.ludocompose.domain.model.ScoreItem
+import hu.bme.aut.android.ludocompose.ui.model.ScoreItemUi
 
-data class GameUi(
-    val boardUi: BoardUi = BoardUi,
-    val diceUi: DiceUi = DiceUi(),
-    val seed: Int = Random.nextInt(),
+
+fun ScoreItem.toUiModel() = ScoreItemUi(
+    id = id,
+    name = name,
+    winCount = winCount.toString(),
 )

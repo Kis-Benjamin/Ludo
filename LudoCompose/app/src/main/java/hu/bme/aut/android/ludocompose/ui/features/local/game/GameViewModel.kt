@@ -21,8 +21,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.ludocompose.domain.services.GameService
 import hu.bme.aut.android.ludocompose.domain.services.ScoreService
+import hu.bme.aut.android.ludocompose.ui.converters.toUiModel
 import hu.bme.aut.android.ludocompose.ui.model.GameUi
-import hu.bme.aut.android.ludocompose.ui.model.toUiModel
 import hu.bme.aut.android.ludocompose.ui.features.common.LoadingViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -21,9 +21,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.ludocompose.R
 import hu.bme.aut.android.ludocompose.domain.services.GameService
+import hu.bme.aut.android.ludocompose.ui.converters.toUiModel
 import hu.bme.aut.android.ludocompose.ui.model.GameListItemUi
 import hu.bme.aut.android.ludocompose.ui.model.UiText
-import hu.bme.aut.android.ludocompose.ui.model.toUiModel
 import hu.bme.aut.android.ludocompose.ui.features.common.LoadingViewModel
 import hu.bme.aut.android.ludocompose.ui.features.common.UiEvent
 import hu.bme.aut.android.ludocompose.ui.features.common.UiEventViewModel
