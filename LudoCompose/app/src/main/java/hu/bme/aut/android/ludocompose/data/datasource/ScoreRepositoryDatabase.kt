@@ -25,17 +25,23 @@ class ScoreRepositoryDatabase @Inject constructor(
 ) : ScoreRepository {
     override suspend fun getAll() = scoreDao.getAll()
 
-    override suspend fun get(name: String) = scoreDao.get(name)
-
-    override suspend fun update(item: ScoreEntity) {
-        scoreDao.update(item)
+    override suspend fun get(name: String): ScoreEntity? {
+        require(name.isNotBlank()) { "Name must not be blank" }
+        return scoreDao.get(name)
     }
 
     override suspend fun insert(item: ScoreEntity) {
+        require(item.id == null) { "Id must be null" }
         scoreDao.insert(item)
     }
 
+    override suspend fun update(item: ScoreEntity) {
+        require(item.id != null) { "Id must not be null" }
+        scoreDao.update(item)
+    }
+
     override suspend fun delete(id: Long) {
+        require(id > 0) { "Id must be positive" }
         scoreDao.delete(id)
     }
 }

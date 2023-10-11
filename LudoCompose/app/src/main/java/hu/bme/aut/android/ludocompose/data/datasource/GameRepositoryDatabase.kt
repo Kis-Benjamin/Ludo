@@ -17,6 +17,7 @@
 package hu.bme.aut.android.ludocompose.data.datasource
 
 import hu.bme.aut.android.ludocompose.data.dao.GameDao
+import hu.bme.aut.android.ludocompose.data.model.GameEntity
 import hu.bme.aut.android.ludocompose.data.model.GameWithPlayers
 import hu.bme.aut.android.ludocompose.data.model.PlayerWithTokens
 import javax.inject.Inject
@@ -26,11 +27,32 @@ class GameRepositoryDatabase @Inject constructor(
 ) : GameRepository {
     override suspend fun getAll() = gameDao.getAll()
 
-    override suspend fun get(name: String) = gameDao.get(name)
+    override suspend fun get(name: String): GameEntity? {
+        require(name.isNotBlank()) { "Name must not be blank" }
+        return gameDao.get(name)
+    }
 
-    override suspend fun get(id: Long) = gameDao.get(id)
+    override suspend fun get(id: Long): GameWithPlayers {
+        require(id > 0) { "Id must be positive" }
+        return gameDao.get(id)
+    }
 
     override suspend fun insert(gameWithPlayers: GameWithPlayers): Long {
+        require(
+            gameWithPlayers.game.id == null &&
+            gameWithPlayers.players.all {
+                it.player.id == null &&
+                it.tokens.all {
+                    it.id == null
+                }
+            }
+        ) { "Id must be null" }
+        require(gameWithPlayers.players.size in 2..4) {
+            "Number of players must be between 2 and 4"
+        }
+        require(gameWithPlayers.players.all { it.player.name.isNotBlank() }) {
+            "Player name must not be blank"
+        }
         val id = gameDao.insert(gameWithPlayers.game)
         gameWithPlayers.players.map {
             it.copy(player = it.player.copy(gameId = id))
@@ -46,10 +68,24 @@ class GameRepositoryDatabase @Inject constructor(
     }
 
     override suspend fun update(gameWithPlayers: GameWithPlayers) {
-        val id = gameDao.insert(gameWithPlayers.game)
-        gameWithPlayers.players.forEach {
-            it.player.gameId = id
-            insert(it)
+        require(
+            gameWithPlayers.game.id != null &&
+            gameWithPlayers.players.all {
+                it.player.id != null &&
+                it.tokens.all {
+                    it.id != null
+                }
+            }
+        ) { "Id must not be null" }
+        require(
+            gameWithPlayers.game.id > 0 &&
+            gameWithPlayers.players.all {
+                it.player.id!! > 0 &&
+                it.tokens.all {
+                    it.id!! > 0
+                }
+            }
+        ) { "Id must be positive" }
         gameDao.update(gameWithPlayers.game)
         gameWithPlayers.players.forEach { playerWithTokens ->
             gameDao.update(playerWithTokens.player)
@@ -60,6 +96,7 @@ class GameRepositoryDatabase @Inject constructor(
     }
 
     override suspend fun delete(id: Long) {
+        require(id > 0) { "Id must be positive" }
         gameDao.delete(id)
     }
 }
