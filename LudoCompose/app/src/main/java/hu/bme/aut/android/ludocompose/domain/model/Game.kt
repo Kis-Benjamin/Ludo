@@ -26,7 +26,10 @@ data class Game(
     var dice: Int = 0,
 ) {
     constructor(playerNames: List<String>) : this(
-        players = playerNames.map { Player(it) }
+        players = playerNames.also {
+            require(it.size in 2..4) { "Number of players must be between 2 and 4" }
+            require(it.all { name -> name.isNotBlank() }) { "Player name must not be blank" }
+        }.map { Player(it) }
     )
 
     private val playerCount: Int get() = players.size

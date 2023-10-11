@@ -22,10 +22,8 @@ import java.time.LocalDateTime
 data class GameListItem(
     val id: Long = 0,
     val name: String = "",
-    val date: LocalDate = LocalDate(
-        LocalDateTime.now().year,
-        LocalDateTime.now().monthValue,
-        LocalDateTime.now().dayOfMonth
-    ),
+    val date: LocalDate = LocalDateTime.now().run {
+        LocalDate(year, monthValue, dayOfMonth)
+    },
     val playerNames: List<String> = emptyList(),
 )
