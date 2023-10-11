@@ -16,7 +16,7 @@
 
 package hu.bme.aut.android.ludocompose.domain.model
 
-class Token(
+data class Token(
     var state: State = State.YARD,
     var trackPos: Int = 0
 ) {

@@ -16,7 +16,7 @@
 
 package hu.bme.aut.android.ludocompose.domain.model
 
-class Player(
+data class Player(
     var name: String = "",
     var standing: Int = 0,
     val tokens: List<Token> = List(4) { Token() },

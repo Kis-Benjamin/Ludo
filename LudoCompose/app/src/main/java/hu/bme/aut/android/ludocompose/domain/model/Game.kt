@@ -20,7 +20,7 @@ import hu.bme.aut.android.ludocompose.domain.model.Constants.tokenCount
 import hu.bme.aut.android.ludocompose.domain.model.Constants.trackMultiplier
 import hu.bme.aut.android.ludocompose.domain.model.Constants.trackSize
 
-class Game(
+data class Game(
     val players: List<Player>,
     var actPlayerIndex: Int = 0,
     var dice: Int = 0,
@@ -32,8 +32,6 @@ class Game(
     private val playerCount: Int get() = players.size
     private val playersInGame: Int get() = players.count { it.isInGame }
     private val actPlayer: Player get() = players[actPlayerIndex]
-
-    val winner: String get() = players.find { it.standing == 1 }!!.name
 
     private val isInYard get() = actPlayer.actToken.isInYard
 
@@ -134,38 +132,5 @@ class Game(
 
     companion object {
         private val set = (1..46656).shuffled()
-    }
-
-    val isSelectEnabled: Boolean get() = actPlayer.tokens.count { it.isInYard && dice == 6 || it.isInTrack } > 1
-
-    val board: Board get() = Board.also { board ->
-        board.reset()
-        for (playerIndex in players.indices) {
-            val player = players[playerIndex]
-            var homeCount = 4
-            for (tokenIndex in player.tokens.indices) {
-                val token = player.tokens[tokenIndex]
-                when (token.state) {
-                    Token.State.YARD -> {
-                        board.yardFields[playerIndex][tokenIndex].playerIndex = playerIndex
-                    }
-                    Token.State.TRACK -> {
-                        board.trackFields[token.trackPos % trackSize].playerIndex = playerIndex
-                    }
-                    else -> {
-                        board.homeFields[playerIndex][--homeCount].playerIndex = playerIndex
-                    }
-                }
-            }
-        }
-        if (isValidStep) {
-            val player = actPlayer
-            val token = actPlayer.actToken
-            if (token.isInYard) {
-                board.yardFields[actPlayerIndex][player.actTokenIndex].isPointer = true
-            } else if (token.isInTrack) {
-                board.trackFields[token.trackPos % trackSize].isPointer = true
-            }
-        }
     }
 }
