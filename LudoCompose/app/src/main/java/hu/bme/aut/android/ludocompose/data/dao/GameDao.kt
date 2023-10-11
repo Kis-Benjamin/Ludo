@@ -25,7 +25,7 @@ import hu.bme.aut.android.ludocompose.data.model.GameWithPlayers
 @Dao
 interface GameDao {
     @Transaction
-    @Query("SELECT * FROM games")
+    @Query("SELECT * FROM games WHERE name != 'ONGOING'")
     suspend fun getAll(): List<GameEntity>
 
     @Transaction
@@ -44,6 +44,15 @@ interface GameDao {
 
     @Insert
     suspend fun insert(token: TokenEntity): Long
+
+    @Update
+    suspend fun update(game: GameEntity)
+
+    @Update
+    suspend fun update(player: PlayerEntity)
+
+    @Update
+    suspend fun update(token: TokenEntity)
 
     @Transaction
     @Query("DELETE FROM games WHERE id = :id")

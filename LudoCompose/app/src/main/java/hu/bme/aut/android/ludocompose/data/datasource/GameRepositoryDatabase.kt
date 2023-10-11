@@ -30,19 +30,32 @@ class GameRepositoryDatabase @Inject constructor(
 
     override suspend fun get(id: Long) = gameDao.get(id)
 
-    private suspend fun insert(playerWithTokens: PlayerWithTokens) {
-        val id = gameDao.insert(playerWithTokens.player)
-        playerWithTokens.tokens.forEach {
-            it.playerId = id
-            gameDao.insert(it)
+    override suspend fun insert(gameWithPlayers: GameWithPlayers): Long {
+        val id = gameDao.insert(gameWithPlayers.game)
+        gameWithPlayers.players.map {
+            it.copy(player = it.player.copy(gameId = id))
+        }.forEach { playerWithTokens ->
+            val id = gameDao.insert(playerWithTokens.player)
+            playerWithTokens.tokens.map {
+                it.copy(playerId = id)
+            }.forEach {
+                gameDao.insert(it)
+            }
         }
+        return id
     }
 
-    override suspend fun insert(gameWithPlayers: GameWithPlayers) {
+    override suspend fun update(gameWithPlayers: GameWithPlayers) {
         val id = gameDao.insert(gameWithPlayers.game)
         gameWithPlayers.players.forEach {
             it.player.gameId = id
             insert(it)
+        gameDao.update(gameWithPlayers.game)
+        gameWithPlayers.players.forEach { playerWithTokens ->
+            gameDao.update(playerWithTokens.player)
+            playerWithTokens.tokens.forEach { token ->
+                gameDao.update(token)
+            }
         }
     }
 

@@ -26,7 +26,9 @@ interface GameRepository {
 
     suspend fun get(id: Long): GameWithPlayers
 
-    suspend fun insert(gameWithPlayers: GameWithPlayers)
+    suspend fun insert(gameWithPlayers: GameWithPlayers): Long
+
+    suspend fun update(gameWithPlayers: GameWithPlayers)
 
     suspend fun delete(id: Long)
 }
