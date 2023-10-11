@@ -37,7 +37,7 @@ import androidx.room.PrimaryKey
 )
 data class TokenEntity(
     @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "player_id") var playerId: Long? = null,
+    @ColumnInfo(name = "player_id") val playerId: Long? = null,
     @ColumnInfo(name = "index") val index: Int,
     @ColumnInfo(name = "state") val state: Int,
     @ColumnInfo(name = "track_pos") val trackPos: Int = 0
