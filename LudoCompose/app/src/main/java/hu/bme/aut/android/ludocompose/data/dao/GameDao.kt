@@ -44,7 +44,7 @@ abstract class GameDao {
     internal abstract suspend fun insert(token: TokenEntity): Long
 
     @Transaction
-    suspend fun insert(gameWithPlayers: GameWithPlayers): Long {
+    open suspend fun insert(gameWithPlayers: GameWithPlayers): Long {
         val id = insert(gameWithPlayers.game)
         gameWithPlayers.players.map {
             it.copy(player = it.player.copy(gameId = id))
@@ -69,7 +69,7 @@ abstract class GameDao {
     internal abstract suspend fun update(token: TokenEntity)
 
     @Transaction
-    suspend fun update(gameWithPlayers: GameWithPlayers) {
+    open suspend fun update(gameWithPlayers: GameWithPlayers) {
         update(gameWithPlayers.game)
         gameWithPlayers.players.forEach { playerWithTokens ->
             update(playerWithTokens.player)

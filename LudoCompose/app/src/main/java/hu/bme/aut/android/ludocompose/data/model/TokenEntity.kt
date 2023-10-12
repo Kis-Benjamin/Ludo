@@ -32,7 +32,9 @@ import androidx.room.PrimaryKey
         entity = PlayerEntity::class,
         parentColumns = ["id"],
         childColumns = ["player_id"],
-        onDelete = ForeignKey.CASCADE
+        onDelete = ForeignKey.CASCADE,
+        onUpdate = ForeignKey.CASCADE,
+        deferred = true
     )]
 )
 data class TokenEntity(
