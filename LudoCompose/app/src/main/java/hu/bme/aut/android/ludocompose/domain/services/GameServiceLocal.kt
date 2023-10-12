@@ -18,77 +18,78 @@ package hu.bme.aut.android.ludocompose.domain.services
 
 import hu.bme.aut.android.ludocompose.data.datasource.GameRepository
 import hu.bme.aut.android.ludocompose.domain.converters.toDataModel
+import hu.bme.aut.android.ludocompose.domain.converters.toDomainListModel
 import hu.bme.aut.android.ludocompose.domain.converters.toDomainModel
+import hu.bme.aut.android.ludocompose.domain.converters.update
 import hu.bme.aut.android.ludocompose.domain.model.Game
 import hu.bme.aut.android.ludocompose.domain.model.GameListItem
-import kotlinx.coroutines.delay
-import kotlinx.datetime.LocalDate
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 class GameServiceLocal @Inject constructor(
     private val gameRepository: GameRepository,
 ) : GameService {
-
-    private var game: Game? = null
-
-    override val hasActive: Boolean
-        get() = game != null
-
-    override suspend fun getActive(): Game {
-        var i = 0
-        while (++i <= 5 && game == null) {
-            delay(1000)
-        }
-        return checkNotNull(game) { "No game loaded" }
+    override suspend fun has(name: String): Boolean {
+        require(name.isNotBlank()) { "Name must not be blank" }
+        val gameEntity = gameRepository.get(name)
+        return gameEntity != null
     }
 
-    override suspend fun start(playerNames: List<String>) {
+    override suspend fun get(id: Long): Game {
+        require(id > 0) { "Id must be positive" }
+        val gameEntity = gameRepository.get(id)
+        return gameEntity.toDomainModel()
+    }
+
+    override suspend fun getAll(): List<GameListItem> {
+        val gameEntities = gameRepository.getAll()
+        return gameEntities.map { it.toDomainListModel() }
+    }
+
+    override suspend fun start(playerNames: List<String>): Long {
+        require(playerNames.size in 2..4) {
+            "Number of players must be between 2 and 4"
+        }
+        require(playerNames.all { it.isNotBlank() }) {
+            "Player name must not be blank"
+        }
         val game = Game(playerNames)
         game.rollDice()
-        this.game = game
+        val gameEntity = game.toDataModel("ONGOING")
+        return gameRepository.insert(gameEntity)
     }
 
-    override suspend fun getList(): List<GameListItem> {
-        val gameEntities = gameRepository.getAll()
-        return gameEntities.map { it.toDomainModel() }
-    }
-
-    override suspend fun load(id: Long) {
-        val gameEntity = gameRepository.get(id)
-        game = gameEntity.toDomainModel()
-    }
-
-    override suspend fun unLoad() {
-        game = null
-    }
-
-    override suspend fun save(name: String) {
-        gameRepository.get(name)?.let {
-            throw IllegalArgumentException("Game already exists")
-        }
-        val date = LocalDateTime.now()
-        val localDate = LocalDate(
-            date.year,
-            date.monthValue,
-            date.dayOfMonth,
-        )
-        val game = checkNotNull(game) { "No game loaded" }
-        val gameEntity = game.toDataModel(name, localDate)
-        gameRepository.insert(gameEntity)
+    override suspend fun save(id: Long, name: String) {
+        require(id > 0) { "Id must be positive" }
+        require(name.isNotBlank()) { "Name must not be blank" }
+        require(gameRepository.get(name) == null) { "Game save already exists:\n$name" }
+        val gameEntity = gameRepository.get(id).update(name)
+        gameRepository.update(gameEntity)
     }
 
     override suspend fun delete(id: Long) {
+        require(id > 0) { "Id must be positive" }
         gameRepository.delete(id)
     }
 
-    override suspend fun select() {
-        val game = checkNotNull(game) { "No game loaded" }
-        game.select()
+    override suspend fun select(id: Long) {
+        require(id > 0) { "Id must be positive" }
+        val gameEntity = gameRepository.get(id).run {
+            val game = this.toDomainModel()
+            game.select()
+            update(game)
+        }
+        gameRepository.update(gameEntity)
     }
 
-    override suspend fun step(): Boolean {
-        val game = checkNotNull(game) { "No game loaded" }
-        return game.step()
+    override suspend fun step(id: Long): Boolean {
+        require(id > 0) { "Id must be positive" }
+        val result: Boolean
+        val gameEntity = gameRepository.get(id).run {
+            val game = this.toDomainModel()
+            result = game.step()
+            update(game)
+        }
+        gameRepository.update(gameEntity)
+        return result
     }
 }

@@ -20,23 +20,19 @@ import hu.bme.aut.android.ludocompose.domain.model.Game
 import hu.bme.aut.android.ludocompose.domain.model.GameListItem
 
 interface GameService {
-    val hasActive: Boolean
+    suspend fun has(name: String): Boolean
 
-    suspend fun getActive(): Game
+    suspend fun get(id: Long): Game
 
-    suspend fun start(playerNames: List<String>)
+    suspend fun getAll(): List<GameListItem>
 
-    suspend fun getList(): List<GameListItem>
+    suspend fun start(playerNames: List<String>): Long
 
-    suspend fun load(id: Long)
-
-    suspend fun unLoad()
-
-    suspend fun save(name: String)
+    suspend fun save(id: Long, name: String)
 
     suspend fun delete(id: Long)
 
-    suspend fun select()
+    suspend fun select(id: Long)
 
-    suspend fun step(): Boolean
+    suspend fun step(id: Long): Boolean
 }
