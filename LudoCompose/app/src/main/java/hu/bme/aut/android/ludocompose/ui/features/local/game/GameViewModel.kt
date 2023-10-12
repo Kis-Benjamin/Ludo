@@ -63,6 +63,8 @@ class GameViewModel @Inject constructor(
         }
     }
 
+    private var ended = false
+
     fun step(
         onGameEnded: () -> Unit,
     ) {
@@ -70,11 +72,15 @@ class GameViewModel @Inject constructor(
             val isFinished = gameController.step()
             loadingViewModel.load()
             if (isFinished) {
+                if (ended) {
+                    return@launch
+                }
+                ended = true
+                onGameEnded()
                 val game = gameController.getActive()
                 val winner = game.winner
                 scoreController.save(winner)
                 gameController.unLoad()
-                onGameEnded()
             }
         }
     }

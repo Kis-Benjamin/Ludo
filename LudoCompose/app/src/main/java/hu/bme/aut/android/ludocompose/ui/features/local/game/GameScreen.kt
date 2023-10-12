@@ -90,7 +90,7 @@ fun GameScreen(
                     Text(text = stringResource(id = R.string.game_select))
                 }
                 Button(
-                    onClick = { gameViewModel.step { onGameEnded() } },
+                    onClick = { gameViewModel.step(onGameEnded) },
                     modifier = Modifier
                         .weight(1f, true)
                         .padding(16.dp),
