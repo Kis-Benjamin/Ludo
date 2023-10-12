@@ -23,38 +23,63 @@ import hu.bme.aut.android.ludocompose.data.model.TokenEntity
 import hu.bme.aut.android.ludocompose.data.model.GameWithPlayers
 
 @Dao
-interface GameDao {
-    @Transaction
+abstract class GameDao {
     @Query("SELECT * FROM games WHERE name != 'ONGOING'")
-    suspend fun getAll(): List<GameEntity>
+    abstract suspend fun getAll(): List<GameEntity>
 
-    @Transaction
     @Query("SELECT * FROM games WHERE name = :name")
-    suspend fun get(name: String): GameEntity?
+    abstract suspend fun get(name: String): GameEntity?
 
     @Transaction
     @Query("SELECT * FROM games WHERE id = :id")
-    suspend fun get(id: Long): GameWithPlayers
+    abstract suspend fun get(id: Long): GameWithPlayers
 
     @Insert
-    suspend fun insert(game: GameEntity): Long
+    internal abstract suspend fun insert(game: GameEntity): Long
 
     @Insert
-    suspend fun insert(player: PlayerEntity): Long
+    internal abstract suspend fun insert(player: PlayerEntity): Long
 
     @Insert
-    suspend fun insert(token: TokenEntity): Long
+    internal abstract suspend fun insert(token: TokenEntity): Long
+
+    @Transaction
+    suspend fun insert(gameWithPlayers: GameWithPlayers): Long {
+        val id = insert(gameWithPlayers.game)
+        gameWithPlayers.players.map {
+            it.copy(player = it.player.copy(gameId = id))
+        }.forEach { playerWithTokens ->
+            val id = insert(playerWithTokens.player)
+            playerWithTokens.tokens.map {
+                it.copy(playerId = id)
+            }.forEach {
+                insert(it)
+            }
+        }
+        return id
+    }
 
     @Update
-    suspend fun update(game: GameEntity)
+    internal abstract suspend fun update(game: GameEntity)
 
     @Update
-    suspend fun update(player: PlayerEntity)
+    internal abstract suspend fun update(player: PlayerEntity)
 
     @Update
-    suspend fun update(token: TokenEntity)
+    internal abstract suspend fun update(token: TokenEntity)
+
+    @Transaction
+    suspend fun update(gameWithPlayers: GameWithPlayers) {
+        update(gameWithPlayers.game)
+        gameWithPlayers.players.forEach { playerWithTokens ->
+            update(playerWithTokens.player)
+            playerWithTokens.tokens.forEach { token ->
+                update(token)
+            }
+        }
+    }
 
     @Transaction
     @Query("DELETE FROM games WHERE id = :id")
-    suspend fun delete(id: Long)
+    abstract suspend fun delete(id: Long)
 }

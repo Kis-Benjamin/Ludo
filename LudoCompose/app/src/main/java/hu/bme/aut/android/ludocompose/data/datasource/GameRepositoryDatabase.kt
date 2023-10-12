@@ -55,18 +55,7 @@ class GameRepositoryDatabase @Inject constructor(
         require(gameWithPlayers.players.all { it.player.name.isNotBlank() }) {
             "Player name must not be blank"
         }
-        val id = gameDao.insert(gameWithPlayers.game)
-        gameWithPlayers.players.map {
-            it.copy(player = it.player.copy(gameId = id))
-        }.forEach { playerWithTokens ->
-            val id = gameDao.insert(playerWithTokens.player)
-            playerWithTokens.tokens.map {
-                it.copy(playerId = id)
-            }.forEach {
-                gameDao.insert(it)
-            }
-        }
-        return id
+        return gameDao.insert(gameWithPlayers)
     }
 
     override suspend fun update(gameWithPlayers: GameWithPlayers) {
@@ -85,18 +74,14 @@ class GameRepositoryDatabase @Inject constructor(
             gameWithPlayers.game.id > 0 &&
             gameWithPlayers.players.all {
                 it.player.id!! > 0 &&
+                it.player.gameId!! > 0 &&
                 it.tokens.all {
-                    it.id!! > 0
+                    it.id!! > 0 &&
+                    it.playerId!! > 0
                 }
             }
         ) { "Id must be positive" }
-        gameDao.update(gameWithPlayers.game)
-        gameWithPlayers.players.forEach { playerWithTokens ->
-            gameDao.update(playerWithTokens.player)
-            playerWithTokens.tokens.forEach { token ->
-                gameDao.update(token)
-            }
-        }
+        gameDao.update(gameWithPlayers)
     }
 
     override suspend fun delete(id: Long) {
