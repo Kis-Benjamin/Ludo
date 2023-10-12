@@ -119,14 +119,14 @@ fun LoadGameScreen(
                         )
                     }
                 }
-            }
-            Button(
-                onClick = { loadGameViewModel.loadSelected() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 50.dp, end = 50.dp, bottom = 30.dp)
-            ) {
-                Text(text = stringResource(id = R.string.load_game_button))
+                Button(
+                    onClick = { loadGameViewModel.loadSelected() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 50.dp, end = 50.dp, bottom = 30.dp)
+                ) {
+                    Text(text = stringResource(id = R.string.load_game_button))
+                }
             }
         }
     }
