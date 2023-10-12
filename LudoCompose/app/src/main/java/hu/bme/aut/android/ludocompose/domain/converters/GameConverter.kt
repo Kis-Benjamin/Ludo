@@ -100,12 +100,25 @@ fun GameEntity.toDomainListModel(): GameListItem {
     )
 }
 
-fun GameWithPlayers.update(name: String) =
+private fun TokenEntity.duplicate() = copy(id = null, playerId = null)
+
+private fun PlayerEntity.duplicate() = copy(id = null, gameId = null)
+
+private fun GameEntity.duplicate(name: String) =
+    copy(id = null, name = name.also {
+        require(it.isNotBlank()) { "Name must not be blank" }
+    })
+
+private fun PlayerWithTokens.duplicate() =
     copy(
-        game = this.game.copy(name = name.also {
-            require(it.isNotBlank()) { "Name must not be blank" }
-        }),
-        players = players,
+        player = player.duplicate(),
+        tokens = tokens.map { it.duplicate() },
+    )
+
+fun GameWithPlayers.duplicate(name: String) =
+    copy(
+        game = game.duplicate(name),
+        players = players.map { it.duplicate() },
     )
 
 private fun TokenEntity.update(token: Token) =

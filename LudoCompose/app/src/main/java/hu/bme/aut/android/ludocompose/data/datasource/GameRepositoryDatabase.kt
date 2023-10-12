@@ -42,8 +42,10 @@ class GameRepositoryDatabase @Inject constructor(
             gameWithPlayers.game.id == null &&
             gameWithPlayers.players.all {
                 it.player.id == null &&
+                it.player.gameId == null &&
                 it.tokens.all {
-                    it.id == null
+                    it.id == null &&
+                    it.playerId == null
                 }
             }
         ) { "Id must be null" }
@@ -72,8 +74,10 @@ class GameRepositoryDatabase @Inject constructor(
             gameWithPlayers.game.id != null &&
             gameWithPlayers.players.all {
                 it.player.id != null &&
+                it.player.gameId != null &&
                 it.tokens.all {
-                    it.id != null
+                    it.id != null &&
+                    it.playerId != null
                 }
             }
         ) { "Id must not be null" }

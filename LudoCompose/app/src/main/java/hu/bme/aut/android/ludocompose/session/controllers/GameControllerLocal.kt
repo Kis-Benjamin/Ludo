@@ -48,10 +48,9 @@ class GameControllerLocal @Inject constructor(
             "Player name must not be blank"
         }
         if (hasActive) {
-            delete(id)
+            unLoad()
         }
-        val id = gameService.start(playerNames)
-        load(id)
+        _id = gameService.start(playerNames)
     }
 
     override suspend fun getList(): List<GameListItemDto> {
@@ -61,22 +60,21 @@ class GameControllerLocal @Inject constructor(
 
     override suspend fun load(id: Long) {
         require(id > 0) { "Id must be positive" }
-        _id = id
+        _id = gameService.save(id, null)
     }
 
     override suspend fun unLoad() {
+        delete(id)
         _id = null
     }
 
     override suspend fun save(name: String) {
         require(name.isNotBlank()) { "Name must not be blank" }
-        require(!gameService.has(name)) { "Game save already exists:\n$name" }
         gameService.save(id, name)
     }
 
     override suspend fun delete(id: Long) {
         gameService.delete(id)
-        unLoad()
     }
 
     override suspend fun select() {

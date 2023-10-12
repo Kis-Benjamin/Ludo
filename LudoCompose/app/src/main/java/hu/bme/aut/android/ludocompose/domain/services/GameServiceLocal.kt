@@ -17,6 +17,7 @@
 package hu.bme.aut.android.ludocompose.domain.services
 
 import hu.bme.aut.android.ludocompose.data.datasource.GameRepository
+import hu.bme.aut.android.ludocompose.domain.converters.duplicate
 import hu.bme.aut.android.ludocompose.domain.converters.toDataModel
 import hu.bme.aut.android.ludocompose.domain.converters.toDomainListModel
 import hu.bme.aut.android.ludocompose.domain.converters.toDomainModel
@@ -28,12 +29,6 @@ import javax.inject.Inject
 class GameServiceLocal @Inject constructor(
     private val gameRepository: GameRepository,
 ) : GameService {
-    override suspend fun has(name: String): Boolean {
-        require(name.isNotBlank()) { "Name must not be blank" }
-        val gameEntity = gameRepository.get(name)
-        return gameEntity != null
-    }
-
     override suspend fun get(id: Long): Game {
         require(id > 0) { "Id must be positive" }
         val gameEntity = gameRepository.get(id)
@@ -58,12 +53,16 @@ class GameServiceLocal @Inject constructor(
         return gameRepository.insert(gameEntity)
     }
 
-    override suspend fun save(id: Long, name: String) {
+    override suspend fun save(id: Long, name: String?): Long {
         require(id > 0) { "Id must be positive" }
-        require(name.isNotBlank()) { "Name must not be blank" }
-        require(gameRepository.get(name) == null) { "Game save already exists:\n$name" }
-        val gameEntity = gameRepository.get(id).update(name)
-        gameRepository.update(gameEntity)
+        val name = if (name != null) {
+            require(name.isNotBlank()) { "Name must not be blank" }
+            require(gameRepository.get(name) == null) { "Game save already exists:\n$name" }
+            name
+        } else "ONGOING"
+        val gameEntity = gameRepository.get(id)
+        val newGameEntity = gameEntity.duplicate(name)
+        return gameRepository.insert(newGameEntity)
     }
 
     override suspend fun delete(id: Long) {
