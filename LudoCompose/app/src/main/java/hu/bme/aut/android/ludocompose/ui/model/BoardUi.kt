@@ -16,11 +16,12 @@
 
 package hu.bme.aut.android.ludocompose.ui.model
 
-import hu.bme.aut.android.ludocompose.domain.model.Board
-import hu.bme.aut.android.ludocompose.domain.model.Constants.playerCount
-import hu.bme.aut.android.ludocompose.domain.model.Constants.tokenCount
-import hu.bme.aut.android.ludocompose.domain.model.Constants.trackMultiplier
-import hu.bme.aut.android.ludocompose.domain.model.Constants.trackSize
+import hu.bme.aut.android.ludocompose.ui.model.Constants.playerCount
+import hu.bme.aut.android.ludocompose.ui.model.Constants.tokenCount
+import hu.bme.aut.android.ludocompose.ui.model.Constants.trackMultiplier
+import hu.bme.aut.android.ludocompose.ui.model.Constants.trackSize
+import hu.bme.aut.android.ludocompose.session.model.GameDto
+import hu.bme.aut.android.ludocompose.session.model.TokenDto
 
 data object BoardUi {
     val yardFields: List<List<FieldUi>> by lazy {
@@ -56,18 +57,40 @@ data object BoardUi {
         }
     }
 
-    fun update(board: Board) {
-        board.yardFields.forEachIndexed { playerIndex, fields ->
-            fields.forEachIndexed { tokenIndex, field ->
-                yardFields[playerIndex][tokenIndex].update(field)
+    private fun reset() {
+        yardFields.forEach { it.forEach { it.reset() } }
+        trackFields.forEach { it.reset() }
+        homeFields.forEach { it.forEach { it.reset() } }
+    }
+
+    fun update(gameDto: GameDto) = apply {
+        reset()
+        val players = gameDto.players
+        for (playerIndex in players.indices) {
+            val player = players[playerIndex]
+            var homeCount = 4
+            for (tokenIndex in player.tokens.indices) {
+                val token = player.tokens[tokenIndex]
+                when (token.state) {
+                    TokenDto.State.YARD -> {
+                        yardFields[playerIndex][tokenIndex].tokenColorIndex = playerIndex
+                    }
+                    TokenDto.State.TRACK -> {
+                        trackFields[token.trackPos % trackSize].tokenColorIndex = playerIndex
+                    }
+                    else -> {
+                        homeFields[playerIndex][--homeCount].tokenColorIndex = playerIndex
+                    }
+                }
             }
         }
-        board.trackFields.forEachIndexed { index, field ->
-            trackFields[index].update(field)
-        }
-        board.homeFields.forEachIndexed { playerIndex, fields ->
-            fields.forEachIndexed { tokenIndex, field ->
-                homeFields[playerIndex][tokenIndex].update(field)
+        if (gameDto.isValidStep) {
+            val player = gameDto.actPlayer
+            val token = gameDto.actPlayer.actToken
+            if (token.isInYard) {
+                yardFields[gameDto.actPlayerIndex][player.actTokenIndex].isPointer = true
+            } else if (token.isInTrack) {
+                trackFields[token.trackPos % trackSize].isPointer = true
             }
         }
     }
