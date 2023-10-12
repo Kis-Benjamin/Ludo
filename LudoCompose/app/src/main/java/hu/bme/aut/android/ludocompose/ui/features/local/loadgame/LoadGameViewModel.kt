@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.ludocompose.R
-import hu.bme.aut.android.ludocompose.domain.services.GameService
+import hu.bme.aut.android.ludocompose.session.controllers.GameController
 import hu.bme.aut.android.ludocompose.ui.converters.toUiModel
 import hu.bme.aut.android.ludocompose.ui.model.GameListItemUi
 import hu.bme.aut.android.ludocompose.ui.model.UiText
@@ -34,7 +34,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoadGameViewModel @Inject constructor(
-    private val gameService: GameService,
+    private val gameController: GameController
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoadGameState())
@@ -58,7 +58,8 @@ class LoadGameViewModel @Inject constructor(
     val uiEvent get() = uiEventViewModel.uiEvent
 
     private suspend fun loadData() {
-        val games = gameService.getList().map { it.toUiModel() }
+        val gameDtos = gameController.getList()
+        val games = gameDtos.map { it.toUiModel() }
         _state.update { state ->
             state.copy(games = games)
         }
@@ -75,7 +76,7 @@ class LoadGameViewModel @Inject constructor(
             val message = UiText.StringResource(R.string.load_game_empty_selection)
             return UiEvent.Failure(message)
         }
-        gameService.load(selectedId)
+        gameController.load(selectedId)
         return UiEvent.Success
     }
 
@@ -85,7 +86,7 @@ class LoadGameViewModel @Inject constructor(
 
     private suspend fun deleteEvent(data: Any?): UiEvent {
         val id = data as Long
-        gameService.delete(id)
+        gameController.delete(id)
         loadingViewModel.load()
         val message = UiText.StringResource(R.string.load_game_delete_success)
         return UiEvent.Settled(message)

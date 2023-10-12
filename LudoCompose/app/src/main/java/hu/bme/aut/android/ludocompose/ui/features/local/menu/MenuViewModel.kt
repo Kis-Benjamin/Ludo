@@ -19,7 +19,7 @@ package hu.bme.aut.android.ludocompose.ui.features.local.menu
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.android.ludocompose.domain.services.GameService
+import hu.bme.aut.android.ludocompose.session.controllers.GameController
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MenuViewModel @Inject constructor(
-    private val gameService: GameService,
+    private val gameController: GameController
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MenuState())
@@ -40,12 +40,20 @@ class MenuViewModel @Inject constructor(
 
     fun load() {
         viewModelScope.launch {
-            val hasActiveGame = gameService.hasActive
+            val hasActiveGame = gameController.hasActive
             _state.update { state ->
                 state.copy(
                     hasActiveGame = hasActiveGame,
                 )
             }
+        }
+    }
+
+    override fun onCleared() {
+        viewModelScope.launch {
+            gameController.unLoad()
+            super.onCleared()
+            // TODO: 2021. 05. 16. watch out for this
         }
     }
 }

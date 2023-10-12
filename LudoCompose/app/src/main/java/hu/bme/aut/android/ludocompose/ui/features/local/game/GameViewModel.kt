@@ -19,8 +19,8 @@ package hu.bme.aut.android.ludocompose.ui.features.local.game
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.android.ludocompose.domain.services.GameService
-import hu.bme.aut.android.ludocompose.domain.services.ScoreService
+import hu.bme.aut.android.ludocompose.session.controllers.GameController
+import hu.bme.aut.android.ludocompose.session.controllers.ScoreController
 import hu.bme.aut.android.ludocompose.ui.converters.toUiModel
 import hu.bme.aut.android.ludocompose.ui.model.GameUi
 import hu.bme.aut.android.ludocompose.ui.features.common.LoadingViewModel
@@ -32,8 +32,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
-    private val gameService: GameService,
-    private val scoreService: ScoreService,
+    private val gameController: GameController,
+    private val scoreController: ScoreController,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(GameState())
@@ -47,7 +47,7 @@ class GameViewModel @Inject constructor(
     val loadingState get() = loadingViewModel.state
 
     private suspend fun loadData() {
-        val game = gameService.getActive()
+        val game = gameController.getActive()
         _state.update { state ->
             state.copy(
                 game = game.toUiModel(),
@@ -58,7 +58,7 @@ class GameViewModel @Inject constructor(
 
     fun select() {
         viewModelScope.launch {
-            gameService.select()
+            gameController.select()
             loadingViewModel.load()
         }
     }
@@ -67,13 +67,13 @@ class GameViewModel @Inject constructor(
         onGameEnded: () -> Unit,
     ) {
         viewModelScope.launch {
-            val isFinished = gameService.step()
+            val isFinished = gameController.step()
             loadingViewModel.load()
             if (isFinished) {
-                val game = gameService.getActive()
+                val game = gameController.getActive()
                 val winner = game.winner
-                scoreService.save(winner)
-                gameService.unLoad()
+                scoreController.save(winner)
+                gameController.unLoad()
                 onGameEnded()
             }
         }

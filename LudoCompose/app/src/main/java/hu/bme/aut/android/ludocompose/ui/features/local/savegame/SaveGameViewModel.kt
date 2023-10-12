@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.ludocompose.R
-import hu.bme.aut.android.ludocompose.domain.services.GameService
+import hu.bme.aut.android.ludocompose.session.controllers.GameController
 import hu.bme.aut.android.ludocompose.ui.model.UiText
 import hu.bme.aut.android.ludocompose.ui.features.common.UiEvent
 import hu.bme.aut.android.ludocompose.ui.features.common.UiEventViewModel
@@ -31,7 +31,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SaveGameViewModel @Inject constructor(
-    private val gameService: GameService,
+    private val gameController: GameController,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SaveGameState())
@@ -53,7 +53,7 @@ class SaveGameViewModel @Inject constructor(
             return UiEvent.Failure(message)
         }
         val message = UiText.StringResource(R.string.save_game_name_exists, name)
-        gameService.save(name)
+        gameController.save(name)
         return UiEvent.Success
     }
 
