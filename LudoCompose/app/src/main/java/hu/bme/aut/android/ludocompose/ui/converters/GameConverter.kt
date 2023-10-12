@@ -16,8 +16,8 @@
 
 package hu.bme.aut.android.ludocompose.ui.converters
 
-import hu.bme.aut.android.ludocompose.domain.model.Game
-import hu.bme.aut.android.ludocompose.domain.model.GameListItem
+import hu.bme.aut.android.ludocompose.session.model.GameDto
+import hu.bme.aut.android.ludocompose.session.model.GameListItemDto
 import hu.bme.aut.android.ludocompose.ui.model.BoardUi
 import hu.bme.aut.android.ludocompose.ui.model.ColorSequence
 import hu.bme.aut.android.ludocompose.ui.model.DiceUi
@@ -25,14 +25,18 @@ import hu.bme.aut.android.ludocompose.ui.model.GameListItemUi
 import hu.bme.aut.android.ludocompose.ui.model.GameUi
 
 
-fun GameListItem.toUiModel() = GameListItemUi(
+fun GameListItemDto.toUiModel() = GameListItemUi(
     id = id,
     name = name,
     date = date.toString(),
     playerNames = playerNames,
 )
 
-fun Game.toUiModel() = GameUi(
-    boardUi = BoardUi.apply { update(board) },
-    diceUi = DiceUi(dice.toString(), ColorSequence.entries[actPlayerIndex]),
+fun GameDto.toUiModel() = GameUi(
+    boardUi = BoardUi.update(this),
+    diceUi = run {
+        val dice = dice.toString()
+        val color = ColorSequence.entries[actPlayerIndex]
+        DiceUi(dice, color)
+    },
 )

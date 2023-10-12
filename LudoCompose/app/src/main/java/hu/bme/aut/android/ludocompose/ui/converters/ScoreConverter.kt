@@ -16,11 +16,11 @@
 
 package hu.bme.aut.android.ludocompose.ui.converters
 
-import hu.bme.aut.android.ludocompose.domain.model.ScoreItem
+import hu.bme.aut.android.ludocompose.session.model.ScoreItemDto
 import hu.bme.aut.android.ludocompose.ui.model.ScoreItemUi
 
 
-fun ScoreItem.toUiModel() = ScoreItemUi(
+fun ScoreItemDto.toUiModel() = ScoreItemUi(
     id = id,
     name = name,
     winCount = winCount.toString(),
