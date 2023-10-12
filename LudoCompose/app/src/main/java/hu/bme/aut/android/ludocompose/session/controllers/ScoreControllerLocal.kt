@@ -16,7 +16,6 @@
 
 package hu.bme.aut.android.ludocompose.session.controllers
 
-import hu.bme.aut.android.ludocompose.domain.model.ScoreItem
 import hu.bme.aut.android.ludocompose.domain.services.ScoreService
 import hu.bme.aut.android.ludocompose.session.converters.toSessionModel
 import hu.bme.aut.android.ludocompose.session.model.ScoreItemDto
