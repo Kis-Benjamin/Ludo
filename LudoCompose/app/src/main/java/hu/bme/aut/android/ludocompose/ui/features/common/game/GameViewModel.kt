@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.ui.features.main.game
+package hu.bme.aut.android.ludocompose.ui.features.common.game
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,7 +22,7 @@ import hu.bme.aut.android.ludocompose.session.controllers.GameController
 import hu.bme.aut.android.ludocompose.session.controllers.ScoreController
 import hu.bme.aut.android.ludocompose.ui.converters.toUiModel
 import hu.bme.aut.android.ludocompose.ui.model.GameUi
-import hu.bme.aut.android.ludocompose.ui.features.common.LoadingViewModel
+import hu.bme.aut.android.ludocompose.ui.features.common.load.LoadingViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

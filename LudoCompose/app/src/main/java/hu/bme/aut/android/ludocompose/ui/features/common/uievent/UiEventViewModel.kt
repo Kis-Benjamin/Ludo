@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.ui.features.common
+package hu.bme.aut.android.ludocompose.ui.features.common.uievent
 
 import hu.bme.aut.android.ludocompose.ui.model.toUiText
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -38,9 +38,8 @@ class UiEventViewModel(
 
     fun fire(event: String, data: Any? = null) {
         coroutineScope.launch(exceptionHandler) {
-            val result = checkNotNull(events[event]?.invoke(data)) {
-                "Event $event not found"
-            }
+            val event = checkNotNull(events[event]) { "Event $event not found" }
+            val result = event(data)
             _uiEvent.send(result)
         }
     }

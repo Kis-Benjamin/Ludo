@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.ui.features.common
+package hu.bme.aut.android.ludocompose.ui.features.common.uievent
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable

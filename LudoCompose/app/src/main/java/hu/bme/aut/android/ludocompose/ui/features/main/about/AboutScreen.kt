@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.ui.features.main
+package hu.bme.aut.android.ludocompose.ui.features.main.about
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

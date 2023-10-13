@@ -23,8 +23,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import hu.bme.aut.android.ludocompose.ui.features.main.MenuScreen
-import hu.bme.aut.android.ludocompose.ui.features.main.AboutScreen
+import hu.bme.aut.android.ludocompose.ui.features.main.menu.MenuScreen
+import hu.bme.aut.android.ludocompose.ui.features.main.about.AboutScreen
 import hu.bme.aut.android.ludocompose.ui.navigation.local.NavGraph as LocalNavGraph
 import hu.bme.aut.android.ludocompose.ui.navigation.local.MenuScreen as Local_MenuScreen
 import hu.bme.aut.android.ludocompose.ui.navigation.online.NavGraph as OnlineNavGraph

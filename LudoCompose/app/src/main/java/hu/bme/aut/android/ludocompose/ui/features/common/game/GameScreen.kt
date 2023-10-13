@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.ui.features.main.game
+package hu.bme.aut.android.ludocompose.ui.features.common.game
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -38,10 +38,9 @@ import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import hu.bme.aut.android.ludocompose.R
-import hu.bme.aut.android.ludocompose.ui.features.common.LoadingScreen
+import hu.bme.aut.android.ludocompose.ui.features.common.load.LoadingScreen
 import hu.bme.aut.android.ludocompose.ui.graphics.drawGame
 
 @Composable

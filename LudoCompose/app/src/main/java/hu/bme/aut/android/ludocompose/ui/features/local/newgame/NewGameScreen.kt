@@ -46,8 +46,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import hu.bme.aut.android.ludocompose.R
 import hu.bme.aut.android.ludocompose.ui.common.topEnterTransition
 import hu.bme.aut.android.ludocompose.ui.common.topExitTransition
-import hu.bme.aut.android.ludocompose.ui.features.common.NormalTextField
-import hu.bme.aut.android.ludocompose.ui.features.common.UiEventHandler
+import hu.bme.aut.android.ludocompose.ui.common.NormalTextField
+import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEventHandler
 
 @ExperimentalComposeUiApi
 @ExperimentalMaterial3Api

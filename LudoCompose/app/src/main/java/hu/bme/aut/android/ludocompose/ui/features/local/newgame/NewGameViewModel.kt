@@ -22,8 +22,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.ludocompose.R
 import hu.bme.aut.android.ludocompose.session.controllers.GameController
 import hu.bme.aut.android.ludocompose.ui.model.UiText
-import hu.bme.aut.android.ludocompose.ui.features.common.UiEvent
-import hu.bme.aut.android.ludocompose.ui.features.common.UiEventViewModel
+import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEvent
+import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEventViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
