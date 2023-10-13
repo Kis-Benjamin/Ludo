@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.ui.features.local.scoreboard
+package hu.bme.aut.android.ludocompose.ui.features.online.scoreboard
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.ludocompose.session.controllers.ScoreController
