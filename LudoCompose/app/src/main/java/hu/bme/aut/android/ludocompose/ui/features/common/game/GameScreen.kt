@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.ui.features.local.game
+package hu.bme.aut.android.ludocompose.ui.features.main.game
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -47,7 +47,7 @@ import hu.bme.aut.android.ludocompose.ui.graphics.drawGame
 @Composable
 fun GameScreen(
     onGameEnded: () -> Unit,
-    gameViewModel: GameViewModel = hiltViewModel(),
+    gameViewModel: GameViewModel,
 ) {
     val loadingState by gameViewModel.loadingState.collectAsStateWithLifecycle()
     val state by gameViewModel.state.collectAsStateWithLifecycle()

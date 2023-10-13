@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.ui.features.local.game
+package hu.bme.aut.android.ludocompose.ui.features.main.game
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.ludocompose.session.controllers.GameController
 import hu.bme.aut.android.ludocompose.session.controllers.ScoreController
 import hu.bme.aut.android.ludocompose.ui.converters.toUiModel
@@ -28,10 +27,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class GameViewModel @Inject constructor(
+open class GameViewModel(
     private val gameController: GameController,
     private val scoreController: ScoreController,
 ) : ViewModel() {
@@ -71,16 +68,13 @@ class GameViewModel @Inject constructor(
         viewModelScope.launch {
             val isFinished = gameController.step()
             loadingViewModel.load()
-            if (isFinished) {
-                if (ended) {
-                    return@launch
-                }
+            if (isFinished && !ended) {
                 ended = true
-                onGameEnded()
                 val game = gameController.getActive()
                 val winner = game.winner
                 scoreController.save(winner)
                 gameController.unLoad()
+                onGameEnded()
             }
         }
     }
