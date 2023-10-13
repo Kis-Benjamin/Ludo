@@ -55,9 +55,13 @@ fun LudoNavGraphBuilder.NavGraph(
         JoinRoomScreen()
     }
     composable(GameScreen) {
-        GameScreen()
+        GameScreen(
+            onGameEnded = { navigate(MenuScreen) },
+        )
     }
     composable(ScoreBoardScreen) {
-        ScoreBoardScreen()
+        ScoreBoardScreen(
+            snackbarHostState = snackbarHostState,
+        )
     }
 }

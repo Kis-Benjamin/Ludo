@@ -67,6 +67,7 @@ class LudoNavGraphBuilder(
 
     fun NavController.navigate(destination: Screen, popUpTo: Screen) {
         navigate(destination.route) {
+            launchSingleTop = destination.route == popUpTo.route
             popUpTo(popUpTo.route)
         }
     }
