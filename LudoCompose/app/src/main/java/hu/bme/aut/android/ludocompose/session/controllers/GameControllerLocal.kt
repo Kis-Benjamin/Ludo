@@ -78,10 +78,14 @@ class GameControllerLocal @Inject constructor(
     }
 
     override suspend fun select() {
-        gameService.select(id)
+        val game = getActive()
+        val name = game.actPlayer.name
+        gameService.select(id, name)
     }
 
     override suspend fun step(): Boolean {
-        return gameService.step(id)
+        val game = getActive()
+        val name = game.actPlayer.name
+        return gameService.step(id, name)
     }
 }

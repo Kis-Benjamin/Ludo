@@ -70,22 +70,24 @@ class GameServiceLocal @Inject constructor(
         gameRepository.delete(id)
     }
 
-    override suspend fun select(id: Long) {
+    override suspend fun select(id: Long, name: String) {
         require(id > 0) { "Id must be positive" }
+        require(name.isNotBlank()) { "Name must not be blank" }
         val gameEntity = gameRepository.get(id).run {
             val game = this.toDomainModel()
-            game.select()
+            game.select(name)
             update(game)
         }
         gameRepository.update(gameEntity)
     }
 
-    override suspend fun step(id: Long): Boolean {
+    override suspend fun step(id: Long, name: String): Boolean {
         require(id > 0) { "Id must be positive" }
+        require(name.isNotBlank()) { "Name must not be blank" }
         val result: Boolean
         val gameEntity = gameRepository.get(id).run {
             val game = this.toDomainModel()
-            result = game.step()
+            result = game.step(name)
             update(game)
         }
         gameRepository.update(gameEntity)

@@ -44,17 +44,20 @@ private fun Player.toDataModel(playerIndex: Int) = PlayerWithTokens(
     tokens = tokens.mapIndexed { tokenIndex, token -> token.toDataModel(tokenIndex) }
 )
 
-fun Game.toDataModel(name: String) = GameWithPlayers(
-    game = GameEntity(
-        name = name.also { require(it.isNotBlank()) { "Name must not be blank" } },
-        date = LocalDateTime.now().run {
-            LocalDate(year, monthValue, dayOfMonth)
-        },
-        dice = dice,
-        actPlayer = actPlayerIndex,
-    ),
-    players = players.mapIndexed { playerIndex, player -> player.toDataModel(playerIndex) }
-)
+fun Game.toDataModel(name: String): GameWithPlayers {
+    require(name.isNotBlank()) { "Name must not be blank" }
+    return GameWithPlayers(
+        game = GameEntity(
+            name = name,
+            date = LocalDateTime.now().run {
+                LocalDate(year, monthValue, dayOfMonth)
+            },
+            dice = dice,
+            actPlayer = actPlayerIndex,
+        ),
+        players = players.mapIndexed { playerIndex, player -> player.toDataModel(playerIndex) }
+    )
+}
 
 private fun TokenEntity.toDomainModel(): Token {
     require(id != null) { "Token id must not be null" }
@@ -104,50 +107,43 @@ private fun TokenEntity.duplicate() = copy(id = null, playerId = null)
 
 private fun PlayerEntity.duplicate() = copy(id = null, gameId = null)
 
-private fun GameEntity.duplicate(name: String) =
-    copy(id = null, name = name.also {
-        require(it.isNotBlank()) { "Name must not be blank" }
-    })
+private fun GameEntity.duplicate(name: String): GameEntity {
+    require(name.isNotBlank()) { "Name must not be blank" }
+    return copy(id = null, name = name)
+}
 
-private fun PlayerWithTokens.duplicate() =
-    copy(
-        player = player.duplicate(),
-        tokens = tokens.map { it.duplicate() },
-    )
+private fun PlayerWithTokens.duplicate() = copy(
+    player = player.duplicate(),
+    tokens = tokens.map { it.duplicate() },
+)
 
-fun GameWithPlayers.duplicate(name: String) =
-    copy(
-        game = game.duplicate(name),
-        players = players.map { it.duplicate() },
-    )
+fun GameWithPlayers.duplicate(name: String) = copy(
+    game = game.duplicate(name),
+    players = players.map { it.duplicate() },
+)
 
-private fun TokenEntity.update(token: Token) =
-    copy(
-        state = token.state.ordinal,
-        trackPos = token.trackPos,
-    )
+private fun TokenEntity.update(token: Token) = copy(
+    state = token.state.ordinal,
+    trackPos = token.trackPos,
+)
 
-private fun PlayerEntity.update(player: Player) =
-    copy(
-        name = player.name,
-        standing = player.standing,
-        actToken = player.actTokenIndex,
-    )
+private fun PlayerEntity.update(player: Player) = copy(
+    name = player.name,
+    standing = player.standing,
+    actToken = player.actTokenIndex,
+)
 
-private fun GameEntity.update(game: Game) =
-    copy(
-        dice = game.dice,
-        actPlayer = game.actPlayerIndex,
-    )
+private fun GameEntity.update(game: Game) = copy(
+    dice = game.dice,
+    actPlayer = game.actPlayerIndex,
+)
 
-private fun PlayerWithTokens.update(player: Player) =
-    copy(
-        player = this.player.update(player),
-        tokens = tokens.map { it.update(player.tokens[it.index]) },
-    )
+private fun PlayerWithTokens.update(player: Player) = copy(
+    player = this.player.update(player),
+    tokens = tokens.map { it.update(player.tokens[it.index]) },
+)
 
-fun GameWithPlayers.update(game: Game) =
-    copy(
-        game = this.game.update(game),
-        players = players.map { it.update(game.players[it.player.index]) },
-    )
+fun GameWithPlayers.update(game: Game) = copy(
+    game = this.game.update(game),
+    players = players.map { it.update(game.players[it.player.index]) },
+)

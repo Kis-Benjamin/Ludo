@@ -109,11 +109,14 @@ data class Game(
         }
     }
 
-    fun select() {
-        nextValidToken()
+    fun select(name: String) {
+        if (actPlayer.name == name) {
+            nextValidToken()
+        }
     }
 
-    fun step(): Boolean {
+    fun step(name: String): Boolean {
+        if (actPlayer.name != name) return false
         executeStep()
         if (isInHome) nextValidToken()
         executeTokenKill()

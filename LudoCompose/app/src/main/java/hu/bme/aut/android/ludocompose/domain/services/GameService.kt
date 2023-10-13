@@ -30,7 +30,7 @@ interface GameService {
 
     suspend fun delete(id: Long)
 
-    suspend fun select(id: Long)
+    suspend fun select(id: Long, name: String)
 
-    suspend fun step(id: Long): Boolean
+    suspend fun step(id: Long, name: String): Boolean
 }

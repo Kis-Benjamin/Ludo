@@ -24,6 +24,7 @@ import hu.bme.aut.android.ludocompose.data.model.GameWithPlayers
 
 @Dao
 abstract class GameDao {
+    @Transaction
     @Query("SELECT * FROM games WHERE name != 'ONGOING'")
     abstract suspend fun getAll(): List<GameEntity>
 
