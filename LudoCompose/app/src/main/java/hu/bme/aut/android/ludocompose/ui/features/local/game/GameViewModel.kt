@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.ui.features.online.game
+package hu.bme.aut.android.ludocompose.ui.features.local.game
 
-import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
-import hu.bme.aut.android.ludocompose.ui.features.common.game.GameScreen
+import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.bme.aut.android.ludocompose.session.controllers.GameController
+import hu.bme.aut.android.ludocompose.session.controllers.ScoreController
+import hu.bme.aut.android.ludocompose.ui.features.common.game.GameViewModel
+import javax.inject.Inject
 
-@Composable
-fun GameScreen(
-    onGameEnded: () -> Unit,
-    gameViewModel: GameViewModel = hiltViewModel(),
-) {
-    GameScreen(
-        onGameEnded = onGameEnded,
-        gameViewModel = gameViewModel,
-    )
-}
+@HiltViewModel
+class GameViewModel @Inject constructor(
+    gameController: GameController,
+    scoreController: ScoreController,
+) : GameViewModel(
+    gameController = gameController,
+    scoreController = scoreController,
+)
