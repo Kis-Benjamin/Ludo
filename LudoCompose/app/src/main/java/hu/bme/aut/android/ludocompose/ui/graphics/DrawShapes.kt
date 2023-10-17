@@ -1,18 +1,30 @@
+/*
+ * Copyright © 2023 Benjamin Kis
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package hu.bme.aut.android.ludocompose.ui.graphics
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
+import hu.bme.aut.android.ludocompose.ui.model.Constants
 import hu.bme.aut.android.ludocompose.ui.model.BoardUi
 import hu.bme.aut.android.ludocompose.ui.model.ColorSequence
 import hu.bme.aut.android.ludocompose.ui.model.DiceUi
 import hu.bme.aut.android.ludocompose.ui.model.FieldUi
 import hu.bme.aut.android.ludocompose.ui.model.GameUi
-import hu.bme.aut.android.ludocompose.ui.model.border
-import hu.bme.aut.android.ludocompose.ui.model.offset
-import hu.bme.aut.android.ludocompose.ui.model.pointerRadius
-import hu.bme.aut.android.ludocompose.ui.model.radius
-import hu.bme.aut.android.ludocompose.ui.model.tokenRadius
 
 fun DrawScope.drawDisk(offset: Offset, radius: Float, color: ColorSequence) {
     drawCircle(
@@ -31,15 +43,15 @@ fun DrawScope.drawRing(offset: Offset, radius: Float, width: Float, color: Color
 
 fun DrawScope.drawField(field: FieldUi, scale: Float) {
     val offset = field.offset * scale
-    val fieldRadius = field.radius * scale
-    val fieldBorder = field.border * scale
+    val fieldRadius = Constants.fieldRadius * scale
+    val fieldBorder = Constants.fieldBorder * scale
 
     drawRing(offset, fieldRadius, fieldBorder, field.color)
 
     val tokenColor = field.tokenColor
     if (tokenColor != null) {
-        val tokenRadius = field.tokenRadius * scale
-        val pointerRadius = field.pointerRadius * scale
+        val tokenRadius = Constants.tokenRadius * scale
+        val pointerRadius = Constants.pointerRadius * scale
 
         drawDisk(offset, tokenRadius, tokenColor)
         if (field.isPointer)
@@ -76,14 +88,14 @@ fun DrawScope.drawBoard(board: BoardUi, scale: Float) {
 }
 
 fun DrawScope.drawDice(dice: DiceUi, scale: Float) {
-    val offset = dice.offset * scale
-    val radius = dice.radius * scale
-    val border = dice.border * scale
+    val offset = Constants.diceOffset * scale
+    val radius = Constants.diceRadius * scale
+    val border = Constants.diceBorder * scale
 
     drawRing(offset, radius, border, dice.color)
 }
 
 fun DrawScope.drawGame(game: GameUi, scale: Float = 1f) {
-    drawBoard(game.board!!, scale)
-    drawDice(game.dice!!, scale)
+    drawBoard(game.boardUi, scale)
+    drawDice(game.diceUi, scale)
 }

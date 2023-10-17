@@ -1,19 +1,33 @@
 <resources>
     <string name="app_name">Ludo Compose</string>
+    <string name="app_version_string">Verzió v1.0</string>
+    <string name="app_author_string">Készítette:\nKis Benjámin</string>
+    <string name="menu_main">Ki nevet a végén!</string>
+    <string name="menu_local">Lokális játék</string>
+    <string name="menu_online">Online játék</string>
+    <string name="menu_about">Rólunk</string>
+    <string name="menu_game">Ki nevet a végén!</string>
     <string name="menu_new_game">Új játék indítása</string>
+    <string name="menu_new_room">Új szoba létrehozása</string>
+    <string name="menu_join_room">Csatlakozás szobához</string>
     <string name="menu_save_game">Játékállás mentése</string>
     <string name="menu_load_game">Játékállás betöltése</string>
     <string name="menu_score_board">Dicsőségtábla</string>
     <string name="menu_resume_game">Játék folytatása</string>
     <string name="new_game_enter_player_count">Játékosok számának megadása</string>
-    <string name="new_game_two_players">Két játékos</string>
-    <string name="new_game_three_players">Három játékos</string>
-    <string name="new_game_four_players">Négy játékos</string>
+    <string-array name="new_game_player_count">
+        <item>Egy játékos</item>
+        <item>Két játékos</item>
+        <item>Három játékos</item>
+        <item>Négy játékos</item>
+    </string-array>
     <string name="new_game_enter_player_names">Játékosok nevének megadása</string>
-    <string name="new_game_enter_player_one_name">Első játékos neve</string>
-    <string name="new_game_enter_player_two_name">Második játékos neve</string>
-    <string name="new_game_enter_player_three_name">Harmadik játékos neve</string>
-    <string name="new_game_enter_player_four_name">Negyedik játékos neve</string>
+    <string-array name="new_game_player_names">
+        <item>Első játékos neve</item>
+        <item>Második játékos neve</item>
+        <item>Harmadik játékos neve</item>
+        <item>Negyedik játékos neve</item>
+    </string-array>
     <string name="new_game_button">Új játék</string>
     <string name="new_game_player_names_empty">Nem adtál meg nevet a %1$d. játékosnak</string>
     <string name="save_game_enter_game_name">Játékállás mentés neve</string>
@@ -24,10 +38,12 @@
     <string name="load_game_list_item_date">A mentés ideje: %1$s</string>
     <string name="load_game_list_empty">Még nem mentettél el egy játékot sem</string>
     <string name="load_game_empty_selection">Még nem választottál ki játékot</string>
+    <string name="load_game_delete_success">Játékállás mentés törölve</string>
     <string name="game_select">Kiválaszt</string>
     <string name="game_step">Lép</string>
     <string name="score_board_name">Játékos neve</string>
     <string name="score_board_win_count">Győzelmek száma</string>
     <string name="score_board_empty">A dicsőség lista üres.</string>
+    <string name="score_board_delete_success">Bejegyzés törölve</string>
     <string name="unknown_error_message">Valami hiba történt</string>
 </resources>
