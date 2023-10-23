@@ -16,6 +16,11 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
   base:
     image: ludo_base:latest
     build: ./base
@@ -45,4 +50,4 @@ services:
       - "${SB_PORT}:${SB_PORT}"
     depends_on:
       postgres:
-        condition: service_started
+        condition: service_healthy
