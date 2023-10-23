@@ -1,6 +1,21 @@
 version: '3'
 
+volumes:
+  postgres_data:
+    driver: local
+
 services:
+  postgres:
+    image: ludo_postgres:latest
+    build: ./postgres
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data:rw
+    env_file: .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   base:
     image: ludo_base:latest
     build: ./base
@@ -17,10 +32,17 @@ services:
     image: ludo_game_server:latest
     build: ./game-server
     restart: on-failure
+    env_file: .env
     environment:
       SPRING_APPLICATION_JSON:
         '{
-          "server.port" : "${SB_PORT}"
+          "server.port" : "${SB_PORT}",
+          "spring.datasource.url" : "jdbc:postgresql://postgres/${POSTGRES_DB}",
+          "spring.datasource.username" : "${POSTGRES_USER}",
+          "spring.datasource.password" : "${POSTGRES_PASSWORD}"
         }'
     ports:
       - "${SB_PORT}:${SB_PORT}"
+    depends_on:
+      postgres:
+        condition: service_started
