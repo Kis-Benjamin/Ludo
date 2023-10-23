@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  base:
+    image: ludo_base:latest
+    build: ./base
+    profiles:
+      - base
+  builder:
+    image: ludo_builder:latest
+    build:
+      context: .
+      dockerfile: builder/Dockerfile
+    profiles:
+      - builder
+  game_server:
+    image: ludo_game_server:latest
+    build: ./game-server
+    restart: on-failure
+    environment:
+      SPRING_APPLICATION_JSON:
+        '{
+          "server.port" : "${SB_PORT}"
+        }'
+    ports:
+      - "${SB_PORT}:${SB_PORT}"
