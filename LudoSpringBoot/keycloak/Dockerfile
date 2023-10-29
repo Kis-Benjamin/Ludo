@@ -9,7 +9,7 @@ ENV \
  KC_HEALTH_ENABLED=true \
  KC_METRICS_ENABLED=true \
 # Enable docker feature
- KC_FEATURES=docker \
+#  KC_FEATURES=docker \
 # Configure the database vendor
  KC_DB=postgres
 

@@ -18,21 +18,21 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
       test: [ "CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}" ]
-      timeout: 45s
+      timeout: 30s
       interval: 10s
       retries: 10
   keycloak:
     image: ludo_keycloak:latest
     build: ./keycloak
     restart: unless-stopped
-    volumes:
-      - /srv/keycloak/data/import/:/opt/keycloak/data/import/:ro
+    #volumes:
+    #  - /srv/keycloak/data/import/:/opt/keycloak/data/import/:ro
     env_file: .env
     environment:
       KC_DB_URL: "jdbc:postgresql://postgres/${POSTGRES_DB}"
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
-      KC_HOSTNAME: localhost
+      KC_HOSTNAME: "192.168.1.105"
       KC_HOSTNAME_PORT: ${KC_PORT}
       KC_HTTPS_CERTIFICATE_FILE: /opt/certfile.pem
       KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keyfile.pem
@@ -42,8 +42,8 @@ services:
     ports:
       - "${KC_PORT}:8443"
     healthcheck:
-      test: [ "CMD", "curl", "--head", "-fsSk", "https://localhost:8443/health/ready" ]
-      timeout: 45s
+      test: [ "CMD", "curl", "--head", "-fsSk", "https://127.0.0.1:8443/health/ready" ]
+      timeout: 30s
       interval: 10s
       retries: 10
     depends_on:
@@ -69,17 +69,16 @@ services:
     environment:
       SPRING_APPLICATION_JSON:
         '{
-          "server.port" : "${SB_PORT}",
           "spring.datasource.url" : "jdbc:postgresql://postgres/${POSTGRES_DB}",
           "spring.datasource.username" : "${POSTGRES_USER}",
           "spring.datasource.password" : "${POSTGRES_PASSWORD}",
           "spring.security.oauth2.resourceserver.jwt.jwk-set-uri" : "https://keycloak:8443/realms/${KC_REALM}/protocol/openid-connect/certs"
         }'
     ports:
-      - "${SB_PORT}:${SB_PORT}"
+      - "${SB_PORT}:8080"
     healthcheck:
-      test: [ "CMD", "curl", "--head", "-fsSk", "http://localhost:${SB_PORT}/actuator/health" ]
-      timeout: 45s
+      test: [ "CMD", "curl", "--head", "-fsSk", "http://localhost:8080/actuator/health" ]
+      timeout: 30s
       interval: 10s
       retries: 10
     depends_on:

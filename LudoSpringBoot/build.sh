@@ -17,11 +17,11 @@
 # Create mkcert certificate
 mkcert -install
 
-# Create certificate for localhost
-mkcert -cert-file base/certfile.pem -key-file base/keyfile.pem server keycloak postgres localhost 127.0.0.1 ::1
-
 # Copy root certificate to base directory
 cp "$(mkcert -CAROOT)/*" base/
+
+# Create certificate for localhost
+mkcert -cert-file base/certfile.pem -key-file base/keyfile.pem server keycloak postgres localhost 192.168.1.105 127.0.0.1 ::1
 
 # Build the base image
 docker compose build base
