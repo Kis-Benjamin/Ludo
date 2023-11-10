@@ -18,6 +18,15 @@ dagger-hilt = "2.48"
 androidx-hilt = "1.0.0"
 # Kotlin extensions
 datetime = "0.4.0"
+# Security
+jwtdecode = "2.0.2"
+appauth = "0.11.1"
+auth-api-impl = "11.6.0"
+# Network
+retrofit = "2.9.0"
+krossbow = "5.10.0"
+# Moshi Kotlin
+moshi-kotlin = "1.14.0"
 # Util
 desugar_jdk_libs = "2.0.3"
 # Test
@@ -58,6 +67,18 @@ androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidx-hilt" }
 # Kotlin extensions
 datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "datetime" }
+# Security
+jwtdecode = { group = "com.auth0.android", name = "jwtdecode", version.ref = "jwtdecode" }
+appauth = { group = "net.openid", name = "appauth", version.ref = "appauth" }
+auth-api-impl = { group = "com.google.android.gms", name = "auth-api-impl", version.ref = "auth-api-impl" }
+# Network
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
+krossbow-stomp-moshi = { group = "org.hildan.krossbow", name = "krossbow-stomp-moshi", version.ref = "krossbow" }
+krossbow-websocket-okhttp = { group = "org.hildan.krossbow", name = "krossbow-websocket-okhttp", version.ref = "krossbow" }
+# Moshi Kotlin
+moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi-kotlin" }
+moshi-kotlin-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi-kotlin" }
 # Util
 desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
 # Test
@@ -77,5 +98,8 @@ room = [ "room-ktx", "room-runtime" ]
 hilt = [ "dagger-hilt-core", "dagger-hilt-android", "androidx-hilt-common", "androidx-hilt-navigation-compose" ]
 lifecycle = [ "lifecycle-runtime-compose", "lifecycle-viewmodel-compose" ]
 compose = [ "ui", "material", "material3", "material-icons-extended", "runtime", "foundation", "animation" ]
+security = [ "jwtdecode", "appauth" ]
+network = [ "retrofit", "retrofit-moshi", "krossbow-stomp-moshi", "krossbow-websocket-okhttp" ]
+moshi-kotlin = [ "moshi-kotlin", "moshi-kotlin-codegen" ]
 test = [ "ui-test", "ui-test-junit4", "espresso-core", "androidx-test-ext-junit" ]
 debug = [ "ui-tooling", "ui-test-manifest" ]

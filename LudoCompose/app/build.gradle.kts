@@ -84,6 +84,13 @@ dependencies {
     kapt(libs.dagger.hilt.compiler)
     // Kotlin extensions
     implementation(libs.datetime)
+    // Security
+    implementation(libs.bundles.security)
+    // Network
+    implementation(libs.bundles.network)
+    // Moshi Kotlin
+    implementation(libs.bundles.moshi.kotlin)
+    ksp(libs.moshi.kotlin.codegen)
     // Util
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     // Test
