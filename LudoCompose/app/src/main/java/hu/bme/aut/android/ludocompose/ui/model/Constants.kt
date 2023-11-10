@@ -29,7 +29,7 @@ data object Constants {
     private fun sin(deg: Int) = sin(deg.rad)
 
     const val playerCount = 4
-    const val tokenCount = 4
+    const val pieceCount = 4
     const val trackMultiplier = 10
     const val trackSize = trackMultiplier * playerCount
 
@@ -41,7 +41,7 @@ data object Constants {
     const val halfHeight = height / 2f
     const val trackPadding = average / 16f
     const val fieldRadius = average / 40f
-    const val tokenRadius = average / 50f
+    const val pieceRadius = average / 50f
     const val pointerRadius = average / 80f
     const val yardPadding = (trackPadding / SQRT2).toFloat()
     const val diceRadius = average / 16f
@@ -51,7 +51,7 @@ data object Constants {
     val diceOffset = Offset(halfWidth, halfHeight)
 
     private const val playerAngleStep = 360 / playerCount
-    private const val tokenAngleStep = 360 / tokenCount
+    private const val tokenAngleStep = 360 / pieceCount
     private const val trackAngleStep = 360 / trackSize
 
     private const val startAngle = 225
@@ -64,8 +64,8 @@ data object Constants {
             val outerRadiusY = halfHeight + trackPadding
             val outerX = outerRadiusX * cos(outerAngle) + halfWidth
             val outerY = outerRadiusY * sin(outerAngle) + halfHeight
-            Array(tokenCount) { token ->
-                val innerAngle = token * tokenAngleStep + startAngle
+            Array(pieceCount) { piece ->
+                val innerAngle = piece * tokenAngleStep + startAngle
                 val innerX = yardPadding * cos(innerAngle)
                 val innerY = yardPadding * sin(innerAngle)
                 Offset(
@@ -91,8 +91,8 @@ data object Constants {
     val homePoints by lazy {
         Array(playerCount) { player ->
             val angle = player * playerAngleStep + startAngle
-            Array(tokenCount) { token ->
-                val radiusDiff = (token + 2) * trackPadding
+            Array(pieceCount) { piece ->
+                val radiusDiff = (piece + 2) * trackPadding
                 Offset(
                     (halfWidth - radiusDiff) * cos(angle) + halfWidth,
                     (halfHeight - radiusDiff) * sin(angle) + halfHeight
