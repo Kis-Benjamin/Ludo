@@ -16,11 +16,22 @@
 
 package hu.bme.aut.android.ludocompose.domain.model
 
-data object Constants {
-    const val playerCount = 4
-    const val pieceCount = 4
-    const val trackMultiplier = 10
-    const val trackSize = trackMultiplier * playerCount
-    val trackPositions = 0 until trackSize
-    val diceValues = 1..6
+data class Field internal constructor(
+    private var piece: Piece? = null,
+    internal var isPointer: Boolean = false,
+) {
+    val pieceColor: Int? get() = piece?.color
+    val pointer: Boolean get() = isPointer
+
+    internal fun stepOnWith(piece: Piece?) {
+        require(piece != null) { "Cannot step with null piece" }
+        this.piece?.kill()
+        this.piece = piece
+    }
+
+    internal fun stepOffWith(piece: Piece) {
+        require(this.piece == piece) { "Cannot step off with other piece" }
+        check(this.piece != null) { "No piece to step off" }
+        this.piece = null
+    }
 }

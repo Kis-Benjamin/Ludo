@@ -16,11 +16,14 @@
 
 package hu.bme.aut.android.ludocompose.domain.model
 
-data object Constants {
-    const val playerCount = 4
-    const val pieceCount = 4
-    const val trackMultiplier = 10
-    const val trackSize = trackMultiplier * playerCount
-    val trackPositions = 0 until trackSize
-    val diceValues = 1..6
-}
+import hu.bme.aut.android.ludocompose.data.model.ScoreEntity
+
+data class Score internal constructor(
+    val name: String = "",
+    val winCount: Int = 0,
+)
+
+fun ScoreEntity.toDomainModel() = Score(
+    name = name,
+    winCount = winCount,
+)
