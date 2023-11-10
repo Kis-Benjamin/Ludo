@@ -14,26 +14,18 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.session.controllers
+package hu.bme.aut.android.ludocompose.session.controller
 
 import hu.bme.aut.android.ludocompose.domain.services.ScoreService
-import hu.bme.aut.android.ludocompose.session.converters.toSessionModel
-import hu.bme.aut.android.ludocompose.session.model.ScoreItemDto
+import hu.bme.aut.android.ludocompose.session.model.ScoreDTO
+import hu.bme.aut.android.ludocompose.session.model.toSessionModel
 import javax.inject.Inject
 
 class ScoreControllerLocal @Inject constructor(
     private val scoreService: ScoreService,
 ) : ScoreController {
-    override suspend fun getAll(): List<ScoreItemDto> {
-        val score = scoreService.getAll()
-        return score.map { it.toSessionModel() }
-    }
-
-    override suspend fun save(name: String) {
-        scoreService.save(name)
-    }
-
-    override suspend fun delete(id: Long) {
-        scoreService.delete(id)
+    override suspend fun getAll(): List<ScoreDTO> {
+        val scores = scoreService.getAll()
+        return scores.map { it.toSessionModel() }
     }
 }
