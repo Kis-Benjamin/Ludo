@@ -14,16 +14,22 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.ui.model
+package hu.bme.aut.android.ludocompose.session.di
 
-import kotlinx.datetime.LocalDate
-import java.time.LocalDateTime
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import hu.bme.aut.android.ludocompose.session.stomp.StompManager
+import hu.bme.aut.android.ludocompose.session.stomp.StompManagerImpl
+import javax.inject.Singleton
 
-data class GameListItemUi internal constructor(
-    val id: Long = 0,
-    val name: String = "",
-    val date: String = LocalDateTime.now().run {
-        LocalDate(year, monthValue, dayOfMonth).toString()
-    },
-    val playerNames: List<String> = emptyList(),
-)
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class StompModule {
+    @Binds
+    @Singleton
+    abstract fun bindStompManager(
+        stompManagerImpl: StompManagerImpl
+    ): StompManager
+}
