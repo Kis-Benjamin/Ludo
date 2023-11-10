@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.domain.model
+package hu.bme.aut.android.ludocompose.session
 
-data class Token(
-    var state: State = State.YARD,
-    var trackPos: Int = 0
-) {
-    val isInYard: Boolean get() = state == State.YARD
+import android.net.Uri
 
-    val isInTrack: Boolean get() = state == State.TRACK
+data object Config {
+    private const val ISSUER = "https://192.168.1.105:8443/realms/ludo"
+    val ISSUER_URI = Uri.parse(ISSUER)!!
 
-    val isInHome: Boolean get() = state == State.HOME
+    const val CLIENT_ID = "ludo-client"
 
-    enum class State {
-        YARD,
-        TRACK,
-        HOME,
-    }
+    const val CLIENT_SECRET = "Queo2GUaGZ5pDORr1qP2s7yeeY99c7qc"
+
+    private const val REDIRECT = "ludo://ludo-compose/callback"
+    val REDIRECT_URI = Uri.parse(REDIRECT)!!
+
+    const val SCOPE = "openid profile ludo.user ludo.host"
+
+    const val HTTP_URL = "http://192.168.1.105:8080/"
+
+    const val WEBSOCKET_URL = "ws://192.168.1.105:8080/ws"
 }
