@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.session.model
+package hu.bme.aut.android.ludocompose.session.authorization
 
-import kotlinx.datetime.LocalDate
-import java.time.LocalDateTime
+import net.openid.appauth.AuthState
+import net.openid.appauth.AuthorizationRequest
 
-data class GameListItemDto(
-    val id: Long = 0,
-    val name: String = "",
-    val date: LocalDate = LocalDateTime.now().run {
-        LocalDate(year, monthValue, dayOfMonth)
-    },
-    val playerNames: List<String> = emptyList(),
-)
+interface AuthManager {
+    val authContract: AuthContract
+    val isOnlineAvailable: Boolean
+    val isAuthorized: Boolean
+    fun launch(launcher: (AuthorizationRequest) -> Unit)
+    suspend fun initialize()
+    suspend fun onResult(result: AuthState?)
+    suspend fun freshAccessToken(): String
+    fun dispose()
+}
