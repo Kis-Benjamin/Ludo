@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.hilt)
 }
 
+repositories.addAll(project.rootProject.repositories)
+
 android {
     namespace = "hu.bme.aut.android.ludocompose"
     compileSdk = 34

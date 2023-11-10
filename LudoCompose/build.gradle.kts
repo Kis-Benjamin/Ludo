@@ -8,4 +8,10 @@ plugins {
     alias(libs.plugins.hilt) apply false
 }
 
+repositories {
+    google()
+    mavenCentral()
+    maven("https://jitpack.io")
+}
+
 true // Needed to make the Suppress annotation work for the plugins block
