@@ -7,17 +7,17 @@ kotlin = "1.9.10"
 ksp = "1.9.10-1.0.13"
 # Android-Compose
 lifecycle-compose = "2.6.2"
-activity-compose = "1.7.2"
-navigation-compose = "2.7.3"
+activity-compose = "1.8.0"
+navigation-compose = "2.7.5"
 # Compose
-compose-bom = "2023.09.02"
+compose-bom = "2023.10.01"
 # Room
-room = "2.5.2"
+room = "2.6.0"
 # Hilt
-dagger-hilt = "2.48"
-androidx-hilt = "1.0.0"
+dagger-hilt = "2.48.1"
+androidx-hilt = "1.1.0"
 # Kotlin extensions
-datetime = "0.4.0"
+datetime = "0.4.1"
 # Security
 jwtdecode = "2.0.2"
 appauth = "0.11.1"
@@ -28,7 +28,7 @@ krossbow = "5.10.0"
 # Moshi Kotlin
 moshi-kotlin = "1.14.0"
 # Util
-desugar_jdk_libs = "2.0.3"
+desugar_jdk_libs = "2.0.4"
 # Test
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
