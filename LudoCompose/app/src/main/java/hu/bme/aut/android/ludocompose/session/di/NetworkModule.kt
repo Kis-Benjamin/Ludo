@@ -51,4 +51,22 @@ class NetworkModule {
             .addConverterFactory(moshiConverterFactory)
             .build()
     }
+
+    @Provides
+    @Singleton
+    fun provideRoomApi(retrofit: Retrofit): RoomApi {
+        return retrofit.create(RoomApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGameApi(retrofit: Retrofit): GameApi {
+        return retrofit.create(GameApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideScoreApi(retrofit: Retrofit): ScoreApi {
+        return retrofit.create(ScoreApi::class.java)
+    }
 }
