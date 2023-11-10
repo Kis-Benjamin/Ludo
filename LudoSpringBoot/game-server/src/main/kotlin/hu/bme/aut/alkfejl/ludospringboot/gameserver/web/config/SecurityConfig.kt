@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.alkfejl.ludospringboot.gameserver.config
+package hu.bme.aut.alkfejl.ludospringboot.gameserver.web.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
 import org.springframework.security.config.Customizer
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.web.SecurityFilterChain
@@ -27,6 +27,7 @@ import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 class SecurityConfig {
     @Bean
     @Throws(Exception::class)
@@ -35,8 +36,7 @@ class SecurityConfig {
             securityMatcher("/api/**")
             authorizeHttpRequests { registry ->
                 registry.run {
-                    requestMatchers(HttpMethod.GET, "/api/**").hasAuthority("SCOPE_read")
-                    requestMatchers(HttpMethod.POST, "/api/**").hasAuthority("SCOPE_write")
+                    requestMatchers("/api/**").hasAuthority("SCOPE_ludo.user")
                     anyRequest().authenticated()
                 }
             }
