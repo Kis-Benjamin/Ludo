@@ -16,39 +16,31 @@
 
 package hu.bme.aut.android.ludocompose.session.di
 
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import hu.bme.aut.android.ludocompose.session.Config
-import hu.bme.aut.android.ludocompose.session.network.GameApi
-import hu.bme.aut.android.ludocompose.session.network.RoomApi
-import hu.bme.aut.android.ludocompose.session.network.ScoreApi
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class NetworkModule {
+class ConverterModule {
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder()
+    fun provideMoshi(): Moshi {
+        return Moshi.Builder()
+            .addLast(KotlinJsonAdapterFactory())
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideRetrofit(
-        okHttpClient: OkHttpClient,
-        moshiConverterFactory: MoshiConverterFactory,
-    ): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(Config.HTTP_URL)
-            .client(okHttpClient)
-            .addConverterFactory(moshiConverterFactory)
-            .build()
+    fun provideMoshiConverterFactory(
+        moshi: Moshi,
+    ): MoshiConverterFactory {
+        return MoshiConverterFactory.create(moshi)
     }
 }
