@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.session.converters
+package hu.bme.aut.alkfejl.ludospringboot.gameserver.domain.model
 
-import hu.bme.aut.android.ludocompose.domain.model.ScoreItem
-import hu.bme.aut.android.ludocompose.session.model.ScoreItemDto
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.model.GameEntity
 
+data class Dice internal constructor(
+    var value: Int = 0,
+    var color: Int? = null,
+)
 
-fun ScoreItem.toSessionModel() = ScoreItemDto(
-    id = id,
-    name = name,
-    winCount = winCount,
+fun GameEntity.toDomainDiceModel() = Dice(
+    value = dice,
+    color = actPlayer,
 )
