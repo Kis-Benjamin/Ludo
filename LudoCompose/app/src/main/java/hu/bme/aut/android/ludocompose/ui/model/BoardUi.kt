@@ -16,7 +16,7 @@
 
 package hu.bme.aut.android.ludocompose.ui.model
 
-import hu.bme.aut.android.ludocompose.ui.model.Constants.trackMultiplier
+import hu.bme.aut.android.ludocompose.common.model.Constants.trackMultiplier
 import hu.bme.aut.android.ludocompose.session.model.BoardDTO
 
 data class BoardUi internal constructor(

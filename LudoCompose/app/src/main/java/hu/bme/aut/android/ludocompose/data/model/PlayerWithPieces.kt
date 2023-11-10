@@ -18,6 +18,7 @@ package hu.bme.aut.android.ludocompose.data.model
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import hu.bme.aut.android.ludocompose.common.model.Constants.pieceCount
 
 data class PlayerWithPieces(
     @Embedded val player: PlayerEntity,
@@ -29,7 +30,7 @@ data class PlayerWithPieces(
 ) {
     constructor(index: Int, name: String) : this(
         player = PlayerEntity(index, name),
-        pieces = List(4) { pieceIndex ->
+        pieces = List(pieceCount) { pieceIndex ->
             PieceEntity(pieceIndex)
         }
     )

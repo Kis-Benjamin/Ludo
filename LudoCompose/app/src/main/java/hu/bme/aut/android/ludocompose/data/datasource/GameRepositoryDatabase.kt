@@ -16,6 +16,9 @@
 
 package hu.bme.aut.android.ludocompose.data.datasource
 
+import hu.bme.aut.android.ludocompose.common.model.Constants.playerCounts
+import hu.bme.aut.android.ludocompose.common.model.Constants.playerMaxCount
+import hu.bme.aut.android.ludocompose.common.model.Constants.playerMinCount
 import hu.bme.aut.android.ludocompose.data.dao.GameDao
 import hu.bme.aut.android.ludocompose.data.model.GameEntity
 import hu.bme.aut.android.ludocompose.data.model.GameWithPlayers
@@ -48,8 +51,8 @@ class GameRepositoryDatabase @Inject constructor(
                 }
             }
         ) { "Id must be null" }
-        require(gameWithPlayers.players.size in 2..4) {
-            "Number of players must be between 2 and 4"
+        require(gameWithPlayers.players.size in playerCounts) {
+            "Number of players must be between $playerMinCount and $playerMaxCount"
         }
         require(gameWithPlayers.players.all { it.player.name.isNotBlank() }) {
             "Player name must not be blank"

@@ -16,9 +16,9 @@
 
 package hu.bme.aut.android.ludocompose.domain.model
 
-import hu.bme.aut.android.ludocompose.domain.model.Constants.diceValues
-import hu.bme.aut.android.ludocompose.domain.model.Constants.trackPositions
-import hu.bme.aut.android.ludocompose.domain.model.Constants.trackSize
+import hu.bme.aut.android.ludocompose.common.model.Constants.diceValues
+import hu.bme.aut.android.ludocompose.common.model.Constants.trackPositions
+import hu.bme.aut.android.ludocompose.common.model.Constants.trackSize
 import hu.bme.aut.android.ludocompose.data.model.PieceEntity
 
 class Piece internal constructor(

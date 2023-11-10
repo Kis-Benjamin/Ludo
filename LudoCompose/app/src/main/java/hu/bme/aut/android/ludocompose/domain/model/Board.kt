@@ -16,10 +16,11 @@
 
 package hu.bme.aut.android.ludocompose.domain.model
 
-import hu.bme.aut.android.ludocompose.domain.model.Constants.playerCount
-import hu.bme.aut.android.ludocompose.domain.model.Constants.pieceCount
-import hu.bme.aut.android.ludocompose.domain.model.Constants.trackMultiplier
-import hu.bme.aut.android.ludocompose.domain.model.Constants.trackSize
+import hu.bme.aut.android.ludocompose.common.model.Constants.pieceCount
+import hu.bme.aut.android.ludocompose.common.model.Constants.playerCountIndices
+import hu.bme.aut.android.ludocompose.common.model.Constants.playerMaxCount
+import hu.bme.aut.android.ludocompose.common.model.Constants.trackMultiplier
+import hu.bme.aut.android.ludocompose.common.model.Constants.trackSize
 
 data class Board internal constructor(
     val dice: Dice = Dice(),
@@ -29,7 +30,7 @@ data class Board internal constructor(
     var stepEnabled: Boolean = true,
 
     val yardFields: List<List<Field>> =
-        List(playerCount) {
+        List(playerMaxCount) {
             List(pieceCount) {
                 Field()
             }
@@ -41,14 +42,12 @@ data class Board internal constructor(
         },
 
     val homeFields: List<List<Field>> =
-        List(playerCount) {
+        List(playerMaxCount) {
             List(pieceCount) {
                 Field()
             }
         },
 ) {
-    private val playerCountIndices = 0 until playerCount
-
     internal fun yardFields(playerIndex: Int): List<Field> {
         require(playerIndex in playerCountIndices) { "Invalid player index: $playerIndex" }
         return yardFields[playerIndex]

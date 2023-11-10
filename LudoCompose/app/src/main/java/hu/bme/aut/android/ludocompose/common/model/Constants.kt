@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.data.model
+package hu.bme.aut.android.ludocompose.common.model
 
-import androidx.room.Embedded
-import androidx.room.Relation
-
-data class PlayerWithTokens(
-    @Embedded val player: PlayerEntity,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "player_id",
-        entity = TokenEntity::class,
-    ) val tokens: List<TokenEntity>
-)
+data object Constants {
+    const val playerMinCount = 2
+    const val playerMaxCount = 4
+    const val pieceCount = 4
+    const val trackMultiplier = 10
+    const val trackSize = trackMultiplier * playerMaxCount
+    val playerCounts = playerMinCount..playerMaxCount
+    val playerCountIndices = 0 until playerMaxCount
+    val pieceIndices = 0 until pieceCount
+    val standingIndices = 0 until playerMaxCount
+    val trackPositions = 0 until trackSize
+    val diceValues = 1..6
+}
