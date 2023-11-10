@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.ui.model
+package hu.bme.aut.android.ludocompose.session.network
 
-data class ScoreItemUi internal constructor(
-    val id: Long = 0,
-    val name: String = "",
-    val winCount: String = "",
-)
+import hu.bme.aut.android.ludocompose.session.model.ScoreDTO
+import retrofit2.Call
+import retrofit2.http.GET
+import retrofit2.http.Header
+
+interface ScoreApi {
+    @GET("/api/score/")
+    fun getAll(
+        @Header("Authorization") accessToken: String,
+    ): Call<List<ScoreDTO>?>?
+}
