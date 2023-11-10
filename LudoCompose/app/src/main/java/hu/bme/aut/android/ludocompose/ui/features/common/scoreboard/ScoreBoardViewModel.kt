@@ -19,13 +19,13 @@ package hu.bme.aut.android.ludocompose.ui.features.common.scoreboard
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import hu.bme.aut.android.ludocompose.R
-import hu.bme.aut.android.ludocompose.session.controllers.ScoreController
-import hu.bme.aut.android.ludocompose.ui.converters.toUiModel
+import hu.bme.aut.android.ludocompose.session.controller.ScoreController
 import hu.bme.aut.android.ludocompose.ui.features.common.load.LoadingViewModel
 import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEvent
 import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEventViewModel
-import hu.bme.aut.android.ludocompose.ui.model.ScoreItemUi
+import hu.bme.aut.android.ludocompose.ui.model.ScoreUi
 import hu.bme.aut.android.ludocompose.ui.model.UiText
+import hu.bme.aut.android.ludocompose.ui.model.toUiModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -37,42 +37,15 @@ open class ScoreBoardViewModel(
     private val _state = MutableStateFlow(ScoreBoardState())
     val state = _state.asStateFlow()
 
-    private val loadingViewModel = LoadingViewModel(
-        coroutineScope = viewModelScope,
-        loadData = ::loadData,
-    )
-
-    private val uiEventViewModel = UiEventViewModel(
-        coroutineScope = viewModelScope,
-        events = mapOf(
-            "delete" to ::deleteEvent,
-        ),
-    )
-
-    val loadingState get() = loadingViewModel.state
-
-    val uiEvent get() = uiEventViewModel.uiEvent
-
-    private suspend fun loadData() {
-        val scoreDtos = scoreController.getAll()
-        val scores = scoreDtos.map { it.toUiModel() }
+    val loadingViewModel = LoadingViewModel(viewModelScope) {
+        val scoreDTOs = scoreController.getAll()
+        val scores = scoreDTOs.map { it.toUiModel() }
         _state.update { state ->
             state.copy(scores = scores)
         }
     }
-    private suspend fun deleteEvent(data: Any?): UiEvent {
-        val id = data as Long
-        scoreController.delete(id)
-        loadingViewModel.load()
-        val message = UiText.StringResource(R.string.score_board_delete_success)
-        return UiEvent.Settled(message)
-    }
-
-    fun delete(id: Long) {
-        uiEventViewModel.fire("delete", id)
-    }
 }
 
 data class ScoreBoardState(
-    val scores: List<ScoreItemUi> = emptyList(),
+    val scores: List<ScoreUi> = emptyList(),
 )

@@ -20,13 +20,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.ludocompose.R
-import hu.bme.aut.android.ludocompose.session.controllers.GameController
-import hu.bme.aut.android.ludocompose.ui.converters.toUiModel
-import hu.bme.aut.android.ludocompose.ui.model.GameListItemUi
+import hu.bme.aut.android.ludocompose.session.manager.GameManager
+import hu.bme.aut.android.ludocompose.ui.model.GameUi
 import hu.bme.aut.android.ludocompose.ui.model.UiText
 import hu.bme.aut.android.ludocompose.ui.features.common.load.LoadingViewModel
 import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEvent
 import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEventViewModel
+import hu.bme.aut.android.ludocompose.ui.model.toUiModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -34,71 +34,51 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoadGameViewModel @Inject constructor(
-    private val gameController: GameController
+    private val gameManager: GameManager,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoadGameState())
     val state = _state.asStateFlow()
 
-    private val loadingViewModel = LoadingViewModel(
-        coroutineScope = viewModelScope,
-        loadData = ::loadData,
-    )
-
-    private val uiEventViewModel = UiEventViewModel(
-        coroutineScope = viewModelScope,
-        events = mapOf(
-            "loadSelected" to ::loadSelectedEvent,
-            "delete" to ::deleteEvent,
-        ),
-    )
-
-    val loadingState get() = loadingViewModel.state
-
-    val uiEvent get() = uiEventViewModel.uiEvent
-
-    private suspend fun loadData() {
-        val gameDtos = gameController.getList()
-        val games = gameDtos.map { it.toUiModel() }
+    val loadingViewModel = LoadingViewModel(viewModelScope) {
+        val gameDTOs = gameManager.getList()
+        val games = gameDTOs.map { it.toUiModel() }
         _state.update { state ->
             state.copy(games = games)
         }
     }
+
+    private val uiEventViewModel = UiEventViewModel(viewModelScope)
+
+    val uiEvent get() = uiEventViewModel.uiEvent
+
     fun select(index: Int) {
         _state.update { state ->
             state.copy(selectedIndex = index)
         }
     }
 
-    private suspend fun loadSelectedEvent(data: Any?): UiEvent {
+    fun load() = uiEventViewModel.handleWith {
         val selectedId = _state.value.selectedId
         if (selectedId == null) {
             val message = UiText.StringResource(R.string.load_game_empty_selection)
-            return UiEvent.Failure(message)
+            UiEvent.Failure(message)
+        } else {
+            gameManager.load(selectedId)
+            UiEvent.Success
         }
-        gameController.load(selectedId)
-        return UiEvent.Success
     }
 
-    fun loadSelected() {
-        uiEventViewModel.fire("loadSelected")
-    }
-
-    private suspend fun deleteEvent(data: Any?): UiEvent {
-        val id = data as Long
-        gameController.delete(id)
+    fun delete(id: Long) = uiEventViewModel.handleWith {
+        gameManager.delete(id)
         loadingViewModel.load()
         val message = UiText.StringResource(R.string.load_game_delete_success)
-        return UiEvent.Settled(message)
-    }
-
-    fun delete(id: Long) {
-        uiEventViewModel.fire("delete", id)
+        UiEvent.Concluded(message)
     }
 }
 
 data class LoadGameState(
-    val games: List<GameListItemUi> = emptyList(),
+    val games: List<GameUi> = emptyList(),
     val selectedIndex: Int? = null,
 ) {
     val selectedId: Long?

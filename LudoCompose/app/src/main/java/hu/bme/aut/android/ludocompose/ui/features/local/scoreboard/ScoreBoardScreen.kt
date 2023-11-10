@@ -23,11 +23,9 @@ import hu.bme.aut.android.ludocompose.ui.features.common.scoreboard.ScoreBoardSc
 
 @Composable
 fun ScoreBoardScreen(
-    snackbarHostState: SnackbarHostState,
     scoreBoardViewModel: ScoreBoardViewModel = hiltViewModel()
 ) {
     ScoreBoardScreen(
-        snackbarHostState = snackbarHostState,
         scoreBoardViewModel = scoreBoardViewModel
     )
 }

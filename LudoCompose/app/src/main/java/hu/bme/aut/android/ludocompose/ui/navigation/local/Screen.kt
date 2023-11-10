@@ -27,6 +27,6 @@ data object LoadGameScreen : Screen("load_game", R.string.menu_load_game)
 
 data object SaveGameScreen : Screen("save_game", R.string.menu_save_game)
 
-data object LocalGameScreen : Screen("local_game", R.string.menu_game)
+data object GameScreen : Screen("local_game", R.string.menu_game)
 
 data object ScoreBoardScreen : Screen("local_score_board", R.string.menu_score_board)

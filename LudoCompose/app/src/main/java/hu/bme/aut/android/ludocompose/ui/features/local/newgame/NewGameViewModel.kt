@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.ludocompose.R
-import hu.bme.aut.android.ludocompose.session.controllers.GameController
+import hu.bme.aut.android.ludocompose.session.manager.GameManager
 import hu.bme.aut.android.ludocompose.ui.model.UiText
 import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEvent
 import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEventViewModel
@@ -31,7 +31,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewGameViewModel @Inject constructor(
-    private val gameController: GameController
+    private val gameManager: GameManager,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(NewGameState())
@@ -39,9 +39,6 @@ class NewGameViewModel @Inject constructor(
 
     private val uiEventViewModel = UiEventViewModel(
         coroutineScope = viewModelScope,
-        events = mapOf(
-            "startGame" to ::startGameEvent
-        )
     )
 
     val uiEvent = uiEventViewModel.uiEvent
@@ -64,22 +61,18 @@ class NewGameViewModel @Inject constructor(
         }
     }
 
-    private suspend fun startGameEvent(data: Any?): UiEvent {
+    fun startGame() = uiEventViewModel.handleWith {
         _state.value.playerNames.forEachIndexed { index, name ->
             if (name.isBlank() && index < _state.value.playerCount) {
                 val message =
                     UiText.StringResource(R.string.new_game_player_names_empty, index + 1)
-                return UiEvent.Failure(message)
+                return@handleWith UiEvent.Failure(message)
             }
         }
         val playerCount = _state.value.playerCount
         val playerNames = _state.value.playerNames
-        gameController.start(playerNames.take(playerCount))
-        return UiEvent.Success
-    }
-
-    fun startGame() {
-        uiEventViewModel.fire("startGame")
+        gameManager.start(playerNames.take(playerCount))
+        UiEvent.Success
     }
 }
 

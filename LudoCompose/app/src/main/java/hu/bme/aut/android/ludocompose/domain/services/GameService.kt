@@ -16,11 +16,11 @@
 
 package hu.bme.aut.android.ludocompose.domain.services
 
-import hu.bme.aut.android.ludocompose.domain.model.Game
+import hu.bme.aut.android.ludocompose.domain.model.Board
 import hu.bme.aut.android.ludocompose.domain.model.GameListItem
 
 interface GameService {
-    suspend fun get(id: Long): Game
+    suspend fun getBoard(id: Long): Board
 
     suspend fun getAll(): List<GameListItem>
 
@@ -30,7 +30,11 @@ interface GameService {
 
     suspend fun delete(id: Long)
 
-    suspend fun select(id: Long, name: String)
+    suspend fun select(id: Long)
 
-    suspend fun step(id: Long, name: String): Boolean
+    suspend fun step(id: Long): Boolean
+
+    suspend fun getWinner(id: Long): String
+
+    suspend fun isFinished(id: Long): Boolean
 }

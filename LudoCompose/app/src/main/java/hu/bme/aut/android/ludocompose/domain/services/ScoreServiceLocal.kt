@@ -17,32 +17,28 @@
 package hu.bme.aut.android.ludocompose.domain.services
 
 import hu.bme.aut.android.ludocompose.data.datasource.ScoreRepository
-import hu.bme.aut.android.ludocompose.domain.converters.toDataModel
-import hu.bme.aut.android.ludocompose.domain.converters.toDomainModel
-import hu.bme.aut.android.ludocompose.domain.model.ScoreItem
+import hu.bme.aut.android.ludocompose.data.model.ScoreEntity
+import hu.bme.aut.android.ludocompose.domain.model.Score
+import hu.bme.aut.android.ludocompose.domain.model.toDomainModel
 import javax.inject.Inject
 
 class ScoreServiceLocal @Inject constructor(
     private val scoreRepository: ScoreRepository,
 ) : ScoreService {
-    override suspend fun getAll(): List<ScoreItem> {
+    override suspend fun getAll(): List<Score> {
         val scoreEntities = scoreRepository.getAll()
         return scoreEntities.map { it.toDomainModel() }
     }
 
-    override suspend fun save(name: String) {
-        val scoreEntity = scoreRepository.get(name)?.let {
-            it.copy(winCount = it.winCount + 1)
+    override suspend fun addOrIncrement(name: String) {
+        require(name.isNotBlank()) { "Name must not be blank" }
+        scoreRepository.get(name)?.let { score ->
+            score.copy(winCount = score.winCount + 1)
+        }?.apply {
+            scoreRepository.update(this)
+        } ?: run {
+            val score = ScoreEntity(name = name, winCount = 1)
+            scoreRepository.insert(score)
         }
-        if (scoreEntity != null) {
-            scoreRepository.update(scoreEntity)
-        } else {
-            val scoreEntity = ScoreItem(name = name, winCount = 1).toDataModel()
-            scoreRepository.insert(scoreEntity)
-        }
-    }
-
-    override suspend fun delete(id: Long) {
-        scoreRepository.delete(id)
     }
 }

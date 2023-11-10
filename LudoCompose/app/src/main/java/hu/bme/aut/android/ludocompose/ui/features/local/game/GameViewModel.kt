@@ -17,16 +17,30 @@
 package hu.bme.aut.android.ludocompose.ui.features.local.game
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.android.ludocompose.session.controllers.GameController
-import hu.bme.aut.android.ludocompose.session.controllers.ScoreController
+import hu.bme.aut.android.ludocompose.session.controller.GameController
+import hu.bme.aut.android.ludocompose.session.di.Local
+import hu.bme.aut.android.ludocompose.session.manager.GameManager
 import hu.bme.aut.android.ludocompose.ui.features.common.game.GameViewModel
+import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEvent
 import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
-    gameController: GameController,
-    scoreController: ScoreController,
+    private val gameManager: GameManager,
 ) : GameViewModel(
-    gameController = gameController,
-    scoreController = scoreController,
-)
+    gameController = gameManager,
+) {
+    override suspend fun selectImpl() {
+        super.selectImpl()
+        load()
+    }
+
+    override suspend fun stepImpl() {
+        super.stepImpl()
+        if (gameManager.isFinished()) {
+            end()
+        } else {
+            load()
+        }
+    }
+}

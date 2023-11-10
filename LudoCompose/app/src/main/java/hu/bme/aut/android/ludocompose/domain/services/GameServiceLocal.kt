@@ -17,26 +17,32 @@
 package hu.bme.aut.android.ludocompose.domain.services
 
 import hu.bme.aut.android.ludocompose.data.datasource.GameRepository
-import hu.bme.aut.android.ludocompose.domain.converters.duplicate
-import hu.bme.aut.android.ludocompose.domain.converters.toDataModel
-import hu.bme.aut.android.ludocompose.domain.converters.toDomainListModel
-import hu.bme.aut.android.ludocompose.domain.converters.toDomainModel
-import hu.bme.aut.android.ludocompose.domain.converters.update
-import hu.bme.aut.android.ludocompose.domain.model.Game
+import hu.bme.aut.android.ludocompose.data.model.GameWithPlayers
+import hu.bme.aut.android.ludocompose.data.model.duplicate
+import hu.bme.aut.android.ludocompose.domain.model.Board
 import hu.bme.aut.android.ludocompose.domain.model.GameListItem
+import hu.bme.aut.android.ludocompose.domain.model.toDomainListModel
+import hu.bme.aut.android.ludocompose.domain.model.toDomainModel
 import javax.inject.Inject
 
 class GameServiceLocal @Inject constructor(
     private val gameRepository: GameRepository,
 ) : GameService {
-    override suspend fun get(id: Long): Game {
+
+    companion object {
+        private val numSet = (1..46656).shuffled()
+        private val nextInt = { numSet.random() }
+    }
+
+    override suspend fun getBoard(id: Long): Board {
         require(id > 0) { "Id must be positive" }
         val gameEntity = gameRepository.get(id)
-        return gameEntity.toDomainModel()
+        val game = gameEntity.toDomainModel(nextInt)
+        return game.getBoard()
     }
 
     override suspend fun getAll(): List<GameListItem> {
-        val gameEntities = gameRepository.getAll()
+        val gameEntities = gameRepository.getAll("ONGOING")
         return gameEntities.map { it.toDomainListModel() }
     }
 
@@ -47,10 +53,8 @@ class GameServiceLocal @Inject constructor(
         require(playerNames.all { it.isNotBlank() }) {
             "Player name must not be blank"
         }
-        val game = Game(playerNames)
-        game.rollDice()
-        val gameEntity = game.toDataModel("ONGOING")
-        return gameRepository.insert(gameEntity)
+        val gameWithPlayers = GameWithPlayers("ONGOING", playerNames)
+        return gameRepository.insert(gameWithPlayers)
     }
 
     override suspend fun save(id: Long, name: String?): Long {
@@ -70,27 +74,34 @@ class GameServiceLocal @Inject constructor(
         gameRepository.delete(id)
     }
 
-    override suspend fun select(id: Long, name: String) {
+    override suspend fun select(id: Long) {
         require(id > 0) { "Id must be positive" }
-        require(name.isNotBlank()) { "Name must not be blank" }
-        val gameEntity = gameRepository.get(id).run {
-            val game = this.toDomainModel()
-            game.select(name)
-            update(game)
-        }
+        val gameEntity = gameRepository.get(id)
+        val game = gameEntity.toDomainModel(nextInt)
+        game.select()
         gameRepository.update(gameEntity)
     }
 
-    override suspend fun step(id: Long, name: String): Boolean {
+    override suspend fun step(id: Long): Boolean {
         require(id > 0) { "Id must be positive" }
-        require(name.isNotBlank()) { "Name must not be blank" }
-        val result: Boolean
-        val gameEntity = gameRepository.get(id).run {
-            val game = this.toDomainModel()
-            result = game.step(name)
-            update(game)
-        }
+        val gameEntity = gameRepository.get(id)
+        val game = gameEntity.toDomainModel(nextInt)
+        val ended = game.step()
         gameRepository.update(gameEntity)
-        return result
+        return ended
+    }
+
+    override suspend fun getWinner(id: Long): String {
+        require(id > 0) { "Id must be positive" }
+        val gameEntity = gameRepository.get(id)
+        val game = gameEntity.toDomainModel(nextInt)
+        return game.winnerName
+    }
+
+    override suspend fun isFinished(id: Long): Boolean {
+        require(id > 0) { "Id must be positive" }
+        val gameEntity = gameRepository.get(id)
+        val game = gameEntity.toDomainModel(nextInt)
+        return game.finished
     }
 }

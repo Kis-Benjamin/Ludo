@@ -21,10 +21,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import hu.bme.aut.android.ludocompose.ui.features.online.game.GameScreen
 import hu.bme.aut.android.ludocompose.ui.features.online.joinroom.JoinRoomScreen
 import hu.bme.aut.android.ludocompose.ui.features.online.menu.MenuScreen
 import hu.bme.aut.android.ludocompose.ui.features.online.newroom.NewRoomScreen
+import hu.bme.aut.android.ludocompose.ui.features.online.room.RoomScreen
 import hu.bme.aut.android.ludocompose.ui.features.online.scoreboard.ScoreBoardScreen
 import hu.bme.aut.android.ludocompose.ui.navigation.common.LudoNavGraphBuilder
 import hu.bme.aut.android.ludocompose.ui.navigation.common.Screen
@@ -48,20 +51,41 @@ fun LudoNavGraphBuilder.NavGraph(
             onNavigateToScoreboard = { navigate(ScoreBoardScreen) },
         )
     }
-    composable(NewRoomScreen) {
-        NewRoomScreen()
+    dialog(NewRoomScreen) {
+        NewRoomScreen(
+            snackbarHostState = snackbarHostState,
+            onSuccess = {
+                navigate(RoomScreen + "/true")
+            },
+        )
     }
     composable(JoinRoomScreen) {
-        JoinRoomScreen()
+        JoinRoomScreen(
+            snackbarHostState = snackbarHostState,
+            onSuccess = {
+                navigate(RoomScreen + "/false")
+            },
+        )
+    }
+    composable(RoomScreen + "/{isHost}",
+        navArgument("isHost") {
+            type = NavType.BoolType
+        }
+    ) {
+        RoomScreen(
+            snackbarHostState = snackbarHostState,
+            onSuccess = { navigate(GameScreen) },
+            onClose = { navController.popBackStack() },
+            isHost = it.arguments!!.getBoolean("isHost"),
+        )
     }
     composable(GameScreen) {
         GameScreen(
-            onGameEnded = { navigate(MenuScreen) },
+            snackbarHostState = snackbarHostState,
+            onGameEnded = { navController.popBackStack() },
         )
     }
     composable(ScoreBoardScreen) {
-        ScoreBoardScreen(
-            snackbarHostState = snackbarHostState,
-        )
+        ScoreBoardScreen()
     }
 }

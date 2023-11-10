@@ -18,7 +18,16 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
+*.iml
+.gradle
+/local.properties
 .idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
 *.iws
 *.iml
 *.ipr
@@ -35,3 +44,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Certifiacte Files ###
+*.p12
+*.jks
+*.cer
+*.pem

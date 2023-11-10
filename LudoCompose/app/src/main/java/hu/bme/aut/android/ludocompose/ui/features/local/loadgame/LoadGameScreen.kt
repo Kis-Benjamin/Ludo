@@ -55,18 +55,15 @@ fun LoadGameScreen(
     onSuccess: () -> Unit,
     loadGameViewModel: LoadGameViewModel = hiltViewModel()
 ) {
-    val loadingState by loadGameViewModel.loadingState.collectAsStateWithLifecycle()
     val state by loadGameViewModel.state.collectAsStateWithLifecycle()
 
-    UiEventHandler(loadGameViewModel.uiEvent, snackbarHostState) {
-        onSuccess()
-    }
+    UiEventHandler(loadGameViewModel.uiEvent, snackbarHostState, onSuccess)
 
-    LoadingScreen(loadingState) {
-        Column {
-            if (state.games.isEmpty()) {
-                Text(text = stringResource(id = R.string.load_game_list_empty))
-            } else {
+    LoadingScreen(loadGameViewModel.loadingViewModel) {
+        if (state.games.isEmpty()) {
+            Text(text = stringResource(id = R.string.load_game_list_empty))
+        } else {
+            Column {
                 val shape = RoundedCornerShape(15.dp)
 
                 LazyColumn(
@@ -120,7 +117,7 @@ fun LoadGameScreen(
                     }
                 }
                 Button(
-                    onClick = { loadGameViewModel.loadSelected() },
+                    onClick = { loadGameViewModel.load() },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 50.dp, end = 50.dp, bottom = 30.dp)
