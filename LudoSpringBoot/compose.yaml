@@ -1,0 +1,84 @@
+version: '3'
+
+volumes:
+  postgres_data:
+    driver: local
+
+services:
+  postgres:
+    image: ludo_postgres:latest
+    build: ./postgres
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data:rw
+    env_file: .env
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${KC_DB_NAME}", "-U", "${KC_DB_USER}" ]
+      timeout: 30s
+      interval: 10s
+      retries: 10
+  keycloak:
+    image: ludo_keycloak:latest
+    build: ./keycloak
+    restart: unless-stopped
+    #volumes:
+    #  - /srv/keycloak/data/import/:/opt/keycloak/data/import/:ro
+    env_file: .env
+    environment:
+      KC_DB_URL: "jdbc:postgresql://postgres/${KC_DB_NAME}"
+      KC_DB_USERNAME: ${KC_DB_USER}
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD}
+      KC_HOSTNAME: "192.168.1.105"
+      KC_HOSTNAME_PORT: ${KC_PORT}
+      KC_HTTPS_CERTIFICATE_FILE: /opt/certfile.pem
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keyfile.pem
+      KEYCLOAK_ADMIN: ${KC_ADMIN_USER}
+      KEYCLOAK_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD}
+    command: "start --optimized"
+    ports:
+      - "${KC_PORT}:8443"
+    healthcheck:
+      test: [ "CMD", "curl", "--head", "-fsSk", "https://127.0.0.1:8443/health/ready" ]
+      timeout: 45s
+      interval: 15s
+      retries: 10
+    depends_on:
+      postgres:
+        condition: service_healthy
+  base:
+    image: ludo_base:latest
+    build: ./base
+    profiles:
+      - base
+  builder:
+    image: ludo_builder:latest
+    build:
+      context: .
+      dockerfile: builder/Dockerfile
+    profiles:
+      - builder
+  game_server:
+    image: ludo_game_server:latest
+    build: ./game-server
+    restart: on-failure
+    env_file: .env
+    environment:
+      SPRING_APPLICATION_JSON:
+        '{
+          "spring.datasource.url" : "jdbc:postgresql://postgres/${SB_DB_NAME}",
+          "spring.datasource.username" : "${SB_DB_USER}",
+          "spring.datasource.password" : "${SB_DB_PASSWORD}",
+          "spring.security.oauth2.resourceserver.jwt.jwk-set-uri" : "https://keycloak:8443/realms/${KC_REALM}/protocol/openid-connect/certs"
+        }'
+    ports:
+      - "${SB_PORT}:8080"
+    healthcheck:
+      test: [ "CMD", "curl", "--head", "-fsSk", "http://localhost:8080/actuator/health" ]
+      timeout: 40s
+      interval: 10s
+      retries: 10
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy

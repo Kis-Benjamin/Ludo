@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.session.converters
-
-import hu.bme.aut.android.ludocompose.domain.model.ScoreItem
-import hu.bme.aut.android.ludocompose.session.model.ScoreItemDto
+package hu.bme.aut.alkfejl.ludospringboot.gameserver.web.model
 
 
-fun ScoreItem.toSessionModel() = ScoreItemDto(
-    id = id,
-    name = name,
-    winCount = winCount,
-)
+data class RoomRequest(val name: String)
+
+data class RoomCreate(val id: Long)
+
+data class RoomStart(val id: Long, val gameId: Long)
+
+data class RoomClose(val id: Long)
+
+data class RoomUpdate(val id: Long)
