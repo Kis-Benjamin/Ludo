@@ -14,29 +14,10 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.session.controllers
+package hu.bme.aut.android.ludocompose.session.controller
 
-import hu.bme.aut.android.ludocompose.session.model.GameDto
-import hu.bme.aut.android.ludocompose.session.model.GameListItemDto
+import hu.bme.aut.android.ludocompose.session.model.ScoreDTO
 
-interface GameController {
-    val hasActive: Boolean
-
-    suspend fun getActive(): GameDto
-
-    suspend fun start(playerNames: List<String>)
-
-    suspend fun getList(): List<GameListItemDto>
-
-    suspend fun load(id: Long)
-
-    suspend fun unLoad()
-
-    suspend fun save(name: String)
-
-    suspend fun delete(id: Long)
-
-    suspend fun select()
-
-    suspend fun step(): Boolean
+interface ScoreController {
+    suspend fun getAll(): List<ScoreDTO>
 }

@@ -14,14 +14,36 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.session.controllers
+package hu.bme.aut.android.ludocompose.session.controller
 
-import hu.bme.aut.android.ludocompose.session.model.ScoreItemDto
+import hu.bme.aut.android.ludocompose.session.model.RoomDTO
 
-interface ScoreController {
-    suspend fun getAll(): List<ScoreItemDto>
+interface RoomController {
+    val hasActive: Boolean
 
-    suspend fun save(name: String)
+    val id: Long
 
-    suspend fun delete(id: Long)
+    suspend fun load(id: Long)
+
+    suspend fun unLoad()
+
+    suspend fun getAll(): List<RoomDTO>
+
+    suspend fun get(id: Long): RoomDTO
+
+    suspend fun get(): RoomDTO
+
+    suspend fun create(name: String)
+
+    suspend fun start()
+
+    suspend fun close()
+
+    suspend fun join(id: Long)
+
+    suspend fun leave()
+
+    suspend fun ready()
+
+    suspend fun unready()
 }
