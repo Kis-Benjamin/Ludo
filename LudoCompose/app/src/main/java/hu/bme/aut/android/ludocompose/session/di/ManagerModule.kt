@@ -20,25 +20,16 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import hu.bme.aut.android.ludocompose.session.controllers.GameController
-import hu.bme.aut.android.ludocompose.session.controllers.GameControllerLocal
-import hu.bme.aut.android.ludocompose.session.controllers.ScoreController
-import hu.bme.aut.android.ludocompose.session.controllers.ScoreControllerLocal
+import hu.bme.aut.android.ludocompose.session.manager.GameManager
+import hu.bme.aut.android.ludocompose.session.manager.GameManagerLocal
 import javax.inject.Singleton
-
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class ControllerModule {
+abstract class ManagerModule {
     @Binds
     @Singleton
-    abstract fun bindGameController(
-        gameControllerLocal: GameManager
-    ): GameController
-
-    @Binds
-    @Singleton
-    abstract fun bindScoreController(
-        scoreControllerLocal: ScoreControllerLocal
-    ): ScoreController
+    abstract fun bindGameManager(
+        gameManagerLocal: GameManagerLocal
+    ): GameManager
 }
