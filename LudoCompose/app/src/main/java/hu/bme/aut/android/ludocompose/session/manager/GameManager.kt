@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.session.model
+package hu.bme.aut.android.ludocompose.session.manager
 
-data class PlayerDto(
-    var name: String = "",
-    var standing: Int = 0,
-    val tokens: List<TokenDto> = List(4) { TokenDto() },
-    var actTokenIndex: Int = 0,
-) {
-    val actToken: TokenDto get() = tokens[actTokenIndex]
+import hu.bme.aut.android.ludocompose.session.controller.GameController
+import hu.bme.aut.android.ludocompose.session.model.BoardDTO
+import hu.bme.aut.android.ludocompose.session.model.GameDTO
+
+interface GameManager : GameController {
+    suspend fun start(playerNames: List<String>)
+
+    suspend fun getList(): List<GameDTO>
+
+    suspend fun save(name: String)
+
+    suspend fun delete(id: Long)
+
+    suspend fun isFinished(): Boolean
 }
