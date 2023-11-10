@@ -18,33 +18,37 @@ package hu.bme.aut.android.ludocompose.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import hu.bme.aut.android.ludocompose.data.converters.LocalDateConverter
-import kotlinx.datetime.LocalDate
-import java.time.LocalDateTime
 
 @Entity(
-    tableName = "games",
-    indices = [Index(value = ["id"], unique = true)]
+    tableName = "pieces",
+    indices = [
+        Index(value = ["id"], unique = true),
+        Index(value = ["player_id"]),
+    ],
+    foreignKeys = [ForeignKey(
+        entity = PlayerEntity::class,
+        parentColumns = ["id"],
+        childColumns = ["player_id"],
+        onDelete = ForeignKey.CASCADE,
+        onUpdate = ForeignKey.CASCADE,
+        deferred = true
+    )]
 )
-@TypeConverters(LocalDateConverter::class)
-data class GameEntity(
+data class PieceEntity(
     @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "date") val date: LocalDate,
-    @ColumnInfo(name = "dice") var dice: Int,
-    @ColumnInfo(name = "act_player") var actPlayer: Int,
+    @ColumnInfo(name = "player_id") val playerId: Long? = null,
+    @ColumnInfo(name = "index") val index: Int,
+    @ColumnInfo(name = "state") var state: Int,
+    @ColumnInfo(name = "track_pos") var trackPos: Int,
 ) {
-    constructor(name: String) : this(
-        name = name,
-        date = LocalDateTime.now().run {
-            LocalDate(year, monthValue, dayOfMonth)
-        },
-        dice = (1..5).random(),
-        actPlayer = 0,
+    constructor(index: Int) : this(
+        index = index,
+        state = 0,
+        trackPos = 0,
     )
 }
 
-fun GameEntity.duplicate(name: String) = copy(id = null, name = name)
+fun PieceEntity.duplicate() = copy(id = null, playerId = null)

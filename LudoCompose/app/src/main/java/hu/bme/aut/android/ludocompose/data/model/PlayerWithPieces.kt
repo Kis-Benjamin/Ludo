@@ -18,27 +18,24 @@ package hu.bme.aut.android.ludocompose.data.model
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import androidx.room.TypeConverters
-import hu.bme.aut.android.ludocompose.data.converters.LocalDateConverter
 
-@TypeConverters(LocalDateConverter::class)
-data class GameWithPlayers(
-    @Embedded val game: GameEntity,
+data class PlayerWithPieces(
+    @Embedded val player: PlayerEntity,
     @Relation(
         parentColumn = "id",
-        entityColumn = "game_id",
-        entity = PlayerEntity::class,
-    ) val players: List<PlayerWithPieces>
+        entityColumn = "player_id",
+        entity = PieceEntity::class,
+    ) val pieces: List<PieceEntity>
 ) {
-    constructor(name: String, playerNames: List<String>) : this(
-        game = GameEntity(name),
-        players = List(playerNames.size) { playerIndex ->
-            PlayerWithPieces(playerIndex, playerNames[playerIndex])
+    constructor(index: Int, name: String) : this(
+        player = PlayerEntity(index, name),
+        pieces = List(4) { pieceIndex ->
+            PieceEntity(pieceIndex)
         }
     )
 }
 
-fun GameWithPlayers.duplicate(name: String) = copy(
-    game = game.duplicate(name),
-    players = players.map { it.duplicate() },
+fun PlayerWithPieces.duplicate() = copy(
+    player = player.duplicate(),
+    pieces = pieces.map { it.duplicate() },
 )

@@ -42,6 +42,15 @@ data class PlayerEntity(
     @ColumnInfo(name = "game_id") val gameId: Long? = null,
     @ColumnInfo(name = "index") val index: Int,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "standing") val standing: Int,
-    @ColumnInfo(name = "act_token") val actToken: Int = 0,
-)
+    @ColumnInfo(name = "standing") var standing: Int,
+    @ColumnInfo(name = "act_piece") var actPiece: Int,
+) {
+    constructor(index: Int, name: String) : this(
+        index = index,
+        name = name,
+        standing = 0,
+        actPiece = 0,
+    )
+}
+
+fun PlayerEntity.duplicate() = copy(id = null, gameId = null)
