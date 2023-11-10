@@ -16,16 +16,19 @@
 
 package hu.bme.aut.android.ludocompose.ui.features.local.game
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.bme.aut.android.ludocompose.ui.features.common.game.GameScreen
 
 @Composable
 fun GameScreen(
+    snackbarHostState: SnackbarHostState,
     onGameEnded: () -> Unit,
     gameViewModel: GameViewModel = hiltViewModel(),
 ) {
     GameScreen(
+        snackbarHostState = snackbarHostState,
         onGameEnded = onGameEnded,
         gameViewModel = gameViewModel,
     )
