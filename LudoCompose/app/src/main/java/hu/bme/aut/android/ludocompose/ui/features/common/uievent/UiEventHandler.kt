@@ -29,7 +29,8 @@ import kotlinx.coroutines.launch
 fun UiEventHandler(
     uiEvent: Flow<UiEvent>,
     snackbarHostState: SnackbarHostState,
-    onSuccess: (UiEvent.Success) -> Unit = {},
+    onSuccess: () -> Unit = {},
+    onClose: () -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
 
@@ -44,9 +45,16 @@ fun UiEventHandler(
             }
             when (uiEvent) {
                 is UiEvent.Success -> {
-                    onSuccess(uiEvent)
+                    onSuccess()
                 }
-                is UiEvent.Settled -> {
+                is UiEvent.Continue -> {
+                    // Do nothing as intended to continue
+                }
+                is UiEvent.Close -> {
+                    onClose()
+                    return@collect
+                }
+                is UiEvent.Concluded -> {
                     send(uiEvent.message)
                 }
                 is UiEvent.Failure -> {

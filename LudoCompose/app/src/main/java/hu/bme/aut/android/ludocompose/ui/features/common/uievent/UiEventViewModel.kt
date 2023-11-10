@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 
 class UiEventViewModel(
     private val coroutineScope: CoroutineScope,
-    private val events: Map<String, suspend (Any?) -> UiEvent>,
 ) {
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -36,10 +35,9 @@ class UiEventViewModel(
         }
     }
 
-    fun fire(event: String, data: Any? = null) {
+    fun handleWith(event: suspend () -> UiEvent) {
         coroutineScope.launch(exceptionHandler) {
-            val event = checkNotNull(events[event]) { "Event $event not found" }
-            val result = event(data)
+            val result = event()
             _uiEvent.send(result)
         }
     }
