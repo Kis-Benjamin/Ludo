@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.session.model
+package hu.bme.aut.android.ludocompose.session.di
 
-data class ScoreItemDto(
-    val id: Long = 0,
-    val name: String = "",
-    val winCount: Int = 0,
-)
+import javax.inject.Qualifier
+
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class Local
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class Online
