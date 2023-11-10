@@ -16,6 +16,7 @@
 
 package hu.bme.aut.android.ludocompose.ui.features.main.menu
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,23 +25,47 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import hu.bme.aut.android.ludocompose.R
+import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEventHandler
 
 @ExperimentalMaterial3Api
 @Composable
 fun MenuScreen(
+    snackbarHostState: SnackbarHostState,
     onNavigateToLocal: () -> Unit,
     onNavigateToOnline: () -> Unit,
     onNavigateToAbout: () -> Unit,
+    menuViewModel: MenuViewModel = hiltViewModel()
 ) {
+    val state by menuViewModel.state.collectAsStateWithLifecycle()
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = menuViewModel.authContract,
+        onResult = menuViewModel::onResult,
+    )
+
+    LaunchedEffect(true) {
+        menuViewModel.initialize()
+    }
+
+    UiEventHandler(menuViewModel.uiEvent, snackbarHostState, onNavigateToOnline)
+
     val style = typography.labelLarge
-    val modifier = Modifier.fillMaxWidth().padding(20.dp)
+    val modifier = Modifier
+        .fillMaxWidth()
+        .padding(20.dp)
 
     Column(
         modifier = Modifier
@@ -60,7 +85,8 @@ fun MenuScreen(
         }
         Button(
             modifier = modifier,
-            onClick = onNavigateToOnline,
+            enabled = state.isOnlineEnabled,
+            onClick = { menuViewModel.launch(launcher::launch) },
         ) {
             Text(
                 text = stringResource(id = R.string.menu_online),
