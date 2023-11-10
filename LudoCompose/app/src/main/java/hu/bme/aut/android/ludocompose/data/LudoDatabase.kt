@@ -25,16 +25,16 @@ import hu.bme.aut.android.ludocompose.data.dao.ScoreDao
 import hu.bme.aut.android.ludocompose.data.model.GameEntity
 import hu.bme.aut.android.ludocompose.data.model.PlayerEntity
 import hu.bme.aut.android.ludocompose.data.model.ScoreEntity
-import hu.bme.aut.android.ludocompose.data.model.TokenEntity
+import hu.bme.aut.android.ludocompose.data.model.PieceEntity
 
 @Database(
     entities = [
         GameEntity::class,
         PlayerEntity::class,
-        TokenEntity::class,
+        PieceEntity::class,
         ScoreEntity::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(LocalDateConverter::class)
