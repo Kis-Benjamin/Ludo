@@ -17,16 +17,44 @@
 package hu.bme.aut.android.ludocompose.ui.features.online.game
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.android.ludocompose.session.controllers.GameController
-import hu.bme.aut.android.ludocompose.session.controllers.ScoreController
+import hu.bme.aut.android.ludocompose.session.controller.GameController
+import hu.bme.aut.android.ludocompose.session.di.Online
+import hu.bme.aut.android.ludocompose.session.model.GameEnd
+import hu.bme.aut.android.ludocompose.session.model.GameUpdate
+import hu.bme.aut.android.ludocompose.session.stomp.StompManager
 import hu.bme.aut.android.ludocompose.ui.features.common.game.GameViewModel
+import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEvent
+import hu.bme.aut.android.ludocompose.ui.model.UiText
+import kotlinx.coroutines.flow.first
+import org.hildan.krossbow.stomp.conversions.subscribe
 import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
+    @Online
     gameController: GameController,
-    scoreController: ScoreController,
+    private val stompManager: StompManager,
 ) : GameViewModel(
     gameController = gameController,
-    scoreController = scoreController,
-)
+) {
+    init {
+        uiEventViewModel.handleWith {
+            stompManager.session
+                .subscribe<GameUpdate>("/game/update")
+                .collect {
+                    if (it.id == gameController.id) {
+                        load()
+                    }
+                }
+            UiEvent.Failure(UiText.DynamicString("Stomp session closed"))
+        }
+        uiEventViewModel.handleWith {
+            stompManager.session
+                .subscribe<GameEnd>("/game/end")
+                .first { it.id == gameController.id }.let {
+                    end()
+                }
+            UiEvent.Close
+        }
+    }
+}
