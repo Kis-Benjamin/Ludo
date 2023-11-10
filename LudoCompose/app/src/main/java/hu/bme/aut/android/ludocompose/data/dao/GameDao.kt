@@ -19,14 +19,14 @@ package hu.bme.aut.android.ludocompose.data.dao
 import androidx.room.*
 import hu.bme.aut.android.ludocompose.data.model.GameEntity
 import hu.bme.aut.android.ludocompose.data.model.PlayerEntity
-import hu.bme.aut.android.ludocompose.data.model.TokenEntity
+import hu.bme.aut.android.ludocompose.data.model.PieceEntity
 import hu.bme.aut.android.ludocompose.data.model.GameWithPlayers
 
 @Dao
 abstract class GameDao {
     @Transaction
-    @Query("SELECT * FROM games WHERE name != 'ONGOING'")
-    abstract suspend fun getAll(): List<GameEntity>
+    @Query("SELECT * FROM games WHERE name != :exceptName")
+    abstract suspend fun getAll(exceptName: String): List<GameEntity>
 
     @Query("SELECT * FROM games WHERE name = :name")
     abstract suspend fun get(name: String): GameEntity?
@@ -42,7 +42,7 @@ abstract class GameDao {
     internal abstract suspend fun insert(player: PlayerEntity): Long
 
     @Insert
-    internal abstract suspend fun insert(token: TokenEntity): Long
+    internal abstract suspend fun insert(piece: PieceEntity): Long
 
     @Transaction
     open suspend fun insert(gameWithPlayers: GameWithPlayers): Long {
@@ -51,7 +51,7 @@ abstract class GameDao {
             it.copy(player = it.player.copy(gameId = id))
         }.forEach { playerWithTokens ->
             val id = insert(playerWithTokens.player)
-            playerWithTokens.tokens.map {
+            playerWithTokens.pieces.map {
                 it.copy(playerId = id)
             }.forEach {
                 insert(it)
@@ -67,15 +67,15 @@ abstract class GameDao {
     internal abstract suspend fun update(player: PlayerEntity)
 
     @Update
-    internal abstract suspend fun update(token: TokenEntity)
+    internal abstract suspend fun update(piece: PieceEntity)
 
     @Transaction
     open suspend fun update(gameWithPlayers: GameWithPlayers) {
         update(gameWithPlayers.game)
         gameWithPlayers.players.forEach { playerWithTokens ->
             update(playerWithTokens.player)
-            playerWithTokens.tokens.forEach { token ->
-                update(token)
+            playerWithTokens.pieces.forEach { piece ->
+                update(piece)
             }
         }
     }
