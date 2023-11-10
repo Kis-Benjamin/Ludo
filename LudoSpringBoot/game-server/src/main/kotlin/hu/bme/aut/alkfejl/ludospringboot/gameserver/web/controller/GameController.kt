@@ -76,11 +76,4 @@ class GameController(
     companion object {
         private val logger = LoggerFactory.getLogger(GameController::class.java)
     }
-
-//    @PostMapping("/hello/{name}")
-//    fun sendMessage(@PathVariable name: String) {
-//        template.convertAndSend("/game/hello", HelloMessage(name))
-//    }
-//
-//    data class HelloMessage(val name: String)
 }
