@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package hu.bme.aut.android.ludocompose.domain.model
+package hu.bme.aut.android.ludocompose.session.stomp
 
-data class ScoreItem(
-    val id: Long = 0,
-    val name: String = "",
-    val winCount: Int = 0,
-)
+import org.hildan.krossbow.stomp.conversions.TypedStompSession
+
+interface StompManager {
+    val session: TypedStompSession
+
+    suspend fun initialize()
+
+    suspend fun dispose()
+}
