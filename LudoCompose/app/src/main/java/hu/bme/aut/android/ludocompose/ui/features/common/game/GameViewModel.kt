@@ -18,69 +18,68 @@ package hu.bme.aut.android.ludocompose.ui.features.common.game
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import hu.bme.aut.android.ludocompose.session.controllers.GameController
-import hu.bme.aut.android.ludocompose.session.controllers.ScoreController
-import hu.bme.aut.android.ludocompose.ui.converters.toUiModel
-import hu.bme.aut.android.ludocompose.ui.model.GameUi
+import hu.bme.aut.android.ludocompose.session.controller.GameController
 import hu.bme.aut.android.ludocompose.ui.features.common.load.LoadingViewModel
+import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEvent
+import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEventViewModel
+import hu.bme.aut.android.ludocompose.ui.model.BoardUi
+import hu.bme.aut.android.ludocompose.ui.model.toUiModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 open class GameViewModel(
     private val gameController: GameController,
-    private val scoreController: ScoreController,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(GameState())
     val state = _state.asStateFlow()
 
-    private val loadingViewModel = LoadingViewModel(
-        coroutineScope = viewModelScope,
-        loadData = ::loadData,
-    )
-
-    val loadingState get() = loadingViewModel.state
-
-    private suspend fun loadData() {
-        val game = gameController.getActive()
+    val loadingViewModel = LoadingViewModel(viewModelScope) {
+        val board = gameController.getBoard()
         _state.update { state ->
             state.copy(
-                game = game.toUiModel(),
-                isSelectEnabled = game.isSelectEnabled,
+                board = board.toUiModel(),
+                selectEnabled = board.selectEnabled,
+                stepEnabled = board.stepEnabled,
             )
         }
     }
 
-    fun select() {
-        viewModelScope.launch {
-            gameController.select()
-            loadingViewModel.load()
-        }
+    protected val uiEventViewModel = UiEventViewModel(viewModelScope)
+
+    val uiEvent get() = uiEventViewModel.uiEvent
+
+    protected fun load() {
+        loadingViewModel.load()
     }
 
-    private var ended = false
+    protected open suspend fun selectImpl() {
+        gameController.select()
+    }
 
-    fun step(
-        onGameEnded: () -> Unit,
-    ) {
-        viewModelScope.launch {
-            val isFinished = gameController.step()
-            loadingViewModel.load()
-            if (isFinished && !ended) {
-                ended = true
-                val game = gameController.getActive()
-                val winner = game.winner
-                scoreController.save(winner)
-                gameController.unLoad()
-                onGameEnded()
-            }
-        }
+    protected open suspend fun stepImpl() {
+        gameController.step()
+    }
+
+    fun select() = uiEventViewModel.handleWith {
+        selectImpl()
+        UiEvent.Continue
+    }
+
+    fun step() = uiEventViewModel.handleWith {
+        stepImpl()
+        UiEvent.Continue
+    }
+
+    fun end() = uiEventViewModel.handleWith {
+        gameController.unLoad()
+        UiEvent.Success
     }
 }
 
 data class GameState(
-    val game: GameUi? = null,
-    val isSelectEnabled: Boolean = false,
+    val board: BoardUi = BoardUi(),
+    val selectEnabled: Boolean = false,
+    val stepEnabled: Boolean = false,
 )
