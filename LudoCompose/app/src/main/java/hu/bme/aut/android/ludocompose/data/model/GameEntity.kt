@@ -23,6 +23,7 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import hu.bme.aut.android.ludocompose.data.converters.LocalDateConverter
 import kotlinx.datetime.LocalDate
+import java.time.LocalDateTime
 
 @Entity(
     tableName = "games",
@@ -33,6 +34,17 @@ data class GameEntity(
     @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "date") val date: LocalDate,
-    @ColumnInfo(name = "dice") val dice: Int,
-    @ColumnInfo(name = "act_player") val actPlayer: Int,
-)
+    @ColumnInfo(name = "dice") var dice: Int,
+    @ColumnInfo(name = "act_player") var actPlayer: Int,
+) {
+    constructor(name: String) : this(
+        name = name,
+        date = LocalDateTime.now().run {
+            LocalDate(year, monthValue, dayOfMonth)
+        },
+        dice = (1..5).random(),
+        actPlayer = 0,
+    )
+}
+
+fun GameEntity.duplicate(name: String) = copy(id = null, name = name)

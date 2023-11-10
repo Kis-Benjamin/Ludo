@@ -17,19 +17,18 @@
 package hu.bme.aut.android.ludocompose.ui.model
 
 import androidx.compose.ui.geometry.Offset
+import hu.bme.aut.android.ludocompose.session.model.FieldDTO
 
-data class FieldUi(
+data class FieldUi internal constructor(
     val offset: Offset,
     val color: ColorSequence = ColorSequence.GRAY,
-    var tokenColor: ColorSequence? = null,
-    var isPointer: Boolean = false,
-) {
-    var tokenColorIndex: Int
-        get() = tokenColor?.ordinal ?: ColorSequence.WHITE.ordinal
-        set(value) { tokenColor = ColorSequence.entries[value] }
+    val pieceColor: ColorSequence? = null,
+    val pointer: Boolean = false,
+)
 
-    fun reset() {
-        tokenColor = null
-        isPointer = false
-    }
-}
+fun FieldDTO.toUiModel(offset: Offset, color: ColorSequence) = FieldUi(
+    offset = offset,
+    color = color,
+    pieceColor = this.pieceColor?.let { ColorSequence.entries[it] },
+    pointer = pointer,
+)

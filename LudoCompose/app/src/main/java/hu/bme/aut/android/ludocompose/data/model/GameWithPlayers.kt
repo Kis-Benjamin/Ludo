@@ -28,5 +28,17 @@ data class GameWithPlayers(
         parentColumn = "id",
         entityColumn = "game_id",
         entity = PlayerEntity::class,
-    ) val players: List<PlayerWithTokens>
+    ) val players: List<PlayerWithPieces>
+) {
+    constructor(name: String, playerNames: List<String>) : this(
+        game = GameEntity(name),
+        players = List(playerNames.size) { playerIndex ->
+            PlayerWithPieces(playerIndex, playerNames[playerIndex])
+        }
+    )
+}
+
+fun GameWithPlayers.duplicate(name: String) = copy(
+    game = game.duplicate(name),
+    players = players.map { it.duplicate() },
 )

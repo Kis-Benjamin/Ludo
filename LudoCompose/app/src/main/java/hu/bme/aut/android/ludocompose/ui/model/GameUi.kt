@@ -16,10 +16,20 @@
 
 package hu.bme.aut.android.ludocompose.ui.model
 
-import kotlin.random.Random
+import hu.bme.aut.android.ludocompose.session.model.GameDTO
+import kotlinx.datetime.LocalDate
+import java.time.LocalDateTime
 
-data class GameUi(
-    val boardUi: BoardUi = BoardUi,
-    val diceUi: DiceUi = DiceUi(),
-    val seed: Int = Random.nextInt(),
+data class GameUi internal constructor(
+    val id: Long = 0,
+    val name: String = "",
+    val date: String = LocalDateTime.now().run {
+        LocalDate(year, monthValue, dayOfMonth).toString()
+    },
+)
+
+fun GameDTO.toUiModel() = GameUi(
+    id = id,
+    name = name,
+    date = date.toString(),
 )

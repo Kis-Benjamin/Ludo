@@ -25,5 +25,5 @@ import androidx.room.PrimaryKey
 data class ScoreEntity(
     @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "win_count") val winCount: Int = 0
+    @ColumnInfo(name = "win_count") val winCount: Int
 )

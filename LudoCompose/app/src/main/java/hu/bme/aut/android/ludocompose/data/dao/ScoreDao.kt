@@ -32,7 +32,4 @@ interface ScoreDao {
 
     @Insert
     suspend fun insert(item: ScoreEntity)
-
-    @Query("DELETE FROM scores WHERE id = :id")
-    suspend fun delete(id: Long)
 }

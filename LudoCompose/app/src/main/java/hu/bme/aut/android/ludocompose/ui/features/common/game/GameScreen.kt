@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,17 +42,20 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import hu.bme.aut.android.ludocompose.R
 import hu.bme.aut.android.ludocompose.ui.features.common.load.LoadingScreen
-import hu.bme.aut.android.ludocompose.ui.graphics.drawGame
+import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEventHandler
+import hu.bme.aut.android.ludocompose.ui.graphics.drawBoard
 
 @Composable
 fun GameScreen(
+    snackbarHostState: SnackbarHostState,
     onGameEnded: () -> Unit,
     gameViewModel: GameViewModel,
 ) {
-    val loadingState by gameViewModel.loadingState.collectAsStateWithLifecycle()
     val state by gameViewModel.state.collectAsStateWithLifecycle()
 
-    LoadingScreen(loadingState) {
+    UiEventHandler(gameViewModel.uiEvent, snackbarHostState, onGameEnded)
+
+    LoadingScreen(gameViewModel.loadingViewModel) {
         Column {
             key(state) {
                 Box(
@@ -63,20 +67,22 @@ fun GameScreen(
                         .background(Gray)
                         .drawWithContent {
                             val average = (size.width + size.height) / 2
-                            drawGame(state.game!!, average)
+                            drawBoard(state.board, average)
                             drawContent()
                         },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = state.game!!.diceUi.value,
+                        text = state.board.dice.value,
                         modifier = Modifier.padding(bottom = 3.dp),
                         style = typography.displayLarge,
                     )
                 }
             }
             Row(
-                modifier = Modifier.fillMaxWidth().weight(0.2f),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.2f),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 Button(
@@ -84,15 +90,16 @@ fun GameScreen(
                     modifier = Modifier
                         .weight(1f, true)
                         .padding(16.dp),
-                    enabled = state.isSelectEnabled
+                    enabled = state.selectEnabled
                 ) {
                     Text(text = stringResource(id = R.string.game_select))
                 }
                 Button(
-                    onClick = { gameViewModel.step(onGameEnded) },
+                    onClick = { gameViewModel.step() },
                     modifier = Modifier
                         .weight(1f, true)
                         .padding(16.dp),
+                    enabled = state.stepEnabled
                 ) {
                     Text(text = stringResource(id = R.string.game_step))
                 }

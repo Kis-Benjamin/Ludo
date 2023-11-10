@@ -16,22 +16,20 @@
 
 package hu.bme.aut.android.ludocompose.session.model
 
-data class GameDto(
-    val players: List<PlayerDto>,
-    var actPlayerIndex: Int = 0,
-    var dice: Int = 0,
-) {
-    val actPlayer: PlayerDto get() = players[actPlayerIndex]
+import hu.bme.aut.android.ludocompose.domain.model.GameListItem
+import kotlinx.datetime.LocalDate
+import java.time.LocalDateTime
 
-    private val isInYard get() = actPlayer.actToken.isInYard
+data class GameDTO(
+    val id: Long = 0,
+    val name: String = "",
+    val date: LocalDate = LocalDateTime.now().run {
+        LocalDate(year, monthValue, dayOfMonth)
+    },
+)
 
-    private val isInTrack get() = actPlayer.actToken.isInTrack
-
-    private val canStepInTrack get() = isInYard && dice == 6
-
-    val isValidStep get() = canStepInTrack || isInTrack
-
-    val winner: String get() = players.find { it.standing == 1 }!!.name
-
-    val isSelectEnabled: Boolean get() = actPlayer.tokens.count { it.isInYard && dice == 6 || it.isInTrack } > 1
-}
+fun GameListItem.toSessionModel() = GameDTO(
+    id = id,
+    name = name,
+    date = date,
+)

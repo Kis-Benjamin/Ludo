@@ -59,9 +59,7 @@ fun NewGameScreen(
 ) {
     val state by newGameViewModel.state.collectAsStateWithLifecycle()
 
-    UiEventHandler(newGameViewModel.uiEvent, snackbarHostState) {
-        onSuccess()
-    }
+    UiEventHandler(newGameViewModel.uiEvent, snackbarHostState, onSuccess)
 
     val keyboardController = LocalSoftwareKeyboardController.current
 

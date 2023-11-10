@@ -16,13 +16,64 @@
 
 package hu.bme.aut.android.ludocompose.domain.model
 
-data class Player(
-    var name: String = "",
-    var standing: Int = 0,
-    val tokens: List<Token> = List(4) { Token() },
-    var actTokenIndex: Int = 0,
-) {
-    val isInGame: Boolean get() = tokens.any { !it.isInHome }
+import hu.bme.aut.android.ludocompose.data.model.PlayerEntity
+import hu.bme.aut.android.ludocompose.data.model.PlayerWithPieces
 
-    val actToken: Token get() = tokens[actTokenIndex]
+class Player internal constructor(
+    private val player: PlayerEntity,
+    private val pieces: List<Piece>,
+) {
+    private var actPieceIndex: Int
+        get() = player.actPiece
+        set(value) {
+            player.actPiece = value
+        }
+
+    private val actPiece: Piece
+        get() = pieces[actPieceIndex]
+
+    private fun selectNextPiece(dice: Int) {
+        var piecesChecked = 0
+        do {
+            actPieceIndex = (actPieceIndex + 1) % pieces.size
+        } while (!actPiece.isValidMove(dice) && ++piecesChecked < pieces.size)
+    }
+
+    internal val isInGame: Boolean get() = pieces.any { it.isInGame }
+
+    internal fun isSelectEnabled(dice: Int) = pieces.count { it.isValidMove(dice) } > 1
+
+    internal fun setPointer(dice: Int) {
+        actPiece.setPointer(dice)
+    }
+
+    internal fun clearPointer() {
+        actPiece.clearPointer()
+    }
+
+    internal fun select(dice: Int) {
+        selectNextPiece(dice)
+    }
+
+    internal fun step(dice: Int): Boolean {
+        return actPiece.step(dice)
+    }
+
+    internal var standing
+        get() = player.standing
+        set(value) {
+            player.standing = value
+        }
+
+    internal val name get() = player.name
 }
+
+fun PlayerWithPieces.toDomainModel(board: Board) = Player(
+    player = player,
+    pieces = pieces.map { it.toDomainModel(
+        yardFields = board.yardFields(player.index),
+        trackFields = board.trackFields(player.index),
+        homeFields = board.homeFields(player.index),
+        color = player.index,
+    ) },
+)

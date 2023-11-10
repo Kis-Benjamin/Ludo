@@ -16,127 +16,108 @@
 
 package hu.bme.aut.android.ludocompose.domain.model
 
-import hu.bme.aut.android.ludocompose.domain.model.Constants.tokenCount
-import hu.bme.aut.android.ludocompose.domain.model.Constants.trackMultiplier
-import hu.bme.aut.android.ludocompose.domain.model.Constants.trackSize
+import hu.bme.aut.android.ludocompose.data.model.GameEntity
+import hu.bme.aut.android.ludocompose.data.model.GameWithPlayers
 
-data class Game(
-    val players: List<Player>,
-    var actPlayerIndex: Int = 0,
-    var dice: Int = 0,
+class Game internal constructor(
+    private val game: GameEntity,
+    private val players: List<Player>,
+    private val board: Board,
+    private val nextInt: () -> Int,
 ) {
-    constructor(playerNames: List<String>) : this(
-        players = playerNames.also {
-            require(it.size in 2..4) { "Number of players must be between 2 and 4" }
-            require(it.all { name -> name.isNotBlank() }) { "Player name must not be blank" }
-        }.map { Player(it) }
-    )
+    private var dice: Int
+        get() = game.dice
+        set(value) {
+            game.dice = value
+            board.dice.value = value
+        }
 
-    private val playerCount: Int get() = players.size
+    private var actPlayerIndex: Int
+        get() = game.actPlayer
+        set(value) {
+            game.actPlayer = value
+            board.dice.color = value
+        }
+
+    private val actPlayer: Player
+        get() = players[actPlayerIndex]
+
+    private val hasPlayerInGame get() = players.any { it.isInGame }
+
     private val playersInGame: Int get() = players.count { it.isInGame }
-    private val actPlayer: Player get() = players[actPlayerIndex]
 
-    private val isInYard get() = actPlayer.actToken.isInYard
-
-    private val isInTrack get() = actPlayer.actToken.isInTrack
-
-    private val isInHome get() = actPlayer.actToken.isInHome
-
-    private val canStepInTrack get() = isInYard && dice == 6
-
-    private val canStepOnHome get() = isInTrack &&
-            actPlayer.actToken.trackPos >= trackSize + trackMultiplier * actPlayerIndex
-
-    private val canRollAgain get() = isInTrack && dice == 6
-
-    private val isValidStep get() = canStepInTrack || isInTrack
-
-    private val isInGame get() = actPlayer.isInGame
-
-    private fun nextPlayer() {
-        actPlayerIndex = (actPlayerIndex + 1) % playerCount
+    private fun selectNextPlayer() {
+        var playersChecked = 0
+        do {
+            actPlayerIndex = (actPlayerIndex + 1) % players.size
+        } while (!actPlayer.isInGame && ++playersChecked < players.size)
     }
 
-    private fun nextValidPlayer(): Boolean {
-        var stepCount = 0
-        do nextPlayer()
-        while (!isInGame && ++stepCount < playerCount)
-        return stepCount == playerCount
+    private fun rollDice() {
+        dice = nextInt() % 6 + 1
+        updateSelectEnabled()
     }
 
-    private fun nextToken() {
-        actPlayer.actTokenIndex = (actPlayer.actTokenIndex + 1) % tokenCount
+    private fun updateSelectEnabled() {
+        board.selectEnabled = actPlayer.isSelectEnabled(dice)
     }
 
-    private fun nextValidToken(): Boolean {
-        var stepCount = 0
-        do nextToken()
-        while (!isValidStep && ++stepCount < tokenCount)
-        return stepCount != tokenCount
+    private fun setPointer() {
+        actPlayer.setPointer(dice)
     }
 
-    private fun executeStep() {
-        val token = actPlayer.actToken
-        if (isInTrack) {
-            token.trackPos += dice
+    private fun clearPointer() {
+        actPlayer.clearPointer()
+    }
+
+    init {
+        setPointer()
+        updateSelectEnabled()
+    }
+
+    fun getBoard(): Board {
+        return board
+    }
+
+    fun select() {
+        clearPointer()
+        actPlayer.select(dice)
+        setPointer()
+    }
+
+    fun step(): Boolean {
+        clearPointer()
+        val enteredHome = actPlayer.step(dice)
+        if (enteredHome) {
+            actPlayer.standing = players.size - playersInGame
         }
-        if (canStepInTrack) {
-            token.state = Token.State.TRACK
-            token.trackPos = trackMultiplier * actPlayerIndex
-        }
-        if (canStepOnHome) {
-            token.state = Token.State.HOME
-            token.trackPos = 0
-            if (!isInGame)
-                actPlayer.standing = playerCount - playersInGame
-        }
+        if (dice != 6) selectNextPlayer()
+        rollDice()
+        actPlayer.select(dice)
+        setPointer()
+        return finished
     }
 
-    private fun executeTokenKill() {
-        if (!isInTrack) return
-        for (playerIndex in players.indices) {
-            val player = players[playerIndex]
-            for (tokenIndex in player.tokens.indices) {
-                if (actPlayerIndex == playerIndex && actPlayer.actTokenIndex == tokenIndex) continue
-                val token = player.tokens[tokenIndex]
-                if (token.state != Token.State.TRACK) continue
-                if (token.trackPos % trackSize == actPlayer.actToken.trackPos % trackSize) {
-                    token.trackPos = 0
-                    token.state = Token.State.YARD
-                    return
-                }
-            }
+    val winnerName: String
+        get() {
+            check(!hasPlayerInGame) { "Game is not ended" }
+            val winner = checkNotNull(players.find { it.standing == 1 }) { "No winner" }
+            return winner.name
         }
-    }
 
-    fun select(name: String) {
-        if (actPlayer.name == name) {
-            nextValidToken()
-        }
-    }
+    val finished: Boolean
+        get() = !hasPlayerInGame
+}
 
-    fun step(name: String): Boolean {
-        if (actPlayer.name != name) return false
-        executeStep()
-        if (isInHome) nextValidToken()
-        executeTokenKill()
-        if (canRollAgain) rollDice()
-        else {
-            if (nextValidPlayer()) {
-                return true
-            } else {
-                rollDice()
-                nextValidToken()
-            }
-        }
-        return false
-    }
-
-    fun rollDice() {
-        dice = set.random() % 6 + 1
-    }
-
-    companion object {
-        private val set = (1..46656).shuffled()
-    }
+fun GameWithPlayers.toDomainModel(nextInt: () -> Int): Game {
+    val board = Board(
+        dice = game.toDomainDiceModel(),
+    )
+    val players = players.map { it.toDomainModel(board) }
+    return Game(
+        game = game,
+        players = players,
+        board = board,
+        nextInt = nextInt,
+    )
 }

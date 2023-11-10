@@ -25,6 +25,8 @@ data object NewRoomScreen : Screen("new_room", R.string.menu_new_room)
 
 data object JoinRoomScreen : Screen("join_room", R.string.menu_join_room)
 
+data object RoomScreen : Screen("room", R.string.menu_room)
+
 data object GameScreen : Screen("online_game", R.string.menu_game)
 
 data object ScoreBoardScreen : Screen("online_score_board", R.string.menu_score_board)

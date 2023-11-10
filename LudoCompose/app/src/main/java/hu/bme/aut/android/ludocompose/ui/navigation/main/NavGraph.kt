@@ -54,6 +54,7 @@ fun NavGraph(
 
         composable(MenuScreen) {
             MenuScreen(
+                snackbarHostState = snackbarHostState,
                 onNavigateToLocal = { navigate(LocalMenuScreen) },
                 onNavigateToOnline = { navigate(OnlineMenuScreen) },
                 onNavigateToAbout = { navigate(AboutScreen) },

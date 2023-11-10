@@ -24,15 +24,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import hu.bme.aut.android.ludocompose.R
+import kotlinx.coroutines.launch
 
 @ExperimentalMaterial3Api
 @Composable
@@ -43,6 +50,12 @@ fun MenuScreen(
     onNavigateToScoreboard: () -> Unit,
     menuViewModel: MenuViewModel = hiltViewModel()
 ) {
+    val state by menuViewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(true) {
+        menuViewModel.load()
+    }
+
     val style = typography.labelLarge
     val modifier = Modifier.fillMaxWidth().padding(20.dp)
 
@@ -75,7 +88,7 @@ fun MenuScreen(
         Button(
             modifier = modifier,
             onClick = onNavigateToGame,
-            enabled = false,
+            enabled = state.hasActiveGame,
         ) {
             Text(
                 text = stringResource(id = R.string.menu_resume_game),

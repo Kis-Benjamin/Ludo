@@ -17,6 +17,7 @@
 package hu.bme.aut.android.ludocompose.ui.navigation.common
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -32,10 +33,12 @@ class LudoNavGraphBuilder(
 ) {
     fun composable(
         screen: Screen,
+        argument: NamedNavArgument? = null,
         content: @Composable (NavBackStackEntry) -> Unit
     ) {
         navGraphBuilder.composable(
             route = screen.route,
+            arguments = argument?.let { listOf(it) } ?: emptyList(),
             enterTransition = enterTransition,
             exitTransition = exitTransition,
         ) {
@@ -67,7 +70,6 @@ class LudoNavGraphBuilder(
 
     fun NavController.navigate(destination: Screen, popUpTo: Screen) {
         navigate(destination.route) {
-            launchSingleTop = destination.route == popUpTo.route
             popUpTo(popUpTo.route)
         }
     }

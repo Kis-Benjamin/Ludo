@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.android.ludocompose.R
-import hu.bme.aut.android.ludocompose.session.controllers.GameController
+import hu.bme.aut.android.ludocompose.session.manager.GameManager
 import hu.bme.aut.android.ludocompose.ui.model.UiText
 import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEvent
 import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEventViewModel
@@ -31,34 +31,26 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SaveGameViewModel @Inject constructor(
-    private val gameController: GameController,
+    private val gameManager: GameManager,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SaveGameState())
     val state = _state.asStateFlow()
 
-    private val uiEventViewModel = UiEventViewModel(
-        coroutineScope = viewModelScope,
-        events = mapOf(
-            "save" to ::saveEvent,
-        )
-    )
+    private val uiEventViewModel = UiEventViewModel(viewModelScope)
 
     val uiEvent = uiEventViewModel.uiEvent
 
-    private suspend fun saveEvent(data: Any?): UiEvent {
+    fun save() = uiEventViewModel.handleWith {
         val name = _state.value.name
         if (name.isBlank()) {
             val message = UiText.StringResource(R.string.save_game_name_empty)
-            return UiEvent.Failure(message)
+            UiEvent.Failure(message)
+        } else {
+            // val message = UiText.StringResource(R.string.save_game_name_exists, name)
+            gameManager.save(name)
+            UiEvent.Success
         }
-        val message = UiText.StringResource(R.string.save_game_name_exists, name)
-        gameController.save(name)
-        return UiEvent.Success
-    }
-
-    fun save() {
-        uiEventViewModel.fire("save")
     }
 
     fun setName(name: String) {

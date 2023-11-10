@@ -20,7 +20,7 @@ import hu.bme.aut.android.ludocompose.data.model.GameEntity
 import hu.bme.aut.android.ludocompose.data.model.GameWithPlayers
 
 interface GameRepository {
-    suspend fun getAll(): List<GameEntity>
+    suspend fun getAll(exceptName: String): List<GameEntity>
 
     suspend fun get(name: String): GameEntity?
 

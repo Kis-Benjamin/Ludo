@@ -54,9 +54,7 @@ fun SaveGameScreen(
 ) {
     val state by saveGameViewModel.state.collectAsStateWithLifecycle()
 
-    UiEventHandler(saveGameViewModel.uiEvent, snackbarHostState) {
-        onSuccess()
-    }
+    UiEventHandler(saveGameViewModel.uiEvent, snackbarHostState, onSuccess)
 
     val shape = RoundedCornerShape(30.dp)
     val color = colorScheme.tertiaryContainer
