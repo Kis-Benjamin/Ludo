@@ -16,18 +16,15 @@
 
 package hu.bme.aut.android.ludocompose.ui.features.online.scoreboard
 
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import hu.bme.aut.android.ludocompose.ui.features.common.scoreboard.ScoreBoardScreen
 
 @Composable
 fun ScoreBoardScreen(
-    snackbarHostState: SnackbarHostState,
     scoreBoardViewModel: ScoreBoardViewModel = hiltViewModel()
 ) {
     ScoreBoardScreen(
-        snackbarHostState = snackbarHostState,
         scoreBoardViewModel = scoreBoardViewModel
     )
 }
