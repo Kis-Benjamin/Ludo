@@ -26,6 +26,4 @@ interface ScoreRepository {
     suspend fun insert(item: ScoreEntity)
 
     suspend fun update(item: ScoreEntity)
-
-    suspend fun delete(id: Long)
 }
