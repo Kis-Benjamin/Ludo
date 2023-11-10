@@ -16,20 +16,7 @@
 
 package hu.bme.aut.android.ludocompose.session.model
 
-import hu.bme.aut.android.ludocompose.domain.model.GameListItem
-import kotlinx.datetime.LocalDate
-import java.time.LocalDateTime
-
-data class GameDTO(
-    val id: Long = 0,
+data class UserDTO(
     val name: String = "",
-    val date: LocalDate = LocalDateTime.now().run {
-        LocalDate(year, monthValue, dayOfMonth)
-    },
-)
-
-fun GameListItem.toSessionModel() = GameDTO(
-    id = id,
-    name = name,
-    date = date,
+    val isReady: Boolean = false,
 )

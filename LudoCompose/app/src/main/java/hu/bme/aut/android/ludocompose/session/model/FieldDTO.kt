@@ -16,20 +16,14 @@
 
 package hu.bme.aut.android.ludocompose.session.model
 
-import hu.bme.aut.android.ludocompose.domain.model.GameListItem
-import kotlinx.datetime.LocalDate
-import java.time.LocalDateTime
+import hu.bme.aut.android.ludocompose.domain.model.Field
 
-data class GameDTO(
-    val id: Long = 0,
-    val name: String = "",
-    val date: LocalDate = LocalDateTime.now().run {
-        LocalDate(year, monthValue, dayOfMonth)
-    },
+data class FieldDTO(
+    val pieceColor: Int? = null,
+    val pointer: Boolean = false,
 )
 
-fun GameListItem.toSessionModel() = GameDTO(
-    id = id,
-    name = name,
-    date = date,
+fun Field.toSessionModel() = FieldDTO(
+    pieceColor = pieceColor,
+    pointer = pointer,
 )
