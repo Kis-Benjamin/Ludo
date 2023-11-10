@@ -24,4 +24,6 @@ open class Screen(
     @StringRes val title: Int,
 ) {
     open val enableNavigationBack: Boolean get() = true
+
+    operator fun plus(route: String) = Screen(this.route + route, title)
 }
