@@ -16,19 +16,14 @@
 
 package hu.bme.aut.android.ludocompose.ui.model
 
-import androidx.compose.ui.geometry.Offset
-import hu.bme.aut.android.ludocompose.session.model.FieldDTO
+import hu.bme.aut.android.ludocompose.session.model.ScoreDTO
 
-data class FieldUi internal constructor(
-    val offset: Offset,
-    val color: ColorSequence = ColorSequence.GRAY,
-    val pieceColor: ColorSequence? = null,
-    val pointer: Boolean = false,
+data class ScoreUi internal constructor(
+    val name: String = "",
+    val winCount: String = "",
 )
 
-fun FieldDTO.toUiModel(offset: Offset, color: ColorSequence) = FieldUi(
-    offset = offset,
-    color = color,
-    pieceColor = this.pieceColor?.let { ColorSequence.entries[it] },
-    pointer = pointer,
+fun ScoreDTO.toUiModel() = ScoreUi(
+    name = name,
+    winCount = winCount.toString()
 )

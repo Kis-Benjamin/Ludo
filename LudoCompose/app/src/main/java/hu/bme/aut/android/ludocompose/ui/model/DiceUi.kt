@@ -16,7 +16,14 @@
 
 package hu.bme.aut.android.ludocompose.ui.model
 
-data class DiceUi(
+import hu.bme.aut.android.ludocompose.session.model.DiceDTO
+
+data class DiceUi internal constructor(
     val value: String = "0",
     val color: ColorSequence = ColorSequence.GRAY,
+)
+
+fun DiceDTO.toUiModel() = DiceUi(
+    value.toString(),
+    color?.let { ColorSequence.entries[it] } ?: ColorSequence.GRAY
 )

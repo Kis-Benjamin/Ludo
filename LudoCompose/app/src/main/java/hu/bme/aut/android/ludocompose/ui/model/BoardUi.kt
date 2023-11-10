@@ -16,82 +16,46 @@
 
 package hu.bme.aut.android.ludocompose.ui.model
 
-import hu.bme.aut.android.ludocompose.ui.model.Constants.playerCount
-import hu.bme.aut.android.ludocompose.ui.model.Constants.tokenCount
 import hu.bme.aut.android.ludocompose.ui.model.Constants.trackMultiplier
-import hu.bme.aut.android.ludocompose.ui.model.Constants.trackSize
-import hu.bme.aut.android.ludocompose.session.model.GameDto
-import hu.bme.aut.android.ludocompose.session.model.TokenDto
+import hu.bme.aut.android.ludocompose.session.model.BoardDTO
 
-data object BoardUi {
-    val yardFields: List<List<FieldUi>> by lazy {
-        List(playerCount) { playerIndex ->
-            List(tokenCount) { tokenIndex ->
-                FieldUi(
-                    Constants.yardPoints[playerIndex][tokenIndex],
-                    ColorSequence.entries[playerIndex],
-                )
-            }
-        }
-    }
+data class BoardUi internal constructor(
+    val dice: DiceUi = DiceUi(),
 
-    val trackFields: List<FieldUi> by lazy {
-        List(trackSize) { index ->
-            FieldUi(
-                Constants.trackPoints[index],
-                if (index.mod(trackMultiplier) == 0)
-                    ColorSequence.entries[index / trackMultiplier]
-                else ColorSequence.WHITE,
+    val yardFields: List<List<FieldUi>> = emptyList(),
+
+    val trackFields: List<FieldUi> = emptyList(),
+
+    val homeFields: List<List<FieldUi>> = emptyList(),
+)
+
+fun BoardDTO.toUiModel() = BoardUi(
+    dice.toUiModel(),
+
+    yardFields.mapIndexed { playerIndex, fieldDTOs ->
+        fieldDTOs.mapIndexed { pieceIndex, fieldDTO ->
+            fieldDTO.toUiModel(
+                Constants.yardPoints[playerIndex][pieceIndex],
+                ColorSequence.entries[playerIndex],
             )
         }
-    }
+    },
 
-    val homeFields: List<List<FieldUi>> by lazy {
-        List(playerCount) { playerIndex ->
-            List(tokenCount) { tokenIndex ->
-                FieldUi(
-                    Constants.homePoints[playerIndex][tokenIndex],
-                    ColorSequence.entries[playerIndex],
-                )
-            }
-        }
-    }
+    trackFields.mapIndexed { index, fieldDTO ->
+        fieldDTO.toUiModel(
+            Constants.trackPoints[index],
+            if (index.mod(trackMultiplier) == 0)
+                ColorSequence.entries[index / trackMultiplier]
+            else ColorSequence.WHITE,
+        )
+    },
 
-    private fun reset() {
-        yardFields.forEach { it.forEach { it.reset() } }
-        trackFields.forEach { it.reset() }
-        homeFields.forEach { it.forEach { it.reset() } }
-    }
-
-    fun update(gameDto: GameDto) = apply {
-        reset()
-        val players = gameDto.players
-        for (playerIndex in players.indices) {
-            val player = players[playerIndex]
-            var homeCount = 4
-            for (tokenIndex in player.tokens.indices) {
-                val token = player.tokens[tokenIndex]
-                when (token.state) {
-                    TokenDto.State.YARD -> {
-                        yardFields[playerIndex][tokenIndex].tokenColorIndex = playerIndex
-                    }
-                    TokenDto.State.TRACK -> {
-                        trackFields[token.trackPos % trackSize].tokenColorIndex = playerIndex
-                    }
-                    else -> {
-                        homeFields[playerIndex][--homeCount].tokenColorIndex = playerIndex
-                    }
-                }
-            }
+    homeFields.mapIndexed { playerIndex, fieldDTOs ->
+        fieldDTOs.mapIndexed { pieceIndex, fieldDTO ->
+            fieldDTO.toUiModel(
+                Constants.homePoints[playerIndex][pieceIndex],
+                ColorSequence.entries[playerIndex],
+            )
         }
-        if (gameDto.isValidStep) {
-            val player = gameDto.actPlayer
-            val token = gameDto.actPlayer.actToken
-            if (token.isInYard) {
-                yardFields[gameDto.actPlayerIndex][player.actTokenIndex].isPointer = true
-            } else if (token.isInTrack) {
-                trackFields[token.trackPos % trackSize].isPointer = true
-            }
-        }
-    }
-}
+    },
+)
