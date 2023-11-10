@@ -6,10 +6,12 @@
     <string name="menu_local">Lokális játék</string>
     <string name="menu_online">Online játék</string>
     <string name="menu_about">Rólunk</string>
+    <string name="menu_login">Bejelentkezés</string>
     <string name="menu_game">Ki nevet a végén!</string>
     <string name="menu_new_game">Új játék indítása</string>
     <string name="menu_new_room">Új szoba létrehozása</string>
     <string name="menu_join_room">Csatlakozás szobához</string>
+    <string name="menu_room">Szoba</string>
     <string name="menu_save_game">Játékállás mentése</string>
     <string name="menu_load_game">Játékállás betöltése</string>
     <string name="menu_score_board">Dicsőségtábla</string>
@@ -45,5 +47,22 @@
     <string name="score_board_win_count">Győzelmek száma</string>
     <string name="score_board_empty">A dicsőség lista üres.</string>
     <string name="score_board_delete_success">Bejegyzés törölve</string>
+    <string name="score_board_delete_error">Hiba történt a bejegyzés törlése közben</string>
+    <string name="login_email_empty">Nem adtál meg felhasználó nevet!</string>
+    <string name="login_password_empty">Nem adtál meg jelszót!</string>
+    <string name="login_failed">Sikertelen bejelentkezés.</string>
+    <string name="new_room_enter_game_name">Szoba neve</string>
+    <string name="new_room_button">Létrehozás</string>
+    <string name="new_room_name_empty">A megadott név üres</string>
     <string name="unknown_error_message">Valami hiba történt</string>
+    <string name="join_room_empty_selection">Még nem választottál ki szobát.</string>
+    <string name="join_room_list_empty">Még nem indítottak egy szobát sem.</string>
+    <string name="join_room_button">Csatlakozás</string>
+    <string name="room_host_name">Szervező:</string>
+    <string name="room_user_list_empty">Még nem csatlakozott egy játékos sem.</string>
+    <string name="room_start_game_button">Indítás</string>
+    <string name="room_unready_button">Várakozás</string>
+    <string name="room_ready_button">Felkészülés</string>
+    <string name="room_close_button">Bezárás</string>
+    <string name="room_leave_button">Kilépés</string>
 </resources>
