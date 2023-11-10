@@ -39,9 +39,4 @@ class ScoreRepositoryDatabase @Inject constructor(
         require(item.id != null) { "Id must not be null" }
         scoreDao.update(item)
     }
-
-    override suspend fun delete(id: Long) {
-        require(id > 0) { "Id must be positive" }
-        scoreDao.delete(id)
-    }
 }

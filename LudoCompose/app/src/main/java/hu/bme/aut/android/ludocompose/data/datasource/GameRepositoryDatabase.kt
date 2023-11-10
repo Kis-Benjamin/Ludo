@@ -19,13 +19,12 @@ package hu.bme.aut.android.ludocompose.data.datasource
 import hu.bme.aut.android.ludocompose.data.dao.GameDao
 import hu.bme.aut.android.ludocompose.data.model.GameEntity
 import hu.bme.aut.android.ludocompose.data.model.GameWithPlayers
-import hu.bme.aut.android.ludocompose.data.model.PlayerWithTokens
 import javax.inject.Inject
 
 class GameRepositoryDatabase @Inject constructor(
     private val gameDao: GameDao
 ) : GameRepository {
-    override suspend fun getAll() = gameDao.getAll()
+    override suspend fun getAll(exceptName: String) = gameDao.getAll(exceptName)
 
     override suspend fun get(name: String): GameEntity? {
         require(name.isNotBlank()) { "Name must not be blank" }
@@ -43,7 +42,7 @@ class GameRepositoryDatabase @Inject constructor(
             gameWithPlayers.players.all {
                 it.player.id == null &&
                 it.player.gameId == null &&
-                it.tokens.all {
+                it.pieces.all {
                     it.id == null &&
                     it.playerId == null
                 }
@@ -64,7 +63,7 @@ class GameRepositoryDatabase @Inject constructor(
             gameWithPlayers.players.all {
                 it.player.id != null &&
                 it.player.gameId != null &&
-                it.tokens.all {
+                it.pieces.all {
                     it.id != null &&
                     it.playerId != null
                 }
@@ -75,7 +74,7 @@ class GameRepositoryDatabase @Inject constructor(
             gameWithPlayers.players.all {
                 it.player.id!! > 0 &&
                 it.player.gameId!! > 0 &&
-                it.tokens.all {
+                it.pieces.all {
                     it.id!! > 0 &&
                     it.playerId!! > 0
                 }
