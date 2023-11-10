@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId = "hu.bme.aut.android.ludocompose"
-        minSdk = 23
+        minSdk = 29
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -59,6 +59,7 @@ android {
 
 kapt {
     correctErrorTypes = true
+    includeCompileClasspath = false
 }
 
 hilt {
