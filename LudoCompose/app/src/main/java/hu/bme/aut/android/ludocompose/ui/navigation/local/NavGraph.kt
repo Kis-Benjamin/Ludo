@@ -46,36 +46,35 @@ fun LudoNavGraphBuilder.NavGraph(
             onNavigateToNewGame = { navigate(NewGameScreen) },
             onNavigateToLoadGame = { navigate(LoadGameScreen) },
             onNavigateToSaveGame = { navigate(SaveGameScreen) },
-            onNavigateToGame = { navigate(LocalGameScreen) },
+            onNavigateToGame = { navigate(GameScreen) },
             onNavigateToScoreboard = { navigate(ScoreBoardScreen) },
         )
     }
     composable(NewGameScreen) {
         NewGameScreen(
             snackbarHostState = snackbarHostState,
-            onSuccess = { navigate(LocalGameScreen) },
+            onSuccess = { navigate(GameScreen) },
         )
     }
     composable(LoadGameScreen) {
         LoadGameScreen(
             snackbarHostState = snackbarHostState,
-            onSuccess = { navigate(LocalGameScreen) },
+            onSuccess = { navigate(GameScreen) },
         )
     }
     dialog(SaveGameScreen) {
         SaveGameScreen(
             snackbarHostState = snackbarHostState,
-            onSuccess = { navigate(MenuScreen) },
+            onSuccess = { navController.popBackStack() },
         )
     }
-    composable(LocalGameScreen) {
+    composable(GameScreen) {
         GameScreen(
-            onGameEnded = { navigate(MenuScreen) },
+            snackbarHostState = snackbarHostState,
+            onGameEnded = { navigate(ScoreBoardScreen) },
         )
     }
     composable(ScoreBoardScreen) {
-        ScoreBoardScreen(
-            snackbarHostState = snackbarHostState,
-        )
+        ScoreBoardScreen()
     }
 }
