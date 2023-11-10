@@ -17,12 +17,14 @@
 package hu.bme.aut.android.ludocompose.ui.features.local.scoreboard
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.android.ludocompose.session.controllers.ScoreController
+import hu.bme.aut.android.ludocompose.session.controller.ScoreController
+import hu.bme.aut.android.ludocompose.session.di.Local
 import hu.bme.aut.android.ludocompose.ui.features.common.scoreboard.ScoreBoardViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class ScoreBoardViewModel @Inject constructor(
+    @Local
     scoreController: ScoreController
 ) : ScoreBoardViewModel(
     scoreController = scoreController
