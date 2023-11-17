@@ -16,13 +16,17 @@
 
 package hu.bme.aut.alkfejl.ludospringboot.gameserver.domain.service
 
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.error
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.info
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.model.Constants.playerCounts
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.model.Constants.playerMaxCount
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.model.Constants.playerMinCount
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.debug
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.datasource.GameRepository
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.domain.model.Board
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.model.GameEntity
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.domain.model.toDomainModel
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -33,36 +37,37 @@ class GameServiceRepository(
     companion object {
         private val numSet = (1..46656).shuffled()
         private val nextInt = { numSet.random() }
+
+        private val logger = LoggerFactory.getLogger(GameServiceRepository::class.java)
     }
 
     override fun start(userDetails: List<Pair<String, String>>): Long {
-        require(userDetails.size in playerCounts) { "Player count: ${userDetails.size}, must be between $playerMinCount and $playerMaxCount" }
-        require(userDetails.map { it.first }.toSet().size == userDetails.size) { "User names must be unique" }
-        require(userDetails.map { it.second }.toSet().size == userDetails.size) { "User ids must be unique" }
-        require(userDetails.all { it.first.isNotBlank() }) { "User names must not be blank" }
-        require(userDetails.all { it.second.isNotBlank() }) { "User ids must not be blank" }
+        require(userDetails.size in playerCounts) { logger error "Player count: ${userDetails.size}, must be between $playerMinCount and $playerMaxCount" }
+        require(userDetails.map { it.first }.toSet().size == userDetails.size) { logger error "User names must be unique" }
+        require(userDetails.map { it.second }.toSet().size == userDetails.size) { logger error "User ids must be unique" }
+        require(userDetails.all { it.first.isNotBlank() }) { logger error "User names must not be blank" }
+        require(userDetails.all { it.second.isNotBlank() }) { logger error "User ids must not be blank" }
         val gameEntity = GameEntity(userDetails).run {
             gameRepository.insert(this)
         }
-        return gameEntity.id!!
+        val id = gameEntity.id!!
+        logger info "Game started with id: $id"
+        return id
     }
 
     override fun delete(id: Long) {
-        require(id > 0) { "Id must be positive" }
         gameRepository.delete(id)
     }
 
     override fun getBoard(id: Long, userId: String): Board {
-        require(id > 0) { "Id must be positive" }
-        require(userId.isNotBlank()) { "User id must not be blank" }
+        require(userId.isNotBlank()) { logger error "User id must not be blank" }
         val gameEntity = gameRepository.get(id)
         val game = gameEntity.toDomainModel(nextInt)
         return game.getBoard(userId)
     }
 
     override fun select(id: Long, userId: String) {
-        require(id > 0) { "Id must be positive" }
-        require(userId.isNotBlank()) { "User id must not be blank" }
+        require(userId.isNotBlank()) { logger error "User id must not be blank" }
         val gameEntity = gameRepository.get(id)
         val game = gameEntity.toDomainModel(nextInt)
         game.select(userId)
@@ -70,8 +75,7 @@ class GameServiceRepository(
     }
 
     override fun step(id: Long, userId: String): Boolean {
-        require(id > 0) { "Id must be positive" }
-        require(userId.isNotBlank()) { "User id must not be blank" }
+        require(userId.isNotBlank()) { logger error "User id must not be blank" }
         val gameEntity = gameRepository.get(id)
         val game = gameEntity.toDomainModel(nextInt)
         val ended = game.step(userId)
@@ -80,7 +84,6 @@ class GameServiceRepository(
     }
 
     override fun getWinner(id: Long): String {
-        require(id > 0) { "Id must be positive" }
         val gameEntity = gameRepository.get(id)
         val game = gameEntity.toDomainModel(nextInt)
         return game.winnerName
