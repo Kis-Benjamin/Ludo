@@ -22,7 +22,7 @@ data class User internal constructor(
     var id: Long = 0,
     var name: String = "",
     var subject: String = "",
-    var isReady: Boolean = false,
+    var ready: Boolean = false,
 )
 
 fun UserEntity.toDomainModel() : User {
@@ -31,6 +31,6 @@ fun UserEntity.toDomainModel() : User {
         id = id,
         name = name,
         subject = subject,
-        isReady = isReady,
+        ready = ready,
     )
 }

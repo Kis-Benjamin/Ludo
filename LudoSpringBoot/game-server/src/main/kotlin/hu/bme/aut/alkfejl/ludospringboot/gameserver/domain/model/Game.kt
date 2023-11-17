@@ -57,12 +57,9 @@ class Game internal constructor(
     }
 
     private fun updateActions(userId: String) {
+        actPlayer.setPointer(dice)
         board.selectEnabled = actPlayer.isSelectEnabled(userId, dice)
         board.stepEnabled = actPlayer.isStepEnabled(userId)
-    }
-
-    init {
-        actPlayer.setPointer(dice)
     }
 
     fun getBoard(userId: String): Board {
@@ -71,17 +68,19 @@ class Game internal constructor(
     }
 
     fun select(userId: String) {
-        actPlayer.select(userId, dice)
+        require(actPlayer.isSelectEnabled(userId, dice)) { logger error "User unauthorized to select" }
+        actPlayer.select(dice)
     }
 
     fun step(userId: String): Boolean {
-        val enteredHome = actPlayer.step(userId, dice)
+        require(actPlayer.isStepEnabled(userId)) { logger error "User unauthorized to step" }
+        val enteredHome = actPlayer.step(dice)
         if (enteredHome) {
             actPlayer.standing = players.size - playersInGame
         }
         if (dice != 6) selectNextPlayer()
         rollDice()
-        actPlayer.select(userId, dice)
+        actPlayer.select(dice)
         return !hasPlayerInGame
     }
 

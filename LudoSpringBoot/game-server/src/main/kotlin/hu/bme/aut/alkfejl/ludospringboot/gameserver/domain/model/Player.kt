@@ -51,13 +51,11 @@ class Player internal constructor(
         actPiece.setPointer(dice)
     }
 
-    internal fun select(userId: String, dice: Int) {
-        require(isSelectEnabled(userId, dice)) { "User id must be the same as the player id" }
+    internal fun select(dice: Int) {
         selectNextPiece(dice)
     }
 
-    internal fun step(userId: String, dice: Int): Boolean {
-        require(isStepEnabled(userId)) { "User id must be the same as the player id" }
+    internal fun step(dice: Int): Boolean {
         return actPiece.step(dice)
     }
 
