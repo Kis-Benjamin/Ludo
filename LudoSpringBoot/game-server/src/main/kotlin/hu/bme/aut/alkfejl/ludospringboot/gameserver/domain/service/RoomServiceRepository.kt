@@ -119,7 +119,7 @@ class RoomServiceRepository(
         val user = room.users.find { it.subject == userId }.run {
             requireNotNull(this) { "This user is not in this room" }
         }
-        user.isReady = false
+        user.ready = false
         userRepository.update(user)
     }
 }

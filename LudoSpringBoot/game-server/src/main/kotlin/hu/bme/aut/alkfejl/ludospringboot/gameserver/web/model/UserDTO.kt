@@ -20,10 +20,10 @@ import hu.bme.aut.alkfejl.ludospringboot.gameserver.domain.model.User
 
 data class UserDTO internal constructor(
     val name: String = "",
-    val isReady: Boolean = false,
+    val ready: Boolean = false,
 )
 
 fun User.toSessionModel() = UserDTO(
     name = name,
-    isReady = isReady,
+    ready = ready,
 )

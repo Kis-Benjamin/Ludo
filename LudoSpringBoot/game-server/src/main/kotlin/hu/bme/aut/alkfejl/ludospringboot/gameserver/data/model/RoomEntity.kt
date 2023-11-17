@@ -16,7 +16,6 @@
 
 package hu.bme.aut.alkfejl.ludospringboot.gameserver.data.model
 
-import jakarta.annotation.Nullable
 import jakarta.persistence.*
 import org.hibernate.Hibernate
 
@@ -58,7 +57,7 @@ data class RoomEntity(
         users = mutableListOf(),
     ) {
         host = UserEntity(this, hostName, hostId).apply {
-            isReady = true
+            ready = true
         }
         users = mutableListOf(host!!)
     }

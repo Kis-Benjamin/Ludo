@@ -26,5 +26,5 @@ data class UserUi internal constructor(
 
 fun UserDTO.toUiModel() = UserUi(
     name = name,
-    color = if (isReady) Color.Green else Color.Red
+    color = if (ready) Color.Green else Color.Red
 )
