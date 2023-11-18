@@ -16,7 +16,11 @@
 
 package hu.bme.aut.alkfejl.ludospringboot.gameserver.domain.model
 
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.debug
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.error
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.info
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.model.GameEntity
+import org.slf4j.LoggerFactory
 
 class Game internal constructor(
     private val game: GameEntity,
@@ -64,12 +68,20 @@ class Game internal constructor(
 
     fun getBoard(userId: String): Board {
         updateActions(userId)
+        val userName = game.players.find { it.subject == userId }?.name
+        val playerName = actPlayer.name
+        logger debug "User: '$userName', Player: '$playerName'"
+        logger debug "Board updated: ${board.selectEnabled} - ${board.stepEnabled}"
         return board
     }
 
     fun select(userId: String) {
         require(actPlayer.isSelectEnabled(userId, dice)) { logger error "User unauthorized to select" }
         actPlayer.select(dice)
+        val userName = game.players.find { it.subject == userId }?.name
+        val playerName = actPlayer.name
+        logger debug "User: '$userName', Player: '$playerName'"
+        logger debug "Player '${actPlayer.name}' selected"
     }
 
     fun step(userId: String): Boolean {
@@ -81,13 +93,21 @@ class Game internal constructor(
         if (dice != 6) selectNextPlayer()
         rollDice()
         actPlayer.select(dice)
+        val userName = game.players.find { it.subject == userId }?.name
+        val playerName = actPlayer.name
+        logger debug "User: '$userName', Player: '$playerName'"
+        logger debug "Player '${actPlayer.name}' stepped"
         return !hasPlayerInGame
     }
 
     val winnerName: String get() {
-        check(!hasPlayerInGame) { "Game is not ended" }
-        val winner = checkNotNull(players.find { it.standing == 1 }) { "No winner" }
+        check(!hasPlayerInGame) { logger error "Game is not ended" }
+        val winner = checkNotNull(players.find { it.standing == 1 }) { logger error "No winner" }
         return winner.name
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(Game::class.java)
     }
 }
 
