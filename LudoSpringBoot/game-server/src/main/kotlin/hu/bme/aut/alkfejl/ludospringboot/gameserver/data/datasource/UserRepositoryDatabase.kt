@@ -46,31 +46,23 @@ class UserRepositoryDatabase(
     }
 
     override fun insert(user: UserEntity): UserEntity {
-        try {
-            return userEntityRepository.save(user)
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException(logger error "User creation failed, id: ${user.id}", e)
-        }
+        val user = userEntityRepository.save(user)
+        logger debug "User created, id: ${user.id }"
+        return user
     }
 
     override fun update(user: UserEntity) {
-        try {
-            userEntityRepository.save(user)
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException(logger error "User update failed, id: ${user.id}", e)
-        }
+        userEntityRepository.save(user)
+        logger debug "User updated, id: ${user.id}"
     }
 
     @Transactional
     override fun delete(user: UserEntity) {
         val room = requireNotNull(user.room) { logger error "User must be in a room" }
-        try {
-            room.users.remove(user)
-            userEntityRepository.delete(user)
-            roomEntityRepository.save(room)
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException(logger error "User deletion failed, id: ${user.id}", e)
-        }
+        room.users.remove(user)
+        logger debug "User deleted, id: ${user.id}"
+        userEntityRepository.delete(user)
+        roomEntityRepository.save(room)
     }
 
     companion object {

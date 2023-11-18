@@ -42,21 +42,13 @@ class ScoreRepositoryDatabase(
     }
 
     override fun insert(item: ScoreEntity) {
-        try {
-            scoreEntityRepository.save(item)
-            logger debug "Score created, id: ${item.id}"
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException(logger error "Score creation failed, id: ${item.id}", e)
-        }
+        scoreEntityRepository.save(item)
+        logger debug "Score created, id: ${item.id}"
     }
 
     override fun update(item: ScoreEntity) {
-        try {
-            scoreEntityRepository.save(item)
-            logger debug "Score updated, id: ${item.id}"
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException(logger error "Score update failed, id: ${item.id}", e)
-        }
+        scoreEntityRepository.save(item)
+        logger debug "Score updated, id: ${item.id}"
     }
 
     companion object {

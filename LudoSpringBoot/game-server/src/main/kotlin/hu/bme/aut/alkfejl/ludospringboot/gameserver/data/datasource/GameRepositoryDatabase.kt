@@ -43,50 +43,38 @@ class GameRepositoryDatabase(
 
     @Transactional
     override fun insert(game: GameEntity): GameEntity {
-        try {
-            return game.copy(id = null, players = mutableListOf()).run {
-                gameEntityRepository.save(this)
-            }.also { gameEntity ->
-                checkNotNull(gameEntity.id) { logger error "Game could not be saved" }
-                val playerEntities = game.players.map { player ->
-                    player.copy(id = null, game = gameEntity, pieces = mutableListOf()).run {
-                        playerEntityRepository.save(this)
-                    }.also { playerEntity ->
-                        checkNotNull(playerEntity.id) { logger error "Player could not be saved" }
-                        val pieceEntities = player.pieces.map { piece ->
-                            piece.copy(id = null, player = playerEntity).run {
-                                pieceEntityRepository.save(this)
-                            }.also { pieceEntity ->
-                                checkNotNull(pieceEntity.id) { logger error "Piece could not be saved" }
-                            }
+        return game.copy(id = null, players = mutableListOf()).run {
+            gameEntityRepository.save(this)
+        }.also { gameEntity ->
+            checkNotNull(gameEntity.id) { logger error "Game could not be saved" }
+            val playerEntities = game.players.map { player ->
+                player.copy(id = null, game = gameEntity, pieces = mutableListOf()).run {
+                    playerEntityRepository.save(this)
+                }.also { playerEntity ->
+                    checkNotNull(playerEntity.id) { logger error "Player could not be saved" }
+                    val pieceEntities = player.pieces.map { piece ->
+                        piece.copy(id = null, player = playerEntity).run {
+                            pieceEntityRepository.save(this)
+                        }.also { pieceEntity ->
+                            checkNotNull(pieceEntity.id) { logger error "Piece could not be saved" }
                         }
-                        playerEntity.pieces = pieceEntities.toMutableList()
                     }
+                    playerEntity.pieces = pieceEntities.toMutableList()
                 }
-                gameEntity.players = playerEntities.toMutableList()
-                logger debug "Game created with id: ${gameEntity.id}"
             }
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException(logger error "Game creation failed", e)
+            gameEntity.players = playerEntities.toMutableList()
+            logger debug "Game created with id: ${gameEntity.id}"
         }
     }
 
     override fun update(game: GameEntity) {
-        try {
-            gameEntityRepository.save(game)
-            logger debug "Game updated with id: ${game.id}"
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException(logger error "Game update failed, id: ${game.id}", e)
-        }
+        gameEntityRepository.save(game)
+        logger debug "Game updated with id: ${game.id}"
     }
 
     override fun delete(id: Long) {
-        try {
-            gameEntityRepository.deleteById(id)
-            logger debug "Game deleted with id: $id"
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException(logger error "Game deletion failed, id: $id", e)
-        }
+        gameEntityRepository.deleteById(id)
+        logger debug "Game deleted with id: $id"
     }
 
     companion object {

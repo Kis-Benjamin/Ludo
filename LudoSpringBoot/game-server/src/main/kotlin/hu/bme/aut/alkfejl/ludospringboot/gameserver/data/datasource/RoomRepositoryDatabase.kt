@@ -48,43 +48,31 @@ class RoomRepositoryDatabase(
     @Transactional
     override fun insert(room: RoomEntity): RoomEntity {
         val host = requireNotNull(room.host) { logger error "Room host is null" }
-        try {
-            return room.copy(id = null, host = null, users = mutableListOf()).run {
-                roomEntityRepository.save(this)
-            }.also { roomEntity ->
-                checkNotNull(roomEntity.id) { logger error "Room creation failed" }
-                val userEntity = host.let { user ->
-                    user.copy(id = null, room = roomEntity).run {
-                        userEntityRepository.save(this)
-                    }.also { userEntity ->
-                        checkNotNull(userEntity.id) { logger error "User creation failed" }
-                    }
+        return room.copy(id = null, host = null, users = mutableListOf()).run {
+            roomEntityRepository.save(this)
+        }.also { roomEntity ->
+            checkNotNull(roomEntity.id) { logger error "Room creation failed" }
+            val userEntity = host.let { user ->
+                user.copy(id = null, room = roomEntity).run {
+                    userEntityRepository.save(this)
+                }.also { userEntity ->
+                    checkNotNull(userEntity.id) { logger error "User creation failed" }
                 }
-                roomEntity.host = userEntity
-                roomEntity.users = mutableListOf(userEntity)
-                logger debug "Room created with id: ${roomEntity.id}"
             }
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException(logger error "Room creation failed", e)
+            roomEntity.host = userEntity
+            roomEntity.users = mutableListOf(userEntity)
+            logger debug "Room created with id: ${roomEntity.id}"
         }
     }
 
     override fun update(room: RoomEntity) {
-        try {
-            roomEntityRepository.save(room)
-            logger debug "Room updated with id: ${room.id}"
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException(logger error "Room update failed", e)
-        }
+        roomEntityRepository.save(room)
+        logger debug "Room updated with id: ${room.id}"
     }
 
     override fun delete(id: Long) {
-        try {
-            roomEntityRepository.deleteById(id)
-            logger debug "Room deleted with id: $id"
-        } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException(logger error "Room deletion failed", e)
-        }
+        roomEntityRepository.deleteById(id)
+        logger debug "Room deleted with id: $id"
     }
 
     companion object {
