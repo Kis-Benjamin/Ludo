@@ -16,9 +16,12 @@
 
 package hu.bme.aut.alkfejl.ludospringboot.gameserver.data.datasource
 
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.error
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.debug
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.dao.RoomEntityRepository
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.dao.UserEntityRepository
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.model.RoomEntity
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import kotlin.jvm.optionals.getOrNull
@@ -29,39 +32,50 @@ class RoomRepositoryDatabase(
     private val userEntityRepository: UserEntityRepository,
 ) : RoomRepository {
     override fun getAll(): List<RoomEntity> {
-        return roomEntityRepository.findAll()
+        val rooms = roomEntityRepository.findAll()
+        logger debug "Rooms found: ${rooms.size}"
+        return rooms
     }
 
     override fun get(id: Long): RoomEntity {
-        return roomEntityRepository.findById(id).run {
-            requireNotNull(getOrNull()) { "Room not found with id: $id" }
+        val room = roomEntityRepository.findById(id).run {
+            requireNotNull(getOrNull()) { logger error "Room not found with id: $id" }
         }
+        logger debug "Room found with id: $id"
+        return room
     }
 
     @Transactional
     override fun insert(room: RoomEntity): RoomEntity {
-        val host = requireNotNull(room.host) { "Room host is null" }
+        val host = requireNotNull(room.host) { logger error "Room host is null" }
         return room.copy(id = null, host = null, users = mutableListOf()).run {
             roomEntityRepository.save(this)
-        }.also {  roomEntity ->
-            checkNotNull(roomEntity.id) { "Room could not be saved" }
+        }.also { roomEntity ->
+            checkNotNull(roomEntity.id) { logger error "Room creation failed" }
             val userEntity = host.let { user ->
                 user.copy(id = null, room = roomEntity).run {
                     userEntityRepository.save(this)
                 }.also { userEntity ->
-                    checkNotNull(userEntity.id) { "User could not be saved" }
+                    checkNotNull(userEntity.id) { logger error "User creation failed" }
                 }
             }
             roomEntity.host = userEntity
             roomEntity.users = mutableListOf(userEntity)
+            logger debug "Room created with id: ${roomEntity.id}"
         }
     }
 
     override fun update(room: RoomEntity) {
         roomEntityRepository.save(room)
+        logger debug "Room updated with id: ${room.id}"
     }
 
     override fun delete(id: Long) {
         roomEntityRepository.deleteById(id)
+        logger debug "Room deleted with id: $id"
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(RoomRepositoryDatabase::class.java)
     }
 }

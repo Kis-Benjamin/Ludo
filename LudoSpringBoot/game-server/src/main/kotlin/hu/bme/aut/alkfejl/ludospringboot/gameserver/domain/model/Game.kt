@@ -16,7 +16,11 @@
 
 package hu.bme.aut.alkfejl.ludospringboot.gameserver.domain.model
 
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.debug
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.error
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.info
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.model.GameEntity
+import org.slf4j.LoggerFactory
 
 class Game internal constructor(
     private val game: GameEntity,
@@ -57,38 +61,53 @@ class Game internal constructor(
     }
 
     private fun updateActions(userId: String) {
+        actPlayer.setPointer(dice)
         board.selectEnabled = actPlayer.isSelectEnabled(userId, dice)
         board.stepEnabled = actPlayer.isStepEnabled(userId)
     }
 
-    init {
-        actPlayer.setPointer(dice)
-    }
-
     fun getBoard(userId: String): Board {
         updateActions(userId)
+        val userName = game.players.find { it.subject == userId }?.name
+        val playerName = actPlayer.name
+        logger debug "User: '$userName', Player: '$playerName'"
+        logger debug "Board updated: ${board.selectEnabled} - ${board.stepEnabled}"
         return board
     }
 
     fun select(userId: String) {
-        actPlayer.select(userId, dice)
+        require(actPlayer.isSelectEnabled(userId, dice)) { logger error "User unauthorized to select" }
+        actPlayer.select(dice)
+        val userName = game.players.find { it.subject == userId }?.name
+        val playerName = actPlayer.name
+        logger debug "User: '$userName', Player: '$playerName'"
+        logger debug "Player '${actPlayer.name}' selected"
     }
 
     fun step(userId: String): Boolean {
-        val enteredHome = actPlayer.step(userId, dice)
+        require(actPlayer.isStepEnabled(userId)) { logger error "User unauthorized to step" }
+        val enteredHome = actPlayer.step(dice)
         if (enteredHome) {
             actPlayer.standing = players.size - playersInGame
         }
         if (dice != 6) selectNextPlayer()
         rollDice()
-        actPlayer.select(userId, dice)
+        actPlayer.select(dice)
+        val userName = game.players.find { it.subject == userId }?.name
+        val playerName = actPlayer.name
+        logger debug "User: '$userName', Player: '$playerName'"
+        logger debug "Player '${actPlayer.name}' stepped"
         return !hasPlayerInGame
     }
 
     val winnerName: String get() {
-        check(!hasPlayerInGame) { "Game is not ended" }
-        val winner = checkNotNull(players.find { it.standing == 1 }) { "No winner" }
+        check(!hasPlayerInGame) { logger error "Game is not ended" }
+        val winner = checkNotNull(players.find { it.standing == 1 }) { logger error "No winner" }
         return winner.name
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(Game::class.java)
     }
 }
 

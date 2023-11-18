@@ -34,7 +34,7 @@ data class UserEntity internal constructor(
     var subject: String,
 
     @Column(name = "is_ready", nullable = false)
-    var isReady: Boolean,
+    var ready: Boolean,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", nullable = false)
@@ -51,13 +51,13 @@ data class UserEntity internal constructor(
     override fun hashCode(): Int = javaClass.hashCode()
 
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , name = $name , isReady = $isReady )"
+        return this::class.simpleName + "(id = $id , name = $name , ready = $ready )"
     }
 
     constructor(room: RoomEntity, name: String, subject: String) : this(
         room = room,
         name = name,
         subject = subject,
-        isReady = false,
+        ready = false,
     )
 }

@@ -16,6 +16,9 @@
 
 package hu.bme.aut.alkfejl.ludospringboot.gameserver.domain.service
 
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.error
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.info
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.warn
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.datasource.RoomRepository
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.datasource.UserRepository
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.model.RoomEntity
@@ -37,47 +40,45 @@ class RoomServiceRepository(
     }
 
     override fun get(id: Long): Room {
-        require(id > 0) { "Id must be positive" }
         val room = roomRepository.get(id)
         return room.toDomainModel()
     }
 
     override fun getUsers(id: Long): List<User> {
-        require(id > 0) { "Id must be positive" }
         val room = roomRepository.get(id)
         return room.users.map { it.toDomainModel() }
     }
 
     override fun delete(id: Long) {
-        require(id > 0) { "Id must be positive" }
         roomRepository.delete(id)
     }
 
     override fun create(name: String, hostName: String, hostId: String): Long {
-        require(name.isNotBlank()) { "Name must not be blank" }
-        require(hostName.isNotBlank()) { "Host name must not be blank" }
-        require(hostId.isNotBlank()) { "Host id must not be blank" }
+        require(name.isNotBlank()) { logger error "Name must not be blank" }
+        require(hostName.isNotBlank()) { logger error "Host name must not be blank" }
+        require(hostId.isNotBlank()) { logger error "Host id must not be blank" }
         val room = RoomEntity(name, hostName, hostId).run {
             roomRepository.insert(this)
         }
-        return room.id!!
+        val id = room.id!!
+        logger info "Room created with id: $id"
+        return id
     }
 
     override fun close(id: Long, userId: String) {
-        require(id > 0) { "Id must be positive" }
-        require(userId.isNotBlank()) { "User id must not be blank" }
+        require(userId.isNotBlank()) { logger error "User id must not be blank" }
         val room = roomRepository.get(id)
-        require(room.host!!.subject == userId) { "Only this room's host can close it" }
+        require(room.host!!.subject == userId) { logger error "Only the host can close the room" }
+        logger info "Room closed by host with id: $id"
         roomRepository.delete(id)
     }
 
     override fun join(id: Long, userName: String, userId: String): Long {
-        require(id > 0) { "Id must be positive" }
-        require(userName.isNotBlank()) { "User name must not be blank" }
-        require(userId.isNotBlank()) { "User id must not be blank" }
+        require(userName.isNotBlank()) { logger error "User name must not be blank" }
+        require(userId.isNotBlank()) { logger error "User id must not be blank" }
         val room = roomRepository.get(id)
-        require(room.host!!.subject != userId) { "This room's host cannot join again" }
-        require(room.users.none { it.subject == userId }) { "This user is already in this room" }
+        require(room.host!!.subject != userId) { logger error "The host should not join" }
+        require(room.users.none { it.subject == userId }) { logger warn "The user is present in this room" }
         val userEntity = UserEntity(
             room = room,
             name = userName,
@@ -85,41 +86,47 @@ class RoomServiceRepository(
         ).apply {
             userRepository.insert(this)
         }
-        return userEntity.id!!
+        val userEntityId = userEntity.id!!
+        logger info "User '$userName' joined to Room with id: $id"
+        return userEntityId
     }
 
     override fun leave(id: Long, userId: String) {
-        require(id > 0) { "Id must be positive" }
-        require(userId.isNotBlank()) { "User id must not be blank" }
+        require(userId.isNotBlank()) { logger error "User id must not be blank" }
         val room = roomRepository.get(id)
-        require(room.host?.subject != userId) { "This room's host cannot leave" }
+        require(room.host?.subject != userId) { logger error "The host should not leave" }
         val userEntity = room.users.find { it.subject == userId }.run {
-            requireNotNull(this) { "This user is not in this room" }
+            requireNotNull(this) { logger error "This user is not in this room" }
         }
+        logger info "User '${userEntity.name}' left from Room with id: $id"
         userRepository.delete(userEntity)
     }
 
     override fun ready(id: Long, userId: String) {
-        require(id > 0) { "Id must be positive" }
-        require(userId.isNotBlank()) { "User id must not be blank" }
+        require(userId.isNotBlank()) { logger error "User id must not be blank" }
         val room = roomRepository.get(id)
-        require(room.host?.subject != userId) { "This room's host cannot ready" }
+        require(room.host?.subject != userId) { logger error "This room's host cannot ready" }
         val user = room.users.find { it.subject == userId }.run {
-            requireNotNull(this) { "This user is not in this room" }
+            requireNotNull(this) { logger error "This user is not in this room" }
         }
-        user.isReady = true
+        user.ready = true
+        logger info "User '${user.name}' is ready in Room with id: $id"
         userRepository.update(user)
     }
 
     override fun unready(id: Long, userId: String) {
-        require(id > 0) { "Id must be positive" }
-        require(userId.isNotBlank()) { "User id must not be blank" }
+        require(userId.isNotBlank()) { logger error "User id must not be blank" }
         val room = roomRepository.get(id)
-        require(room.host?.subject != userId) { "This room's host cannot unready" }
+        require(room.host?.subject != userId) { logger error "This room's host cannot unready" }
         val user = room.users.find { it.subject == userId }.run {
-            requireNotNull(this) { "This user is not in this room" }
+            requireNotNull(this) { logger error "This user is not in this room" }
         }
-        user.isReady = false
+        user.ready = false
+        logger info "User '${user.name}' is not ready in Room with id: $id"
         userRepository.update(user)
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(RoomServiceRepository::class.java)
     }
 }

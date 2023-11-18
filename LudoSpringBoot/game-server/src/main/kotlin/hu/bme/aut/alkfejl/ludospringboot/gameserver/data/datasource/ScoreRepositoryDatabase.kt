@@ -16,8 +16,11 @@
 
 package hu.bme.aut.alkfejl.ludospringboot.gameserver.data.datasource
 
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.error
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.debug
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.dao.ScoreEntityRepository
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.model.ScoreEntity
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -25,18 +28,30 @@ class ScoreRepositoryDatabase(
     private val scoreEntityRepository: ScoreEntityRepository,
 ) : ScoreRepository {
     override fun getAll(): List<ScoreEntity> {
-        return scoreEntityRepository.findAll()
+        val scores = scoreEntityRepository.findAll()
+        logger debug "Scores found: ${scores.size}"
+        return scores
     }
 
     override fun get(name: String): ScoreEntity? {
-        return scoreEntityRepository.findByName(name)
+        require(name.isNotBlank()) { logger error "Name must not be blank" }
+        val score = scoreEntityRepository.findByName(name)
+        score?.let { logger debug "Score found with name: $name, id: ${it.id}" }
+            ?: (logger debug "Score not found with name: $name")
+        return score
     }
 
     override fun insert(item: ScoreEntity) {
         scoreEntityRepository.save(item)
+        logger debug "Score created, id: ${item.id}"
     }
 
     override fun update(item: ScoreEntity) {
         scoreEntityRepository.save(item)
+        logger debug "Score updated, id: ${item.id}"
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(ScoreRepositoryDatabase::class.java)
     }
 }

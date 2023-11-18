@@ -16,10 +16,12 @@
 
 package hu.bme.aut.alkfejl.ludospringboot.gameserver.domain.model
 
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.error
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.model.Constants.diceValues
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.model.Constants.trackPositions
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.model.Constants.trackSize
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.model.PieceEntity
+import org.slf4j.LoggerFactory
 
 class Piece internal constructor(
     private val piece: PieceEntity,
@@ -31,7 +33,7 @@ class Piece internal constructor(
     private var trackPos: Int
         get() = piece.trackPos
         set(value) {
-            require(value in trackPositions) { "Invalid track position: $value" }
+            require(value in trackPositions) { logger error "Invalid track position: $value" }
             piece.trackPos = value
         }
 
@@ -44,7 +46,7 @@ class Piece internal constructor(
             0 -> State.YARD
             1 -> State.TRACK
             2 -> State.HOME
-            else -> throw IllegalStateException("Invalid piece state: ${piece.state}")
+            else -> throw IllegalStateException(logger error "Invalid piece state: ${piece.state}")
         }
         set(value) {
             piece.state = value.ordinal
@@ -90,7 +92,7 @@ class Piece internal constructor(
             }
 
             // never happens, isValidMove would return false
-            State.HOME -> throw IllegalStateException("Cannot move a piece that is already home")
+            State.HOME -> throw IllegalStateException(logger error "Cannot move a piece that is already home")
         }
     }
 
@@ -98,7 +100,7 @@ class Piece internal constructor(
         get() = state != State.HOME
 
     internal fun isValidMove(dice: Int) = run {
-        require(dice in diceValues) { "Invalid dice value: $dice" }
+        require(dice in diceValues) { logger error "Invalid dice value: $dice" }
         when (state) {
             State.YARD -> dice == 6
             State.TRACK -> true
@@ -111,16 +113,20 @@ class Piece internal constructor(
     }
 
     internal fun step(dice: Int): Boolean {
-        require(dice in diceValues) { "Invalid dice value: $dice" }
+        require(dice in diceValues) { logger error "Invalid dice value: $dice" }
         if (isValidMove(dice)) move(dice)
         return state == State.HOME
     }
 
     internal fun kill() {
-        check(state != State.YARD) { "Cannot kill a piece that is still in the yard" }
-        check(state != State.HOME) { "Cannot kill a piece that is already home" }
+        check(state != State.YARD) { logger error "Cannot kill a piece that is still in the yard" }
+        check(state != State.HOME) { logger error "Cannot kill a piece that is already home" }
         state = State.YARD
         yardField.stepOnWith(this)
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(Piece::class.java)
     }
 }
 

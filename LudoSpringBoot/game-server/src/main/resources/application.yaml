@@ -1,11 +1,17 @@
 logging:
+  pattern:
+    dateformat: "yyyy-MM-dd HH:mm:ss.SSS"
+  group:
+    security:
+     - org.springframework.security
+     - org.springframework.security.oauth2
+     - org.springframework.boot.autoconfigure.security
   level:
     root: INFO
     web: INFO
-    org.springframework.web: INFO
-    org.springframework.security: INFO
-    org.springframework.security.oauth2: INFO
-#    org.springframework.boot.autoconfigure: DEBUG
+    security: INFO
+    hu.bme.aut.alkfejl.ludospringboot: DEBUG
+    org.springframework.security.web.DefaultSecurityFilterChain: WARN
 
 spring:
   application:
@@ -17,3 +23,6 @@ spring:
       ddl-auto: update
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: true
+    show-sql: false
+  output.ansi.enabled: always

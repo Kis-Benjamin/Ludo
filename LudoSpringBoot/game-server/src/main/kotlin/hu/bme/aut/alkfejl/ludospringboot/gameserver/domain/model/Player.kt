@@ -16,7 +16,10 @@
 
 package hu.bme.aut.alkfejl.ludospringboot.gameserver.domain.model
 
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.debug
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.error
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.model.PlayerEntity
+import org.slf4j.LoggerFactory
 
 class Player internal constructor(
     private val player: PlayerEntity,
@@ -51,13 +54,11 @@ class Player internal constructor(
         actPiece.setPointer(dice)
     }
 
-    internal fun select(userId: String, dice: Int) {
-        require(isSelectEnabled(userId, dice)) { "User id must be the same as the player id" }
+    internal fun select(dice: Int) {
         selectNextPiece(dice)
     }
 
-    internal fun step(userId: String, dice: Int): Boolean {
-        require(isStepEnabled(userId)) { "User id must be the same as the player id" }
+    internal fun step(dice: Int): Boolean {
         return actPiece.step(dice)
     }
 
@@ -68,6 +69,10 @@ class Player internal constructor(
         }
 
     internal val name get() = player.name
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(Player::class.java)
+    }
 }
 
 fun PlayerEntity.toDomainModel(board: Board) = Player(

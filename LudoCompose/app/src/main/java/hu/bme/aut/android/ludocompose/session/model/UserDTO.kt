@@ -18,5 +18,5 @@ package hu.bme.aut.android.ludocompose.session.model
 
 data class UserDTO(
     val name: String = "",
-    val isReady: Boolean = false,
+    val ready: Boolean = false,
 )

@@ -16,10 +16,12 @@
 
 package hu.bme.aut.alkfejl.ludospringboot.gameserver.domain.service
 
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.error
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.datasource.ScoreRepository
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.model.ScoreEntity
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.domain.model.Score
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.domain.model.toDomainModel
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -32,7 +34,7 @@ class ScoreServiceRepository(
     }
 
     override fun addOrIncrement(name: String) {
-        require(name.isNotBlank()) { "Name must not be blank" }
+        require(name.isNotBlank()) { logger error "Name must not be blank" }
         scoreRepository.get(name)?.let { score ->
             score.copy(winCount = score.winCount + 1)
         }?.apply {
@@ -41,5 +43,9 @@ class ScoreServiceRepository(
             val score = ScoreEntity(name = name, winCount = 1)
             scoreRepository.insert(score)
         }
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(ScoreServiceRepository::class.java)
     }
 }

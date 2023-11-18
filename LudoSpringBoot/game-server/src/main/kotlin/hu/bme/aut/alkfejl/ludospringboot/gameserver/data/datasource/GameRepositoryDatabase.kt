@@ -16,10 +16,13 @@
 
 package hu.bme.aut.alkfejl.ludospringboot.gameserver.data.datasource
 
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.debug
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.error
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.dao.GameEntityRepository
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.dao.PieceEntityRepository
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.dao.PlayerEntityRepository
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.data.model.GameEntity
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import kotlin.jvm.optionals.getOrNull
@@ -31,9 +34,11 @@ class GameRepositoryDatabase(
     private val pieceEntityRepository: PieceEntityRepository,
 ) : GameRepository {
     override fun get(id: Long): GameEntity {
-        return gameEntityRepository.findById(id).run {
-            requireNotNull(getOrNull()) { "Game not found with id: $id" }
+        val game = gameEntityRepository.findById(id).run {
+            requireNotNull(getOrNull()) { logger error "Game not found with id: $id" }
         }
+        logger debug "Game found with id: $id"
+        return game
     }
 
     @Transactional
@@ -41,31 +46,38 @@ class GameRepositoryDatabase(
         return game.copy(id = null, players = mutableListOf()).run {
             gameEntityRepository.save(this)
         }.also { gameEntity ->
-            checkNotNull(gameEntity.id) { "Game could not be saved" }
+            checkNotNull(gameEntity.id) { logger error "Game could not be saved" }
             val playerEntities = game.players.map { player ->
                 player.copy(id = null, game = gameEntity, pieces = mutableListOf()).run {
                     playerEntityRepository.save(this)
                 }.also { playerEntity ->
-                    checkNotNull(playerEntity.id) { "Player could not be saved" }
+                    checkNotNull(playerEntity.id) { logger error "Player could not be saved" }
                     val pieceEntities = player.pieces.map { piece ->
                         piece.copy(id = null, player = playerEntity).run {
                             pieceEntityRepository.save(this)
                         }.also { pieceEntity ->
-                            checkNotNull(pieceEntity.id) { "Piece could not be saved" }
+                            checkNotNull(pieceEntity.id) { logger error "Piece could not be saved" }
                         }
                     }
                     playerEntity.pieces = pieceEntities.toMutableList()
                 }
             }
             gameEntity.players = playerEntities.toMutableList()
+            logger debug "Game created with id: ${gameEntity.id}"
         }
     }
 
     override fun update(game: GameEntity) {
         gameEntityRepository.save(game)
+        logger debug "Game updated with id: ${game.id}"
     }
 
     override fun delete(id: Long) {
         gameEntityRepository.deleteById(id)
+        logger debug "Game deleted with id: $id"
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(GameRepositoryDatabase::class.java)
     }
 }
