@@ -1,13 +1,21 @@
 # Ki nevet a végén
-### A közismert társasjáték megvalósítása több platformon különböző technológiákkal
+### A közismert társasjáték megvalósítása több platformon különböző technológiákkal.
 
 -----
 
 # LudoCompose
 
+### Android frontend client with Jetpack compose.
+
+This project is an Android Studio gradle project with kotlin dsl and version catalog.
+
 -----
 
 # LudoSpringBoot
+
+### Spring Boot backend server
+
+This project is an Intellij generated project using the start.spring.io Initilizer.
 
 -----
 
