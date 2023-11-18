@@ -16,6 +16,9 @@
 
 package hu.bme.aut.alkfejl.ludospringboot.gameserver.web.controller
 
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.error
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.model.Constants.playerMinCount
+import hu.bme.aut.alkfejl.ludospringboot.gameserver.common.util.info
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.domain.service.GameService
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.domain.service.RoomService
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.web.model.*
@@ -57,7 +60,10 @@ class RoomController(
         @RequestBody room: RoomRequest,
         @AuthenticationPrincipal principal: Jwt,
     ): Long {
-        require(principal.claims.containsKey("name")) { "Name must be present in token, did you forget to request the profile scope?" }
+        require(principal.claims.containsKey("name")) {
+            logger.error("No name present in access token")
+            "Name must be present in token, did you forget to request the profile scope?"
+        }
         val hostName = principal.claims["name"] as String
         val hostId = principal.subject
         val id = roomService.create(room.name, hostName, hostId)
@@ -70,6 +76,12 @@ class RoomController(
     fun start(@PathVariable id: Long) {
         val users = roomService.getUsers(id)
         val userDetails = users.map { it.name to it.subject }
+        require(userDetails.size >= playerMinCount) {
+            logger info "Not enough players in room"
+        }
+        require(users.all { it.ready }) {
+            logger info "Not all players are ready"
+        }
         val gameId = gameService.start(userDetails)
         roomService.delete(id)
         template.convertAndSend("/room/start", RoomStart(id, gameId))
@@ -91,7 +103,10 @@ class RoomController(
         @PathVariable id: Long,
         @AuthenticationPrincipal principal: Jwt,
     ) {
-        require(principal.claims.containsKey("name")) { "Name must be present in token, did you forget to request the profile scope?" }
+        require(principal.claims.containsKey("name")) {
+            logger.error("No name present in access token")
+            "Name must be present in token, did you forget to request the profile scope?"
+        }
         val userName = principal.claims["name"] as String
         val userId = principal.subject
         roomService.join(id, userName, userId)

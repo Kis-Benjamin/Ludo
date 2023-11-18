@@ -19,6 +19,7 @@ package hu.bme.aut.alkfejl.ludospringboot.gameserver.web.controller
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.domain.service.ScoreService
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.web.model.ScoreDTO
 import hu.bme.aut.alkfejl.ludospringboot.gameserver.web.model.toSessionModel
+import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -32,5 +33,9 @@ class ScoreController(
     fun getAll(): List<ScoreDTO> {
         val scores = scoreService.getAll()
         return scores.map { it.toSessionModel() }
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(ScoreController::class.java)
     }
 }
