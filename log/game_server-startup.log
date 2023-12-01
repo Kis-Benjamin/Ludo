@@ -1,0 +1,44 @@
+
+  ___      __   __  ______   _______
+ |   |    |  | |  ||      | |       |
+ |   |    |  | |  ||  _    ||   _   | __ _ _
+ |   |    |  | |  || | |   ||  | |  | \ \ \ \
+ |   |___ |  |_|  || |_|   ||  |_|  |  \ \ \ \
+ |       ||       ||       ||       |   ) ) ) )
+ |_______||_______||______| |_______|  / / / /
+ =====================================/_/_/_/
+
+:: Built with Spring Boot :: 3.1.5
+
+
+2023-11-29 11:56:21.143  INFO 1 --- [           main] h.b.a.a.l.g.GameServerApplicationKt      : Starting GameServerApplicationKt v0.0.1-SNAPSHOT using Java 17.0.9 with PID 1 (/opt/ludo-server/game-server.jar started by root in /opt/ludo-server)
+2023-11-29 11:56:21.146 DEBUG 1 --- [           main] h.b.a.a.l.g.GameServerApplicationKt      : Running with Spring Boot v3.1.5, Spring v6.0.13
+2023-11-29 11:56:21.147  INFO 1 --- [           main] h.b.a.a.l.g.GameServerApplicationKt      : No active profile set, falling back to 1 default profile: "default"
+2023-11-29 11:56:23.084  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-11-29 11:56:23.311  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 207 ms. Found 6 JPA repository interfaces.
+2023-11-29 11:56:24.653  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-11-29 11:56:24.668  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-11-29 11:56:24.668  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.15]
+2023-11-29 11:56:24.831  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-11-29 11:56:24.833  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3584 ms
+2023-11-29 11:56:25.289  INFO 1 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-11-29 11:56:25.372  INFO 1 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.13.Final
+2023-11-29 11:56:25.377  INFO 1 --- [           main] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2023-11-29 11:56:25.904  INFO 1 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-11-29 11:56:25.942  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-11-29 11:56:26.222  INFO 1 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@4e92466a
+2023-11-29 11:56:26.224  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-11-29 11:56:26.264  WARN 1 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2023-11-29 11:56:27.807  INFO 1 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2023-11-29 11:56:27.946  INFO 1 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-11-29 11:56:28.717  INFO 1 --- [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2023-11-29 11:56:30.359  INFO 1 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint(s) beneath base path '/actuator'
+2023-11-29 11:56:30.974  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-11-29 11:56:30.976  INFO 1 --- [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2023-11-29 11:56:30.978  INFO 1 --- [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@46e388ec]]
+2023-11-29 11:56:30.979  INFO 1 --- [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2023-11-29 11:56:31.031  INFO 1 --- [           main] h.b.a.a.l.g.GameServerApplicationKt      : Started GameServerApplicationKt in 10.836 seconds (process running for 11.585)
+2023-11-29 11:56:39.895  INFO 1 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-11-29 11:56:39.896  INFO 1 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-11-29 11:56:39.898  INFO 1 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2023-11-29 11:57:30.596  INFO 1 --- [MessageBroker-1] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]

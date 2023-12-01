@@ -1,0 +1,8 @@
+2023-11-29 11:55:52.790 UTC [1] LOG:  starting PostgreSQL 16.0 (Debian 16.0-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+2023-11-29 11:55:52.790 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2023-11-29 11:55:52.790 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+2023-11-29 11:55:53.204 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2023-11-29 11:55:53.582 UTC [29] LOG:  database system was shut down at 2023-11-29 11:53:33 UTC
+2023-11-29 11:55:53.741 UTC [1] LOG:  database system is ready to accept connections
+2023-11-29 12:00:53.648 UTC [27] LOG:  checkpoint starting: time
+2023-11-29 12:00:54.490 UTC [27] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.290 s, sync=0.189 s, total=0.842 s; sync files=3, longest=0.100 s, average=0.063 s; distance=0 kB, estimate=0 kB; lsn=0/24703E0, redo lsn=0/24703A8
