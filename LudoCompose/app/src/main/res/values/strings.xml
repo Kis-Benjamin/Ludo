@@ -2,12 +2,12 @@
     <string name="app_name">Ludo Compose</string>
     <string name="app_version_string">Verzió v1.0</string>
     <string name="app_author_string">Készítette:\nKis Benjámin</string>
-    <string name="menu_main">Ki nevet a végén!</string>
+    <string name="menu_main">Ki nevet a végén?</string>
     <string name="menu_local">Lokális játék</string>
     <string name="menu_online">Online játék</string>
     <string name="menu_about">Rólunk</string>
     <string name="menu_login">Bejelentkezés</string>
-    <string name="menu_game">Ki nevet a végén!</string>
+    <string name="menu_game">Ki nevet a végén?</string>
     <string name="menu_new_game">Új játék indítása</string>
     <string name="menu_new_room">Új szoba létrehozása</string>
     <string name="menu_join_room">Csatlakozás szobához</string>
@@ -58,7 +58,7 @@
     <string name="join_room_empty_selection">Még nem választottál ki szobát.</string>
     <string name="join_room_list_empty">Még nem indítottak egy szobát sem.</string>
     <string name="join_room_button">Csatlakozás</string>
-    <string name="room_host_name">Szervező:</string>
+    <string name="room_host_name">Vendéglátó:</string>
     <string name="room_user_list_empty">Még nem csatlakozott egy játékos sem.</string>
     <string name="room_start_game_button">Indítás</string>
     <string name="room_unready_button">Várakozás</string>

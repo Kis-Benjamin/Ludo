@@ -76,38 +76,44 @@ fun RoomScreen(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.weight(0.02f))
             Text(
                 text = state.room.name,
                 textAlign = TextAlign.Center,
                 style = typography.headlineLarge,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(vertical = 20.dp)
             )
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = stringResource(id = R.string.room_host_name),
+                    textAlign = TextAlign.Center,
                     style = typography.headlineMedium,
                 )
                 Text(
                     text = state.room.host.name,
+                    textAlign = TextAlign.Center,
                     style = typography.headlineMedium,
                 )
             }
             if (state.room.users.isEmpty()) {
-                Text(
-                    text = stringResource(id = R.string.room_user_list_empty),
-                    textAlign = TextAlign.Center,
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f)
-                )
+                        .weight(1f),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.room_user_list_empty),
+                        textAlign = TextAlign.Center,
+                    )
+                }
             } else {
                 LazyColumn(
                     modifier = Modifier
@@ -136,29 +142,18 @@ fun RoomScreen(
                         )
                     }
                 }
-                if (isHost) {
+                if (isHost && state.isReadyToStart) {
                     Button(
                         onClick = { roomViewModel.start() },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 50.dp, end = 50.dp, bottom = 30.dp)
+                            .padding(horizontal = 50.dp)
+                            .padding(bottom = 30.dp)
                     ) {
                         Text(text = stringResource(id = R.string.room_start_game_button))
                     }
                 } else {
-                    Button(
-                        onClick = { roomViewModel.changeReadyState() },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 50.dp, end = 50.dp, bottom = 30.dp)
-                    ) {
-                        Text(
-                            text = stringResource(
-                                id = if (state.ready) R.string.room_unready_button
-                                else R.string.room_ready_button
-                            )
-                        )
-                    }
+                    Spacer(modifier = Modifier)
                 }
             }
             if (isHost) {
@@ -166,16 +161,32 @@ fun RoomScreen(
                     onClick = { roomViewModel.close() },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 50.dp, end = 50.dp, bottom = 30.dp)
+                        .padding(horizontal = 50.dp)
+                        .padding(bottom = 30.dp)
                 ) {
                     Text(text = stringResource(id = R.string.room_close_button))
                 }
             } else {
                 Button(
+                    onClick = { roomViewModel.changeReadyState() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 50.dp)
+                        .padding(bottom = 30.dp)
+                ) {
+                    Text(
+                        text = stringResource(
+                            id = if (state.ready) R.string.room_unready_button
+                            else R.string.room_ready_button
+                        )
+                    )
+                }
+                Button(
                     onClick = { roomViewModel.leave() },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 50.dp, end = 50.dp, bottom = 30.dp)
+                        .padding(horizontal = 50.dp)
+                        .padding(bottom = 30.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.room_leave_button)

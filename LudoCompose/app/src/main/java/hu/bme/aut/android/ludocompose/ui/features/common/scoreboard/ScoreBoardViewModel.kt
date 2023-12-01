@@ -39,7 +39,9 @@ open class ScoreBoardViewModel(
 
     val loadingViewModel = LoadingViewModel(viewModelScope) {
         val scoreDTOs = scoreController.getAll()
-        val scores = scoreDTOs.map { it.toUiModel() }
+        val scores = scoreDTOs
+            .sortedByDescending { it.winCount }
+            .map { it.toUiModel() }
         _state.update { state ->
             state.copy(scores = scores)
         }

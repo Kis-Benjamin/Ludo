@@ -48,7 +48,7 @@ fun UiEventHandler(
                     onSuccess()
                 }
                 is UiEvent.Continue -> {
-                    // Do nothing as intended to continue
+                    // Do nothing as intended to continue handling events
                 }
                 is UiEvent.Close -> {
                     onClose()

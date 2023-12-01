@@ -55,7 +55,10 @@ class RoomViewModel @Inject constructor(
     val loadingViewModel = LoadingViewModel(viewModelScope) {
         val room = roomController.get()
         _state.update { state ->
-            state.copy(room = room.toUiModel())
+            state.copy(
+                room = room.toUiModel(),
+                isReadyToStart = room.users.all { it.ready }
+            )
         }
     }
 
@@ -124,4 +127,5 @@ class RoomViewModel @Inject constructor(
 data class RoomState(
     val room: RoomUi = RoomUi(),
     val ready: Boolean = false,
+    val isReadyToStart: Boolean = false,
 )
