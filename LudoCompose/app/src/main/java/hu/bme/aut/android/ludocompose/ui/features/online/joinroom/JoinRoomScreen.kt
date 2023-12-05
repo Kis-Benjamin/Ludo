@@ -27,7 +27,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -71,7 +72,7 @@ fun JoinRoomScreen(
                         .weight(1f)
                         .padding(15.dp)
                         .clip(shape)
-                        .background(MaterialTheme.colorScheme.secondaryContainer, shape)
+                        .background(colorScheme.secondaryContainer, shape)
                 ) {
                     itemsIndexed(state.rooms, key = { _, room -> room.id }) { index, room ->
                         val isSelected = index == state.selectedIndex
@@ -80,23 +81,25 @@ fun JoinRoomScreen(
                             modifier = Modifier
                                 .padding(5.dp)
                                 .clip(shape)
-                                .background(MaterialTheme.colorScheme.onSecondaryContainer, shape)
                                 .clickable {
                                     joinRoomViewModel.select(index)
                                 },
                             headlineContent = {
                                 Text(text = room.name)
                             },
-                            tonalElevation = if (isSelected) {
-                                50.dp
-                            } else {
-                                0.dp
-                            }
+                            colors = ListItemDefaults.colors(
+                                containerColor = if (isSelected) {
+                                    colorScheme.onTertiary
+                                } else {
+                                    colorScheme.surface
+                                }
+                            ),
                         )
                     }
                 }
                 Button(
                     onClick = { joinRoomViewModel.join() },
+                    enabled = state.selectedIndex != null,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 50.dp, end = 50.dp, bottom = 30.dp)

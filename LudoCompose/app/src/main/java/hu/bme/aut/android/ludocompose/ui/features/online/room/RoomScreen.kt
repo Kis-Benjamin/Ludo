@@ -16,6 +16,7 @@
 
 package hu.bme.aut.android.ludocompose.ui.features.online.room
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -51,6 +52,22 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import hu.bme.aut.android.ludocompose.R
 import hu.bme.aut.android.ludocompose.ui.features.common.load.LoadingScreen
 import hu.bme.aut.android.ludocompose.ui.features.common.uievent.UiEventHandler
+
+@Composable
+fun RoomButton(
+    @StringRes textId: Int,
+    onClick: () -> Unit,
+) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 50.dp)
+            .padding(bottom = 30.dp)
+    ) {
+        Text(text = stringResource(id = textId))
+    }
+}
 
 @Composable
 fun RoomScreen(
@@ -136,62 +153,34 @@ fun RoomScreen(
                                     modifier = Modifier.size(40.dp),
                                 )
                             },
-                            headlineContent = {
-                                Text(text = user.name)
-                            },
+                            headlineContent = { Text(text = user.name) },
                         )
                     }
                 }
                 if (isHost && state.isReadyToStart) {
-                    Button(
+                    RoomButton(
+                        textId = R.string.room_start_game_button,
                         onClick = { roomViewModel.start() },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 50.dp)
-                            .padding(bottom = 30.dp)
-                    ) {
-                        Text(text = stringResource(id = R.string.room_start_game_button))
-                    }
+                    )
                 } else {
                     Spacer(modifier = Modifier)
                 }
             }
             if (isHost) {
-                Button(
+                RoomButton(
+                    textId = R.string.room_close_button,
                     onClick = { roomViewModel.close() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 50.dp)
-                        .padding(bottom = 30.dp)
-                ) {
-                    Text(text = stringResource(id = R.string.room_close_button))
-                }
+                )
             } else {
-                Button(
+                RoomButton(
+                    textId = if (state.ready) R.string.room_unready_button
+                    else R.string.room_ready_button,
                     onClick = { roomViewModel.changeReadyState() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 50.dp)
-                        .padding(bottom = 30.dp)
-                ) {
-                    Text(
-                        text = stringResource(
-                            id = if (state.ready) R.string.room_unready_button
-                            else R.string.room_ready_button
-                        )
-                    )
-                }
-                Button(
+                )
+                RoomButton(
+                    textId = R.string.room_leave_button,
                     onClick = { roomViewModel.leave() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 50.dp)
-                        .padding(bottom = 30.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.room_leave_button)
-                    )
-                }
+                )
             }
         }
     }

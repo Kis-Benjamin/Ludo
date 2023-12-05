@@ -65,4 +65,5 @@
     <string name="room_ready_button">Felkészülés</string>
     <string name="room_close_button">Bezárás</string>
     <string name="room_leave_button">Kilépés</string>
+    <string name="connection_error">A kapcsolat a szerverrel megszakadt.</string>
 </resources>

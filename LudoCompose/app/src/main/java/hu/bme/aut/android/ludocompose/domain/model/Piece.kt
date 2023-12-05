@@ -23,9 +23,9 @@ import hu.bme.aut.android.ludocompose.data.model.PieceEntity
 
 class Piece internal constructor(
     private val piece: PieceEntity,
-    homeFields: List<Field>,
+    private val yardField: Field,
     private val trackFields: List<Field>,
-    yardFields: List<Field>,
+    private val homeField: Field,
     internal val color: Int,
 ) {
     private var trackPos: Int
@@ -50,12 +50,8 @@ class Piece internal constructor(
             piece.state = value.ordinal
         }
 
-    private val yardField = yardFields[piece.index]
-
     private val trackField: Field
         get() = trackFields[piece.trackPos]
-
-    private val homeField = homeFields[piece.index]
 
     private val currentField: Field
         get() = when (state) {
@@ -115,7 +111,6 @@ class Piece internal constructor(
     }
 
     internal fun step(dice: Int): Boolean {
-        require(dice in diceValues) { "Invalid dice value: $dice" }
         if (isValidMove(dice)) move(dice)
         return state == State.HOME
     }
@@ -129,14 +124,14 @@ class Piece internal constructor(
 }
 
 fun PieceEntity.toDomainModel(
-    homeFields: List<Field>,
-    trackFields: List<Field>,
     yardFields: List<Field>,
+    trackFields: List<Field>,
+    homeFields: List<Field>,
     color: Int,
 ) = Piece(
     piece = this,
-    homeFields = homeFields,
+    yardField = yardFields[index],
     trackFields = trackFields,
-    yardFields = yardFields,
+    homeField = homeFields[index],
     color = color,
 )

@@ -19,6 +19,7 @@ package hu.bme.aut.android.ludocompose.ui.features.online.room
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import hu.bme.aut.android.ludocompose.R
 import hu.bme.aut.android.ludocompose.session.controller.GameController
 import hu.bme.aut.android.ludocompose.session.controller.RoomController
 import hu.bme.aut.android.ludocompose.session.di.Online
@@ -84,7 +85,7 @@ class RoomViewModel @Inject constructor(
                         loadingViewModel.load()
                     }
                 }
-            UiEvent.Failure(UiText.DynamicString("Stomp session closed"))
+            UiEvent.Failure(UiText.StringResource(R.string.connection_error))
         }
         uiEventViewModel.handleWith {
             stompManager.session

@@ -34,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -81,7 +82,6 @@ fun LoadGameScreen(
                             modifier = Modifier
                                 .padding(5.dp)
                                 .clip(shape)
-                                .background(colorScheme.onSecondaryContainer, shape)
                                 .clickable {
                                     loadGameViewModel.select(index)
                                 },
@@ -108,16 +108,19 @@ fun LoadGameScreen(
                                     )
                                 }
                             },
-                            tonalElevation = if (isSelected) {
-                                50.dp
-                            } else {
-                                0.dp
-                            }
+                            colors = ListItemDefaults.colors(
+                                containerColor = if (isSelected) {
+                                    colorScheme.onTertiary
+                                } else {
+                                    colorScheme.surface
+                                }
+                            ),
                         )
                     }
                 }
                 Button(
                     onClick = { loadGameViewModel.load() },
+                    enabled = state.selectedIndex != null,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 50.dp, end = 50.dp, bottom = 30.dp)

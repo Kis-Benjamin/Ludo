@@ -26,7 +26,7 @@ services:
       KC_DB_URL: "jdbc:postgresql://postgres/${KC_DB_NAME}"
       KC_DB_USERNAME: ${KC_DB_USER}
       KC_DB_PASSWORD: ${KC_DB_PASSWORD}
-      KC_HOSTNAME: "192.168.1.105"
+      KC_HOSTNAME: ${KC_HOST}
       KC_HOSTNAME_PORT: ${KC_PORT}
       KC_HTTPS_CERTIFICATE_FILE: /opt/certfile.pem
       KC_HTTPS_CERTIFICATE_KEY_FILE: /opt/keyfile.pem
